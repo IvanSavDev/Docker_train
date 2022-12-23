@@ -1,0 +1,25 @@
+.containerPassword {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.containerInput {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.forgotPassword {
+    color: #5382E7;
+    text-decoration: none;
+}
+
+.forgotPassword:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.fullName {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
