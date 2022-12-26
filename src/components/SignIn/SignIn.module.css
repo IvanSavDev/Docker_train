@@ -1,90 +1,29 @@
-:root {
-    --black: #2B3844;
-}
-
-.container {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.containerForm {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-    padding: 10px;
-}
-
-.form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    max-width: 380px;
-    width: 100%;
-}
-
 .containerEmail {
     width: 100%;
-    margin-bottom: 24px;
 }
 
 .containerPassword {
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
-.title {
-    margin-bottom: 48px;
-    text-align: center;
-    font-size: 36px;
-    line-height: 48px;
-    color: var(--black);
-}
-
-.fieldName {
-    margin-bottom: 8px;
+.containerError {
+    position: relative;
+    top: -20px;
+    width: 100%;
     font-size: 12px;
-    line-height: 12px;
-    color: var(--black);
 }
 
-.field {
+.containerButton {
     width: 100%;
-    padding: 16px;
-    opacity: 0.3;
-    border: 1px solid #354352;
-    border-radius: 3px;
-    font-size: 14px;
-}
-
-.submitButton {
     margin-bottom: 32px;
-    width: 100%;
-    padding: 19px 0;
-    border: none;
-    border-radius: 3px;
-    background-color: #5382E7;
-    color: #FFFFFF;
-    font-size: 14px;
-    cursor: pointer;
 }
 
-.forgotPassword {
-    color: #5382E7;
-    text-decoration: none;
+.haveAccountText {
+    color: #2B3844;
 }
 
-.forgotPassword:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.backgroundImg {
-    height: 100%;
-    width: 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url("../../assets/img/singIn.jpg");
+.accountExist {
+    position: absolute;
+    color: red;
 }
