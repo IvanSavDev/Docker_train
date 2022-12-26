@@ -22,7 +22,7 @@ import {
 } from "../../utils/validation";
 import {getDataFromLocalStorage, setDataInLocalStorage} from "../../utils/localStorage";
 import {checkExistsAccountByEmail, isEmptyProperties} from "../../utils/utils";
-import {useForm} from "../Hooks/useForm";
+import {useForm} from "../../hooks/useForm";
 
 import styles from './SignUp.module.css';
 
