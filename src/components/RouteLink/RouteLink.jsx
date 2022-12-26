@@ -1,6 +1,8 @@
 import React from 'react';
-import styles from "../SignUp/SignUp.module.css";
+import { Link } from "react-router-dom";
 
-const RouteLink = ({ children, ...rest }) => <a {...rest} className={styles.forgotPassword}>{children}</a>
+import styles from "./RouteLink.module.css";
+
+const RouteLink = ({ children, ...rest }) => <Link {...rest} className={styles.link}>{children}</Link>
 
 export default RouteLink;
