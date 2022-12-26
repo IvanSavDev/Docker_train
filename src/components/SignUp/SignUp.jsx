@@ -26,7 +26,7 @@ import {useForm} from "../Hooks/useForm";
 
 import styles from './SignUp.module.css';
 
-function SignIn() {
+const SignUp = () => {
     const [errors, setErrors] = useState({
         name: null,
         surname: null,
@@ -124,4 +124,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default SignUp;
