@@ -9,20 +9,21 @@ import {
 import App from './components/App';
 import SignIn from "./components/SignIn/SignIn";
 import SignUp from "./components/SignUp/SignUp";
+import {Paths} from "./consts/consts";
 
 import './index.css';
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: Paths.main,
         element: <App />,
     },
     {
-        path: "/signin",
+        path: Paths.signIn,
         element: <SignIn />
     },
     {
-        path: "/signup",
+        path: Paths.signUp,
         element: <SignUp />
     }
 ]);
