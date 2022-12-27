@@ -13,7 +13,11 @@ export const MATCH_PASSWORD_ERROR = 'Not equal to password above';
 export const ACCOUNT_EXISTS_ERROR = 'Account already exist';
 
 export const Paths = {
-    main: '/',
+    base: '/',
     signIn: '/signin',
     signUp: '/signup',
+    main: "/main",
+    myProduct: "/myproduct",
+    mySales: "/mySales",
+    personalCabinet: "/personalcabinet"
 }
