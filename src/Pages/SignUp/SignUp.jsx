@@ -1,18 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
 
-import {
-    ACCOUNT_EXISTS_ERROR, COMPANY_NAME_ERROR,
-    EMAIL_ERROR,
-    FULLNAME_ERROR,
-    MATCH_PASSWORD_ERROR,
-    PASSWORD_ERROR, Paths
-} from "../../consts/consts";
-import ContainerSignInAndSignUp from '../ContainerSignInAndSignUp';
-import Input from "../Inputs/Input";
-import Button from "../Buttons/Button";
-import Form from "../Form/Form";
-import RouteLink from "../RouteLink/RouteLink";
+import {Errors, KeysLocalStorage, Paths,} from "../../consts/consts";
+import ContainerSignInAndSignUp from '../../components/ContainerSignInAndSignUp';
+import Input from "../../components/Inputs/Input";
+import Button from "../../components/Buttons/Button";
+import Form from "../../components/Form/Form";
+import RouteLink from "../../components/RouteLink/RouteLink";
 import {
     isMatchPassword,
     isValidCompanyName,
@@ -23,6 +16,7 @@ import {
 import {getDataFromLocalStorage, setDataInLocalStorage} from "../../utils/localStorage";
 import {checkExistsAccountByEmail, isEmptyProperties} from "../../utils/utils";
 import {useForm} from "../../hooks/useForm";
+import useAuth from "../../hooks/useAuth";
 
 import styles from './SignUp.module.css';
 
@@ -46,21 +40,21 @@ const SignUp = () => {
     })
     const [accounts, setAccounts] = useState([]);
     const [checkAccountExists, setCheckAccountExists] = useState(false);
-    const navigate = useNavigate();
+    const {logIn} = useAuth();
 
     useEffect(() => {
-        setAccounts(getDataFromLocalStorage('accounts'));
+        setAccounts(getDataFromLocalStorage(KeysLocalStorage.accounts));
     }, []);
 
     useEffect(() => {
         const isNotErrors = Object.values(errors).every(error => !error);
         if (isNotErrors && checkAccountExists) {
             const id = Date.now();
-            setDataInLocalStorage('accounts', [...accounts, { id, ...form }]);
-            setDataInLocalStorage('account', { id, ...form });
-            navigate(Paths.main);
+            setDataInLocalStorage(KeysLocalStorage.accounts, [...accounts, { id, ...form }]);
+            setDataInLocalStorage(KeysLocalStorage.userId, id);
+            logIn();
         }
-    }, [errors, checkAccountExists, navigate, form, accounts]);
+    }, [errors, checkAccountExists, form, accounts, logIn]);
 
     const handleChange = (event) => {
         setCheckAccountExists(false);
@@ -74,13 +68,13 @@ const SignUp = () => {
         const isExistsAccount = checkExistsAccountByEmail(accounts, email);
 
         const checkedErrors = {
-            name: isValidFullName(name) ? null : FULLNAME_ERROR,
-            surname: isValidFullName(surname) ? null : FULLNAME_ERROR,
-            companyName: isValidCompanyName(companyName) ? null : COMPANY_NAME_ERROR,
-            email: isValidEmail(email) ? null : EMAIL_ERROR,
-            password: isValidPassword(password) ? null : PASSWORD_ERROR,
-            repeatPassword: isMatchPassword(password, repeatPassword) ? null : MATCH_PASSWORD_ERROR,
-            accountExists: !isExistsAccount ? null : ACCOUNT_EXISTS_ERROR,
+            name: isValidFullName(name) ? null : Errors.fullname,
+            surname: isValidFullName(surname) ? null : Errors.fullname,
+            companyName: isValidCompanyName(companyName) ? null : Errors.companyName,
+            email: isValidEmail(email) ? null : Errors.email,
+            password: isValidPassword(password) ? null : Errors.password,
+            repeatPassword: isMatchPassword(password, repeatPassword) ? null : Errors.matchPassword,
+            accountExists: !isExistsAccount ? null : Errors.accountExists,
         };
 
         setErrors(checkedErrors);
