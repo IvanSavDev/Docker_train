@@ -1,10 +1,10 @@
-.containerEmail {
-    width: 100%;
-}
-
 .containerPassword {
     width: 100%;
     margin-bottom: 10px;
+}
+
+.containerInput {
+    width: 100%;
 }
 
 .containerError {
@@ -19,11 +19,16 @@
     margin-bottom: 32px;
 }
 
-.haveAccountText {
+.containerFullName {
+    display: flex;
+    gap: 16px;
+}
+
+.alreadyHaveAccount {
     color: #2B3844;
 }
 
-.accountExist {
+.accountExists {
     position: absolute;
     color: red;
 }

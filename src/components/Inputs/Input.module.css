@@ -1,0 +1,22 @@
+.fieldName {
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 12px;
+    color: #2B3844;
+}
+
+.textError {
+    min-height: 24px;
+    margin: 0 0 5px 0;
+    font-size: 12px;
+    color: red;
+}
+
+.field {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid rgba(53, 67, 82, 0.3);
+    border-radius: 3px;
+    font-size: 14px;
+    color: #2B3844;
+}
