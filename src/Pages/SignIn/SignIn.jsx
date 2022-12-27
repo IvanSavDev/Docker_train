@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
 
 import {isValidEmail, isValidPassword} from "../../utils/validation";
 import {checkExistsAccountByEmailAndPassword} from "../../utils/utils";
-import {EMAIL_ERROR, PASSWORD_ERROR, Paths} from "../../consts/consts";
+import {Errors, KeysLocalStorage, Paths} from "../../consts/consts";
 import {getDataFromLocalStorage} from "../../utils/localStorage";
-import ContainerSignInAndSignUp from "../ContainerSignInAndSignUp";
-import Input from "../Inputs/Input";
-import Button from "../Buttons/Button";
-import RouteLink from "../RouteLink/RouteLink";
-import Form from "../Form/Form";
+import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
+import Input from "../../components/Inputs/Input";
+import Button from "../../components/Buttons/Button";
+import RouteLink from "../../components/RouteLink/RouteLink";
+import Form from "../../components/Form/Form";
 import {useForm} from "../../hooks/useForm";
+import useAuth from "../../hooks/useAuth";
 
 import styles from './SignIn.module.css';
 
@@ -26,17 +26,19 @@ const SignIn = () => {
         email: '',
         password: ''
     });
-    const navigate = useNavigate();
+    const {logIn} = useAuth();
 
     useEffect(() => {
-        setAccounts(getDataFromLocalStorage('accounts'));
+        setAccounts(getDataFromLocalStorage(KeysLocalStorage.accounts));
     }, []);
 
     useEffect(() => {
         if (errors.existsAccount && checkAccountExists) {
-            navigate(Paths.main);
+            const account = accounts.find((account) => account.mail === form.mail);
+            localStorage.setItem(KeysLocalStorage.userId, account.id);
+            logIn();
         }
-    }, [checkAccountExists, errors.existsAccount, navigate]);
+    }, [checkAccountExists, errors.existsAccount, accounts, form, logIn]);
 
     const handleChange = (event) => {
         setCheckAccountExists(false);
@@ -49,8 +51,8 @@ const SignIn = () => {
         const isExistsAccount = checkExistsAccountByEmailAndPassword(accounts, email, password);
 
         setErrors({
-            email: isValidEmail(email) ? null : EMAIL_ERROR,
-            password: isValidPassword(password) ? null : PASSWORD_ERROR,
+            email: isValidEmail(email) ? null : Errors.email,
+            password: isValidPassword(password) ? null : Errors.password,
             existsAccount: isExistsAccount,
         });
 
@@ -83,6 +85,6 @@ const SignIn = () => {
             </Form>
         </ContainerSignInAndSignUp>
     );
-}
+};
 
 export default SignIn;
