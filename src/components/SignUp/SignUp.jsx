@@ -50,15 +50,17 @@ const SignUp = () => {
 
     useEffect(() => {
         setAccounts(getDataFromLocalStorage('accounts'));
-    }, [errors]);
+    }, []);
 
     useEffect(() => {
         const isNotErrors = Object.values(errors).every(error => !error);
         if (isNotErrors && checkAccountExists) {
-            setDataInLocalStorage('accounts', [...accounts, form]);
+            const id = Date.now();
+            setDataInLocalStorage('accounts', [...accounts, { id, ...form }]);
+            setDataInLocalStorage('account', { id, ...form });
             navigate(Paths.main);
         }
-    });
+    }, [errors, checkAccountExists, navigate, form, accounts]);
 
     const handleChange = (event) => {
         setCheckAccountExists(false);
