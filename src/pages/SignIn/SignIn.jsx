@@ -40,10 +40,10 @@ const SignIn = () => {
         }
     }, [checkAccountExists, errors.existsAccount, accounts, form, logIn]);
 
-    const handleChange = (event) => {
+    const handleChange = ({target}) => {
         setCheckAccountExists(false);
-        setForm(event);
-    }
+        setForm({[target.name]: target.value});
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -76,7 +76,7 @@ const SignIn = () => {
                     }
                 </div>
                 <div className={styles.containerButton}>
-                    <Button type="submit">Log in</Button>
+                    <Button type="submit" classNames={styles.button}>Log in</Button>
                 </div>
                 <div>
                     <span className={styles.haveAccountText}>Don't have an account? </span>
