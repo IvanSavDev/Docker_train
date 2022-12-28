@@ -50,15 +50,23 @@ const SignUp = () => {
         const isNotErrors = Object.values(errors).every(error => !error);
         if (isNotErrors && checkAccountExists) {
             const id = Date.now();
-            setDataInLocalStorage(KeysLocalStorage.accounts, [...accounts, { id, ...form }]);
+            setDataInLocalStorage(KeysLocalStorage.accounts, [...accounts, {
+                id,
+                name: form.name,
+                surname: form.surname,
+                companyName: form.companyName,
+                email: form.email,
+                password: form.password,
+                address: '',
+            }]);
             setDataInLocalStorage(KeysLocalStorage.userId, id);
             logIn();
         }
     }, [errors, checkAccountExists, form, accounts, logIn]);
 
-    const handleChange = (event) => {
+    const handleChange = ({target}) => {
         setCheckAccountExists(false);
-        setForm(event);
+        setForm({[target.name]: target.value});
     };
 
     const handleSubmit = (event) => {
@@ -109,7 +117,7 @@ const SignUp = () => {
                     }
                 </div>
                 <div className={styles.containerButton}>
-                    <Button type="submit">Create account</Button>
+                    <Button type="submit" classNames={styles.button}>Create account</Button>
                 </div>
             </Form>
             <div>
