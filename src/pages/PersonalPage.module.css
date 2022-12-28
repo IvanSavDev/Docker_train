@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.wrapper {
+    flex-grow: 1;
+    padding: 48px 56px 56px 56px;
+    background-color: #F8F8F8;
+}
+
