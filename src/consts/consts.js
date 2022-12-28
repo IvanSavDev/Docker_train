@@ -7,6 +7,7 @@ export const Errors = {
     email: 'Does not match the email',
     password: 'Minimum 8 characters required, 1 special character and 1 number',
     matchPassword: 'Not equal to password above',
+    matchOldPassword: 'Not equal to old password',
     accountExists: 'Account already exist'
 }
 
