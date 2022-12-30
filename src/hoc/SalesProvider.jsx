@@ -7,14 +7,26 @@ import {
 } from "../utils/localStorage";
 import { isEmptyObject } from "../utils/utils";
 
-const AccountsProvider = ({ children }) => {
-  const [sales, setSales] = useState({});
+const SalesProvider = ({ children }) => {
+  const [sales, setSales] = useState(null);
 
   const updateSales = () => {
-    const accountsFromLocalStorage = getDataFromLocalStorage(
+    const salesFromLocalStorage = getDataFromLocalStorage(
       KeysLocalStorage.sales
     );
-    setSales(accountsFromLocalStorage || {});
+    const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
+    if (salesFromLocalStorage) {
+      const accountSales = Object.values(salesFromLocalStorage)
+        .sort((a, b) => a.creationDate > b.creationDate)
+        .reduce((acc, sale) => {
+          if (sale.accountId === accountId) {
+            return { [sale.id]: { ...sale }, ...acc };
+          } else {
+            return acc;
+          }
+        }, {});
+      setSales(accountSales);
+    }
   };
 
   useEffect(() => {
@@ -22,30 +34,35 @@ const AccountsProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!isEmptyObject(sales)) {
-      setDataInLocalStorage(KeysLocalStorage.sales, sales);
+    if (sales) {
+      setDataInLocalStorage(KeysLocalStorage.sales, {
+        ...sales,
+      });
     }
   }, [sales]);
 
-  const updateSale = (id, updatedAccount) => {
+  const updateSale = (id, updatedSales) => {
     setSales((prevState) => ({
       ...prevState,
-      [id]: { ...updatedAccount },
+      [id]: updatedSales,
     }));
   };
+
   const getSale = (id) => sales[id];
 
-  const addSale = (newSales) => {
-    const id = Date.now();
-    setSales((prevState) => ({
-      ...prevState,
-      [id]: { ...newSales },
-    }));
+  const addSale = (product) => {
+    const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
+    const id = Date.now() + 1;
+    const updatedProduct = {
+      [id]: { id, accountId: accountId, ...product },
+      ...sales,
+    };
+    setSales(updatedProduct);
   };
 
   const salesInfo = useMemo(
-    () => ({ sales, updateSales, updateSale, getSale, addSale }),
-    [sales, updateSales, updateSale, getSale, addSale]
+    () => ({ sales, updateSale, getSale, addSale }),
+    [sales, updateSale, getSale, addSale]
   );
 
   return (
@@ -53,4 +70,4 @@ const AccountsProvider = ({ children }) => {
   );
 };
 
-export default AccountsProvider;
+export default SalesProvider;

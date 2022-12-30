@@ -5,34 +5,51 @@ import {
   getDataFromLocalStorage,
   setDataInLocalStorage,
 } from "../utils/localStorage";
+import { generateId } from "../utils/utils";
 
 const AccountProvider = ({ children }) => {
-  const [accountId, setAccountId] = useState(null);
-  const updateAccountId = () => {
-    const accountsFromLocalStorage = getDataFromLocalStorage(
-      KeysLocalStorage.userId
-    );
-    setAccountId(accountsFromLocalStorage);
+  const [account, setAccount] = useState(null);
+  const loadAccountFromLocalStorage = () => {
+    const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
+    if (accountId) {
+      const accounts = getDataFromLocalStorage(KeysLocalStorage.accounts);
+      const accountFromLocalStorage = accounts[accountId];
+      setAccount(accountFromLocalStorage);
+    }
   };
 
   useEffect(() => {
-    updateAccountId();
+    loadAccountFromLocalStorage();
   }, []);
 
   useEffect(() => {
-    if (accountId) {
-      setDataInLocalStorage(KeysLocalStorage.userId, accountId);
+    if (account) {
+      const accounts = getDataFromLocalStorage(KeysLocalStorage.accounts) || {};
+      setDataInLocalStorage(KeysLocalStorage.accounts, {
+        ...accounts,
+        [account.id]: { ...account },
+      });
     }
-  }, [accountId]);
+  }, [account]);
 
-  const getAccountId = () => accountId;
+  const updateAccount = (updatedAccount) => {
+    setAccount(updatedAccount);
+  };
 
-  const addAccountId = (id) =>
+  const addAccount = (newAccount) => {
+    const id = generateId();
+    setAccount({ id, ...newAccount });
     setDataInLocalStorage(KeysLocalStorage.userId, id);
+  };
 
   const accountInfo = useMemo(
-    () => ({ accountId, setAccountId, addAccountId }),
-    [accountId, addAccountId, getAccountId]
+    () => ({
+      account,
+      loadAccountFromLocalStorage,
+      addAccount,
+      updateAccount,
+    }),
+    [account, loadAccountFromLocalStorage, addAccount, updateAccount]
   );
 
   return (
