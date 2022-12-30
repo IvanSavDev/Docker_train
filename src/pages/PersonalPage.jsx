@@ -7,7 +7,7 @@ import styles from './PersonalPage.module.css';
 
 const PersonalPage = () => {
     return (
-        <div className={styles.container}>
+        <div className={styles.container} data-portal="modal">
             <Sidebar />
             <div className={styles.wrapper}>
                 <Outlet />
