@@ -1,90 +1,108 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from "react";
 
-import {isValidEmail, isValidPassword} from "../../utils/validation";
-import {checkExistsAccountByEmailAndPassword} from "../../utils/utils";
-import {Errors, KeysLocalStorage, Paths} from "../../consts/consts";
-import {getDataFromLocalStorage} from "../../utils/localStorage";
+import { isValidEmail, isValidPassword } from "../../utils/validation";
+import {
+  checkExistAccount,
+  findAccountByEmailAndPassword,
+  getAccountByEmailAndPassword,
+} from "../../utils/utils";
+import { Errors, KeysLocalStorage, Paths } from "../../consts/consts";
 import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
 import Input from "../../components/Inputs/Input";
 import Button from "../../components/Buttons/Button";
 import RouteLink from "../../components/RouteLink/RouteLink";
 import Form from "../../components/Form/Form";
-import {useForm} from "../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
+import useAccounts from "../../hooks/useAccounts";
+import useAccount from "../../hooks/useAccount";
 
-import styles from './SignIn.module.css';
+import styles from "./SignIn.module.css";
+import { setDataInLocalStorage } from "../../utils/localStorage";
 
 const SignIn = () => {
-    const [errors, setErrors] = useState({
-        email: null,
-        password: null,
-        existsAccount: false,
-    });
-    const [accounts, setAccounts] = useState([]);
-    const [checkAccountExists, setCheckAccountExists] = useState(false);
-    const [form, setForm] = useForm({
-        email: '',
-        password: ''
-    });
-    const {logIn} = useAuth();
+  const [errors, setErrors] = useState({
+    email: null,
+    password: null,
+    existsAccount: true,
+  });
+  const { logIn } = useAuth();
+  const { updateAccount } = useAccount();
+  const [form, setForm] = useForm({
+    email: "",
+    password: "",
+  });
 
-    useEffect(() => {
-        setAccounts(getDataFromLocalStorage(KeysLocalStorage.accounts));
-    }, []);
+  const handleChange = ({ target }) => {
+    setForm({ [target.name]: target.value });
+  };
 
-    useEffect(() => {
-        if (errors.existsAccount && checkAccountExists) {
-            const account = accounts.find((account) => account.mail === form.mail);
-            localStorage.setItem(KeysLocalStorage.userId, account.id);
-            logIn();
-        }
-    }, [checkAccountExists, errors.existsAccount, accounts, form, logIn]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const { email, password } = form;
 
-    const handleChange = ({target}) => {
-        setCheckAccountExists(false);
-        setForm({[target.name]: target.value});
+    const account = getAccountByEmailAndPassword(email, password);
+    const isExistsAccount = Boolean(account);
+
+    const checkedErrors = {
+      email: isValidEmail(email) ? null : Errors.email,
+      password: isValidPassword(password) ? null : Errors.password,
+      existsAccount: isExistsAccount,
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const { email, password } = form;
-        const isExistsAccount = checkExistsAccountByEmailAndPassword(accounts, email, password);
+    if (isExistsAccount) {
+      setDataInLocalStorage(KeysLocalStorage.userId, account.id);
+      updateAccount(account);
+      logIn();
+    } else {
+      setErrors(checkedErrors);
+    }
+  };
 
-        setErrors({
-            email: isValidEmail(email) ? null : Errors.email,
-            password: isValidPassword(password) ? null : Errors.password,
-            existsAccount: isExistsAccount,
-        });
-
-        setCheckAccountExists(true)
-    };
-
-    return (
-        <ContainerSignInAndSignUp>
-            <Form formName="Sign in" onSubmit={handleSubmit}>
-                <div className={styles.containerEmail}>
-                    <Input type="text" name="email" placeholder="Email" titleName="Email" error={errors.email} onChange={handleChange} />
-                </div>
-                <div className={styles.containerPassword}>
-                    <Input type="password" name="password" placeholder="Enter password" titleName="Password"
-                           error={errors.password} onChange={handleChange} />
-                </div>
-                <div className={styles.containerError}>
-                    {checkAccountExists && !errors.existsAccount
-                        ? <p className={styles.accountExist}>Invalid email or password</p>
-                        : ''
-                    }
-                </div>
-                <div className={styles.containerButton}>
-                    <Button type="submit" classNames={styles.button}>Log in</Button>
-                </div>
-                <div>
-                    <span className={styles.haveAccountText}>Don't have an account? </span>
-                    <RouteLink to={Paths.signUp}>Create account</RouteLink>
-                </div>
-            </Form>
-        </ContainerSignInAndSignUp>
-    );
+  return (
+    <ContainerSignInAndSignUp>
+      <Form formName="Sign in" onSubmit={handleSubmit}>
+        <div className={styles.containerEmail}>
+          <Input
+            type="text"
+            name="email"
+            placeholder="Email"
+            titleName="Email"
+            error={errors.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.containerPassword}>
+          <Input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            titleName="Password"
+            error={errors.password}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.containerError}>
+          {errors.existsAccount ||
+            Boolean(errors.email) ||
+            Boolean(errors.password) || (
+              <p className={styles.accountExist}>Invalid email or password</p>
+            )}
+        </div>
+        <div className={styles.containerButton}>
+          <Button type="submit" classNames={styles.button}>
+            Log in
+          </Button>
+        </div>
+        <div>
+          <span className={styles.haveAccountText}>
+            Don't have an account?{" "}
+          </span>
+          <RouteLink to={Paths.signUp}>Create account</RouteLink>
+        </div>
+      </Form>
+    </ContainerSignInAndSignUp>
+  );
 };
 
 export default SignIn;
