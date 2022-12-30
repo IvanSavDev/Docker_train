@@ -5,13 +5,13 @@ import Button from "../Buttons/Button";
 
 import styles from "./Header.module.css";
 
-const Header = ({title, description, isAddProductPage = false}) => {
+const Header = ({title, description, addProductPage = false, handleClick}) => {
     return (
         <header>
             <div className={styles.container}>
                 <h1 className={styles.title}>{title}</h1>
-                {isAddProductPage &&
-                    <Button classNames={styles.button}>
+                {addProductPage &&
+                    <Button classNames={styles.button} onClick={handleClick}>
                         <CreateProduct/>
                         Create a product
                     </Button>
