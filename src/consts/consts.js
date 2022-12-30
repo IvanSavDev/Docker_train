@@ -12,6 +12,8 @@ export const Errors = {
   accountExists: "Account already exist",
   requiredField: "Required field",
   moreZero: "Value must be a positive number",
+  date: "Invalid date",
+  notEnoughGoods: "Not enough goods",
 };
 
 export const KeysLocalStorage = {
