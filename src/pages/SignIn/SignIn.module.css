@@ -27,3 +27,7 @@
     position: absolute;
     color: red;
 }
+
+.button {
+    width: 100%;
+}
