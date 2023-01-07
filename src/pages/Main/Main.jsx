@@ -7,12 +7,12 @@ import PieChart from "../../components/Diagrams/PieChart";
 
 const Main = () => {
   return (
-    <div>
+    <>
       <Header title="Sales statistics" description="Welcome to CRM dashboard" />
       <div className={styles.container}>
         <PieChart />
       </div>
-    </div>
+    </>
   );
 };
 
