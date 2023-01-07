@@ -8,12 +8,11 @@ import {
   getFormatDate,
   haveErrors,
 } from "../../utils/utils";
-import ModalButton from "../Buttons/ModalButton";
+import StandardButton from "../Buttons/StandardButton";
 import ModalInput from "./ModalInput";
 import ModalTitle from "./ModalTitle";
 import ModalInputContainer from "./ModalInputContainer";
 import ModalContainer from "./ModalContainer";
-import useAccounts from "../../hooks/useAccounts";
 import useAccount from "../../hooks/useAccount";
 import useProducts from "../../hooks/useProducts";
 
@@ -67,7 +66,6 @@ const CreateProduct = ({ open, closeModal }) => {
 
     const isNotErrors = haveErrors(checkedErrors);
     if (isNotErrors) {
-      setForm({ ...initialStateForm });
       addProduct({
         productName,
         store,
@@ -95,7 +93,7 @@ const CreateProduct = ({ open, closeModal }) => {
   return (
     <ModalContainer open={open} onClose={handleClose}>
       <ModalTitle handleClose={handleClose}>Creating a product</ModalTitle>
-      <ModalInputContainer errors={errors}>
+      <ModalInputContainer>
         {fieldsNames.map((fieldName) => (
           <ModalInput
             key={fieldName}
@@ -107,12 +105,13 @@ const CreateProduct = ({ open, closeModal }) => {
             helperText={errors[fieldName]}
             onChange={handleChange}
             value={form[fieldName]}
-            errors={haveErrors(errors)}
           />
         ))}
       </ModalInputContainer>
       <DialogActions>
-        <ModalButton onClick={handleSubmit}>Add Product +</ModalButton>
+        <StandardButton onClick={handleSubmit} fullWidth>
+          Add Product +
+        </StandardButton>
       </DialogActions>
     </ModalContainer>
   );

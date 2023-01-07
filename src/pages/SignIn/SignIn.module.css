@@ -14,11 +14,6 @@
     font-size: 12px;
 }
 
-.containerButton {
-    width: 100%;
-    margin-bottom: 32px;
-}
-
 .haveAccountText {
     color: #2B3844;
 }
@@ -26,8 +21,4 @@
 .accountExist {
     position: absolute;
     color: red;
-}
-
-.button {
-    width: 100%;
 }

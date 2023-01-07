@@ -1,16 +1,14 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import DialogActions from "@mui/material/DialogActions";
 import { useForm } from "../../hooks/useForm";
 import { Errors } from "../../consts/consts";
 import { capitalizeFirstLetter, haveErrors } from "../../utils/utils";
-import ModalButton from "../Buttons/ModalButton";
+import StandardButton from "../Buttons/StandardButton";
 import ModalInput from "./ModalInput";
 import ModalTitle from "./ModalTitle";
 import ModalInputContainer from "./ModalInputContainer";
 import ModalContainer from "./ModalContainer";
-import useAccounts from "../../hooks/useAccounts";
-import useAccount from "../../hooks/useAccount";
 import useProducts from "../../hooks/useProducts";
 
 const initialStateForm = {
@@ -47,9 +45,8 @@ const EditProduct = ({ open, closeModal, id }) => {
 
   useLayoutEffect(() => {
     setForm(getProduct(id));
-  }, [getProduct, setForm]);
+  }, []);
 
-  console.log(form);
   const handleSubmit = () => {
     const { store, price, productName, category, remains, weight } = form;
     const checkedErrors = {
@@ -94,12 +91,13 @@ const EditProduct = ({ open, closeModal, id }) => {
             helperText={errors[fieldName]}
             onChange={handleChange}
             value={form[fieldName]}
-            errors={haveErrors(errors)}
           />
         ))}
       </ModalInputContainer>
       <DialogActions>
-        <ModalButton onClick={handleSubmit}>Add Product +</ModalButton>
+        <StandardButton fullWidth onClick={handleSubmit}>
+          Save changes
+        </StandardButton>
       </DialogActions>
     </ModalContainer>
   );

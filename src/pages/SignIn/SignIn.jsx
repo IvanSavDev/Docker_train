@@ -1,24 +1,19 @@
 import React, { useState } from "react";
 
-import { isValidEmail, isValidPassword } from "../../utils/validation";
-import {
-  checkExistAccount,
-  findAccountByEmailAndPassword,
-  getAccountByEmailAndPassword,
-} from "../../utils/utils";
-import { Errors, KeysLocalStorage, Paths } from "../../consts/consts";
-import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
-import Input from "../../components/Inputs/Input";
-import Button from "../../components/Buttons/Button";
-import RouteLink from "../../components/RouteLink/RouteLink";
-import Form from "../../components/Form/Form";
 import { useForm } from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
-import useAccounts from "../../hooks/useAccounts";
 import useAccount from "../../hooks/useAccount";
+import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
+import Input from "../../components/Inputs/Input";
+import RouteLink from "../../components/RouteLink/RouteLink";
+import Form from "../../components/Form/Form";
+import StandardButton from "../../components/Buttons/StandardButton";
+import { setDataInLocalStorage } from "../../utils/localStorage";
+import { isValidEmail, isValidPassword } from "../../utils/validation";
+import { getAccountByEmailAndPassword } from "../../utils/utils";
+import { Errors, KeysLocalStorage, Paths } from "../../consts/consts";
 
 import styles from "./SignIn.module.css";
-import { setDataInLocalStorage } from "../../utils/localStorage";
 
 const SignIn = () => {
   const [errors, setErrors] = useState({
@@ -89,11 +84,9 @@ const SignIn = () => {
               <p className={styles.accountExist}>Invalid email or password</p>
             )}
         </div>
-        <div className={styles.containerButton}>
-          <Button type="submit" classNames={styles.button}>
-            Log in
-          </Button>
-        </div>
+        <StandardButton type="submit" sx={{ marginBottom: "32px" }} fullWidth>
+          Log in
+        </StandardButton>
         <div>
           <span className={styles.haveAccountText}>
             Don't have an account?{" "}

@@ -1,15 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
+import useAccount from "../../hooks/useAccount";
+import { useForm } from "../../hooks/useForm";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Inputs/Input";
-import Button from "../../components/Buttons/Button";
-
-import {
-  getDataFromLocalStorage,
-  setDataInLocalStorage,
-} from "../../utils/localStorage";
-import { Errors, KeysLocalStorage } from "../../consts/consts";
-import { useForm } from "../../hooks/useForm";
+import StandardButton from "../../components/Buttons/StandardButton";
 import {
   isMatchPassword,
   isValidCompanyName,
@@ -22,10 +17,9 @@ import {
   haveErrors,
   isDifferencesWithOldAccount,
 } from "../../utils/utils";
+import { Errors } from "../../consts/consts";
 
 import styles from "./PersonalCabinet.module.css";
-import useAccounts from "../../hooks/useAccounts";
-import useAccount from "../../hooks/useAccount";
 
 const initialStateForm = {
   name: "",
@@ -215,9 +209,9 @@ const PersonalCabinet = () => {
           onChange={handleChange}
         />
       </div>
-      <Button type="submit" disabled={disabledButton}>
+      <StandardButton type="submit" disabled={disabledButton}>
         Save changes
-      </Button>
+      </StandardButton>
     </form>
   );
 };

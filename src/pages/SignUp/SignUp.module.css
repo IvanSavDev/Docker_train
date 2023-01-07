@@ -14,11 +14,6 @@
     font-size: 12px;
 }
 
-.containerButton {
-    width: 100%;
-    margin-bottom: 32px;
-}
-
 .containerFullName {
     display: flex;
     gap: 16px;
@@ -31,8 +26,4 @@
 .accountExists {
     position: absolute;
     color: red;
-}
-
-.button {
-    width: 100%;
 }

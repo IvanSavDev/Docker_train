@@ -1,3 +1,10 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .title {
     font-size: 36px;
     line-height: 36px;
@@ -8,20 +15,4 @@
     font-size: 14px;
     line-height: 14px;
     color: rgba(43, 56, 68, 0.7);
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    max-height: 52px;
-    padding-top: 16px;
-    padding-bottom: 16px;
 }

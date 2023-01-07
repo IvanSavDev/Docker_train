@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 
-import { Errors, Paths } from "../../consts/consts";
+import { useForm } from "../../hooks/useForm";
+import useAuth from "../../hooks/useAuth";
+import useAccount from "../../hooks/useAccount";
 import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
 import Input from "../../components/Inputs/Input";
-import Button from "../../components/Buttons/Button";
 import Form from "../../components/Form/Form";
 import RouteLink from "../../components/RouteLink/RouteLink";
+import StandardButton from "../../components/Buttons/StandardButton";
 import {
   isMatchPassword,
   isValidCompanyName,
@@ -13,15 +15,8 @@ import {
   isValidFullName,
   isValidPassword,
 } from "../../utils/validation";
-import {
-  checkExistsAccountByEmail,
-  generateId,
-  haveErrors,
-} from "../../utils/utils";
-import { useForm } from "../../hooks/useForm";
-import useAuth from "../../hooks/useAuth";
-import useAccounts from "../../hooks/useAccounts";
-import useAccount from "../../hooks/useAccount";
+import { checkExistsAccountByEmail, haveErrors } from "../../utils/utils";
+import { Errors, Paths } from "../../consts/consts";
 
 import styles from "./SignUp.module.css";
 
@@ -152,11 +147,9 @@ const SignUp = () => {
             <p className={styles.accountExists}>Account already exist</p>
           )}
         </div>
-        <div className={styles.containerButton}>
-          <Button type="submit" classNames={styles.button}>
-            Create account
-          </Button>
-        </div>
+        <StandardButton type="submit" sx={{ marginBottom: "32px" }} fullWidth>
+          Create account
+        </StandardButton>
       </Form>
       <div>
         <span className={styles.alreadyHaveAccount}>
