@@ -21,14 +21,11 @@ export const checkExistsAccountByEmail = (email) => {
 
 export const getAccountByEmailAndPassword = (email, password) => {
   const accounts = getDataFromLocalStorage(KeysLocalStorage.accounts);
-  if (accounts) {
-    const accountFromLocalStorage = Object.values(accounts).find(
-      (account) => account.email === email && account.password === password
-    );
-    return accountFromLocalStorage;
-  } else {
-    return null;
-  }
+  return accounts
+    ? Object.values(accounts).find(
+        (account) => account.email === email && account.password === password
+      )
+    : null;
 };
 
 export const checkNewEmailOnValidation = (oldEmail, newEmail) => {
@@ -61,7 +58,7 @@ export const getFormatDate = (dateForFormat) => {
   if (String(day).length === 1) {
     day = `0${day}`;
   }
-  let month = dateInMilliseconds.getMonth();
+  let month = dateInMilliseconds.getMonth() + 1;
   if (String(month).length === 1) {
     month = `0${month}`;
   }
