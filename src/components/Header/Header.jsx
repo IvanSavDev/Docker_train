@@ -12,19 +12,20 @@ const Header = ({
   handleClick,
 }) => {
   return (
-    <header>
-      <div className={styles.container}>
-        <h1 className={styles.title}>{title}</h1>
-        {addProductPage && (
-          <StandardButton
-            sx={{ gap: "8px", paddingTop: "16px", paddingBottom: "16px" }}
-            onClick={handleClick}
-          >
-            <CreateProduct />
-            Create a product
-          </StandardButton>
-        )}
-      </div>
+    <header
+      className={addProductPage ? styles.containerWithButton : styles.container}
+    >
+      <h1 className={styles.title}>{title}</h1>
+      {addProductPage && (
+        <StandardButton
+          className={styles.addProduct}
+          sx={{ gap: "8px", paddingTop: "16px", paddingBottom: "16px" }}
+          onClick={handleClick}
+        >
+          <CreateProduct />
+          Create a product
+        </StandardButton>
+      )}
       <p className={styles.text}>{description}</p>
     </header>
   );

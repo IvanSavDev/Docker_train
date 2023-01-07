@@ -3,19 +3,24 @@
     min-height: 100%;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    flex-grow: 1;
+    padding: 0 56px 56px 56px;
+    background-color: #F8F8F8;
+    overflow: hidden;
+}
+
 @media (max-width: 920px) {
     .container {
         flex-direction: column;
     }
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-    flex-grow: 1;
-    padding: 48px 56px 56px 56px;
-    background-color: #F8F8F8;
-    overflow: hidden;
+@media (max-width: 720px) {
+    .wrapper {
+        padding: 0 56px 36px 56px;
+    }
 }
-
