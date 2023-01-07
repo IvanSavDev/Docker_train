@@ -23,15 +23,14 @@
     line-height: 14px;
 }
 
-.container {
+.sidebar {
     display: flex;
     flex-direction: column;
-    max-width: 274px;
-    width: 100%;
+    min-width: 274px;
     padding: 40px 0 0 0;
 }
 
-.wrapper {
+.sections {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -44,7 +43,6 @@
 }
 
 .wrapperPadding {
-    width: 100%;
     padding: 0 40px;
 }
 
@@ -52,8 +50,10 @@
     width: 100%;
     height: 26px;
     margin-bottom: 82px;
+    padding: 0 40px;
     background-repeat: no-repeat;
     background-size: contain;
+    background-position: center;
     background-image: url("../../assets/img/logo.png");
 }
 
@@ -71,4 +71,72 @@ a[aria-current="page"] .activeLogo {
     cursor: pointer;
     font-size: 14px;
     line-height: 14px;
+    white-space: nowrap;
+}
+
+.burgerMenu {
+    display: none;
+}
+
+@media (max-width: 920px) {
+    .sidebar {
+        padding-inline: 56px;
+        padding-bottom: 40px;
+        gap: 20px;
+        display: grid;
+        grid-template-areas: 'logo logOut'
+                            'nav nav';
+    }
+
+    .wrapperButton {
+        border: 0;
+        padding: 0;
+    }
+
+    .sections {
+        grid-area: nav;
+        flex-direction: row;
+        gap: 30px;
+        border-bottom: 1px solid #E8EBEF;
+    }
+
+    .wrapperPadding {
+        grid-area: logOut;
+        justify-self: end;
+        padding: 0;
+    }
+
+    .background {
+        margin-bottom: 0;
+        padding: 0;
+        background-position: left;
+        grid-area: logo;
+    }
+
+    .active {
+        padding-inline: 10px;
+        border-right: 0;
+        border-bottom: 2px solid #5382E7;
+    }
+
+    .noActive {
+        padding-inline: 10px;
+    }
+}
+
+@media (max-width: 720px) {
+    .sidebar {
+        grid-template-areas: 'burger logo logOut';
+        grid-template-columns: 40px 1fr 90px;
+        align-items: center;
+    }
+
+    .sections {
+        display: none;
+    }
+
+    .burgerMenu {
+        display: block;
+        grid-area: burger;
+    }
 }
