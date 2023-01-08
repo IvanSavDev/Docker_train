@@ -9,7 +9,7 @@ const Input = ({ titleName, error, containerStyles, autoFocus, ...rest }) => {
     if (autoFocus) {
       ref.current.focus();
     }
-  }, []);
+  }, [autoFocus]);
 
   return (
     <div className={containerStyles}>

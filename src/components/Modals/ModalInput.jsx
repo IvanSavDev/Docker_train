@@ -29,7 +29,7 @@ const ModalInput = ({ error, autoFocus, ...rest }) => {
     if (autoFocus && ref.current) {
       ref.current.focus();
     }
-  });
+  }, [autoFocus]);
 
   return (
     <StyledTextField inputRef={ref} {...rest} error={error}></StyledTextField>
