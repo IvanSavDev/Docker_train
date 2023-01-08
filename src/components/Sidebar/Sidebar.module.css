@@ -1,3 +1,17 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 274px;
+    padding: 40px 0 0 0;
+}
+
+.sections {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+}
+
 .active {
     display: flex;
     align-items: center;
@@ -23,20 +37,6 @@
     line-height: 14px;
 }
 
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    min-width: 274px;
-    padding: 40px 0 0 0;
-}
-
-.sections {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex-grow: 1;
-}
-
 .wrapperButton {
     padding: 48px 0 48px 0;
     border-top: 1px solid #E8EBEF;
@@ -57,8 +57,8 @@
     background-image: url("../../assets/img/logo.png");
 }
 
-a[aria-current="page"] .activeLogo {
-    fill: #5382E7;
+a[aria-current="page"] .activeLogo path {
+    stroke: #5382E7;
 }
 
 .button {
