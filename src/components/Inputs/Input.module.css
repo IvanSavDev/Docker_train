@@ -7,7 +7,7 @@
 
 .textError {
     min-height: 24px;
-    margin: 0 0 5px 0;
+    margin: 2px 0 5px 16px;
     font-size: 12px;
     color: red;
 }
@@ -20,4 +20,9 @@
     font-size: 14px;
     color: #2B3844;
     background-color: transparent;
+}
+
+.field:focus {
+    outline: 2px solid #5382E7;
+    border: 1px solid transparent;
 }

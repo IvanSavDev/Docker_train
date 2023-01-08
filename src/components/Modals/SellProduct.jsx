@@ -44,8 +44,8 @@ const SellProduct = ({ open, closeModal, id }) => {
         dateSale !== ""
           ? resultInsertedDate !== "Invalid Date"
             ? null
-            : Errors.moreZero
-          : Errors.moreZero,
+            : Errors.date
+          : Errors.date,
     };
 
     const isNotErrors = haveErrors(checkedErrors);
@@ -59,35 +59,25 @@ const SellProduct = ({ open, closeModal, id }) => {
         numberProducts: numberProductsAsNumber,
         dateSale: date,
       });
+
       updateProduct(id, {
         ...products[id],
         remains: products[id].remains - numberProductsAsNumber,
       });
-      setForm({ ...initialStateForm });
-      closeModal();
-    }
 
-    setErrors(checkedErrors);
+      closeModal();
+    } else {
+      setErrors(checkedErrors);
+    }
   };
 
   const handleChange = ({ target }) => setForm({ [target.name]: target.value });
 
-  const handleDate = (date) => {
-    setForm({ dateSale: date });
-  };
+  const handleChangeDate = (date) => setForm({ dateSale: date });
 
-  const handleText = ({ target }) => {
-    console.log(target.value);
-  };
-  console.log(errors.dateSale);
-  const handleClose = () => {
-    setForm({ ...initialStateForm });
-    setErrors({ ...initialStateErrors });
-    closeModal();
-  };
   return (
-    <ModalContainer open={open} onClose={handleClose}>
-      <ModalTitle handleClose={handleClose}>Sell the product</ModalTitle>
+    <ModalContainer open={open} onClose={closeModal}>
+      <ModalTitle handleClose={closeModal}>Sell the product</ModalTitle>
       <ModalInputContainer errors={errors}>
         <ModalInput
           name="numberProducts"
@@ -97,12 +87,13 @@ const SellProduct = ({ open, closeModal, id }) => {
           helperText={errors.numberProducts}
           onChange={handleChange}
           value={form.numberProducts}
+          autoFocus
         />
         <DateInput
           label="Date of sale"
           inputFormat="DD/MM/YYYY"
           value={form.dateSale}
-          onChange={handleDate}
+          onChange={handleChangeDate}
           error={Boolean(errors.dateSale)}
         />
       </ModalInputContainer>

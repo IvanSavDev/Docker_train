@@ -1,5 +1,6 @@
 import { TextField, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useEffect, useRef } from "react";
 
 const StyledTextField = styled(TextField)(({ theme, error }) => ({
   "&": {
@@ -21,9 +22,18 @@ const StyledTextField = styled(TextField)(({ theme, error }) => ({
   },
 }));
 
-const ModalInput = (props) => {
-  const { error, ...rest } = props;
-  return <StyledTextField {...rest} error={error}></StyledTextField>;
+const ModalInput = ({ error, autoFocus, ...rest }) => {
+  const ref = useRef();
+
+  useEffect(() => {
+    if (autoFocus && ref.current) {
+      ref.current.focus();
+    }
+  });
+
+  return (
+    <StyledTextField inputRef={ref} {...rest} error={error}></StyledTextField>
+  );
 };
 
 export default ModalInput;

@@ -92,6 +92,7 @@ const SignUp = () => {
             titleName="First name"
             error={errors.name}
             onChange={handleChange}
+            autoFocus
           />
           <Input
             type="text"

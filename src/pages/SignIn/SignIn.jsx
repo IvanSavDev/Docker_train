@@ -65,6 +65,7 @@ const SignIn = () => {
             titleName="Email"
             error={errors.email}
             onChange={handleChange}
+            autoFocus
           />
         </div>
         <div className={styles.containerPassword}>

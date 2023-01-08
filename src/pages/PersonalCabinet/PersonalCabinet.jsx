@@ -56,31 +56,33 @@ const PersonalCabinet = () => {
         address: account.address,
       });
     }
-  }, [setForm]);
+  }, [setForm, account]);
 
   useEffect(() => {
-    setDisabledButton(
-      isDifferencesWithOldAccount(
-        {
-          name: account.name,
-          surname: account.surname,
-          companyName: account.companyName,
-          email: account.email,
-          address: account.address,
-          password: "",
-          newPassword: "",
-        },
-        {
-          name: form.name,
-          surname: form.surname,
-          companyName: form.companyName,
-          email: form.email,
-          address: form.address,
-          password: form.password,
-          newPassword: form.newPassword,
-        }
-      )
-    );
+    if (account) {
+      setDisabledButton(
+        isDifferencesWithOldAccount(
+          {
+            name: account.name,
+            surname: account.surname,
+            companyName: account.companyName,
+            email: account.email,
+            address: account.address,
+            password: "",
+            newPassword: "",
+          },
+          {
+            name: form.name,
+            surname: form.surname,
+            companyName: form.companyName,
+            email: form.email,
+            address: form.address,
+            password: form.password,
+            newPassword: form.newPassword,
+          }
+        )
+      );
+    }
   }, [form, account]);
 
   const handleChange = ({ target }) => setForm({ [target.name]: target.value });
@@ -90,6 +92,25 @@ const PersonalCabinet = () => {
     const { name, surname, companyName, email, password, newPassword } = form;
 
     const isExistsAccount = checkNewEmailOnValidation(account.email, email);
+    console.log("new password", newPassword);
+
+    const checkOldPasswordErrors = () => {
+      if (password.length === 0) {
+        return newPassword.length === 0 ? null : Errors.oldPassword;
+      } else {
+        return isMatchPassword(password, account.password)
+          ? null
+          : Errors.matchOldPassword;
+      }
+    };
+
+    const checkNewPasswordErrors = () => {
+      if (newPassword.length === 0) {
+        return password.length === 0 ? null : Errors.newPassword;
+      } else {
+        return isValidPassword(newPassword) ? null : Errors.password;
+      }
+    };
 
     const checkedErrors = {
       name: isValidFullName(name) ? null : Errors.fullname,
@@ -100,16 +121,10 @@ const PersonalCabinet = () => {
           ? null
           : Errors.accountExists
         : Errors.email,
-      password:
-        isMatchPassword(password, account.password) || password.length === 0
-          ? null
-          : Errors.matchOldPassword,
-      newPassword:
-        isValidPassword(newPassword) || password.length === 0
-          ? null
-          : Errors.password,
+      password: checkOldPasswordErrors(),
+      newPassword: checkNewPasswordErrors(),
     };
-
+    console.log(checkedErrors);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
@@ -148,6 +163,7 @@ const PersonalCabinet = () => {
           value={form.name}
           error={errors.name}
           onChange={handleChange}
+          autoFocus
         />
         <Input
           name="surname"

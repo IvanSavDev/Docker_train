@@ -80,7 +80,7 @@ const EditProduct = ({ open, closeModal, id }) => {
     <ModalContainer open={open} onClose={handleClose}>
       <ModalTitle handleClose={handleClose}>Editing a product</ModalTitle>
       <ModalInputContainer errors={errors}>
-        {fieldsNames.map((fieldName) => (
+        {fieldsNames.map((fieldName, index) => (
           <ModalInput
             key={fieldName}
             id={fieldName}
@@ -91,6 +91,7 @@ const EditProduct = ({ open, closeModal, id }) => {
             helperText={errors[fieldName]}
             onChange={handleChange}
             value={form[fieldName]}
+            autoFocus={index === 0}
           />
         ))}
       </ModalInputContainer>

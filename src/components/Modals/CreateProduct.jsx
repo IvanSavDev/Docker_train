@@ -94,7 +94,7 @@ const CreateProduct = ({ open, closeModal }) => {
     <ModalContainer open={open} onClose={handleClose}>
       <ModalTitle handleClose={handleClose}>Creating a product</ModalTitle>
       <ModalInputContainer>
-        {fieldsNames.map((fieldName) => (
+        {fieldsNames.map((fieldName, index) => (
           <ModalInput
             key={fieldName}
             id={fieldName}
@@ -105,6 +105,7 @@ const CreateProduct = ({ open, closeModal }) => {
             helperText={errors[fieldName]}
             onChange={handleChange}
             value={form[fieldName]}
+            autoFocus={index === 0}
           />
         ))}
       </ModalInputContainer>
