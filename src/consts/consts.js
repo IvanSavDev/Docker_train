@@ -14,6 +14,8 @@ export const Errors = {
   moreZero: "Value must be a positive number",
   date: "Invalid date",
   notEnoughGoods: "Not enough goods",
+  newPassword: "Enter new password",
+  oldPassword: "Enter old password",
 };
 
 export const KeysLocalStorage = {
