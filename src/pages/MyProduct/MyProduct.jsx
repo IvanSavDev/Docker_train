@@ -1,17 +1,11 @@
-import React, { useState } from "react";
-import { Modal } from "@mui/material";
+import React from "react";
+import TableBody from "@mui/material/TableBody";
 
 import useProducts from "../../hooks/useProducts";
 import Header from "../../components/Header/Header";
 import TableTemplate from "../../components/Table/TableTemplate";
 import EmptyTable from "../../components/Table/EmptyTable";
-import {
-  formatNumberWithSpace,
-  getFormatDate,
-  isEmptyObject,
-} from "../../utils/utils";
 import TableHeader from "../../components/Table/TableHeader";
-import TableBody from "@mui/material/TableBody";
 import TableButton from "../../components/Buttons/TableButton";
 import SellProduct from "../../components/Modals/SellProduct";
 import EditProduct from "../../components/Modals/EditProduct";
@@ -19,6 +13,11 @@ import DeleteButton from "../../components/Buttons/DeleteButton";
 import { StyledTableCell } from "../../components/Table/StyledTableCell";
 import { ReactComponent as Edit } from "../../assets/img/edit.svg";
 import { StyledTableRow } from "../../components/Table/StyledTableRow";
+import {
+  formatNumberWithSpace,
+  getFormatDate,
+  isEmptyObject,
+} from "../../utils/utils";
 
 const tableHeaders = [
   "Product name",

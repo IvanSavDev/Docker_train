@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import useProducts from "../../hooks/useProducts";
+import useSales from "../../hooks/useSales";
 import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
 import useAccount from "../../hooks/useAccount";
@@ -19,8 +21,6 @@ import { checkExistsAccountByEmail, haveErrors } from "../../utils/utils";
 import { Errors, Paths } from "../../consts/consts";
 
 import styles from "./SignUp.module.css";
-import useProducts from "../../hooks/useProducts";
-import useSales from "../../hooks/useSales";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import Modal from "../Modals/Modal";
 import { styled } from "@mui/material/styles";
+
+import Modal from "../Modals/Modal";
 
 const StyledButton = styled(Button)(() => ({
   backgroundColor: "rgba(83,130,231,0.1)",

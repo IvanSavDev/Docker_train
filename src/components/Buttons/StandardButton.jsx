@@ -9,12 +9,10 @@ const StyledButton = styled(Button)(() => ({
   backgroundColor: "#5382E7",
 }));
 
-const StandardButton = ({ children, ...rest }) => {
-  return (
-    <StyledButton {...rest} variant="contained" autoFocus>
-      {children}
-    </StyledButton>
-  );
-};
+const StandardButton = ({ children, ...rest }) => (
+  <StyledButton {...rest} variant="contained" autoFocus>
+    {children}
+  </StyledButton>
+);
 
 export default StandardButton;

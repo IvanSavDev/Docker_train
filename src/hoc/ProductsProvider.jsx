@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
+
+import ProductsContext from "../context/ProductsContext";
 import { KeysLocalStorage } from "../consts/consts";
 import {
   getDataFromLocalStorage,
   setDataInLocalStorage,
 } from "../utils/localStorage";
-import ProductsContext from "../context/ProductsContext";
 import { generateId } from "../utils/utils";
 
 const ProductsProvider = ({ children }) => {

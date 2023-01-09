@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import useProducts from "../../hooks/useProducts";
+import useSales from "../../hooks/useSales";
 import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
 import useAccount from "../../hooks/useAccount";
@@ -14,8 +16,6 @@ import { getAccountByEmailAndPassword } from "../../utils/utils";
 import { Errors, KeysLocalStorage, Paths } from "../../consts/consts";
 
 import styles from "./SignIn.module.css";
-import useProducts from "../../hooks/useProducts";
-import useSales from "../../hooks/useSales";
 
 const SignIn = () => {
   const [errors, setErrors] = useState({

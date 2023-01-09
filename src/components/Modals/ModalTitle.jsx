@@ -14,7 +14,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   color: theme.palette.custom.main.grey,
 }));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
+const StyledIconButton = styled(IconButton)(() => ({
   position: "absolute",
   right: 8,
   top: 8,

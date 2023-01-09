@@ -1,17 +1,18 @@
 import React from "react";
-import Header from "../../components/Header/Header";
+
 import useSales from "../../hooks/useSales";
-import {
-  formatNumberWithSpace,
-  getFormatDate,
-  isEmptyObject,
-} from "../../utils/utils";
+import Header from "../../components/Header/Header";
 import TableTemplate from "../../components/Table/TableTemplate";
 import TableHeader from "../../components/Table/TableHeader";
 import TableBody from "@mui/material/TableBody";
 import { StyledTableRow } from "../../components/Table/StyledTableRow";
 import { StyledTableCell } from "../../components/Table/StyledTableCell";
 import EmptyTable from "../../components/Table/EmptyTable";
+import {
+  formatNumberWithSpace,
+  getFormatDate,
+  isEmptyObject,
+} from "../../utils/utils";
 
 const tableHeaders = [
   "Product name",
