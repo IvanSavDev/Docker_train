@@ -1,10 +1,6 @@
 import { getDataFromLocalStorage } from "./localStorage";
 import { KeysLocalStorage } from "../consts/consts";
 
-export const isEmptyProperties = (object) => {
-  return Object.keys(object).some((key) => object[key].length === 0);
-};
-
 export const isEmptyObject = (object) => Object.keys(object).length === 0;
 
 export const checkExistsAccountByEmail = (email) => {
@@ -44,17 +40,13 @@ export const isDifferencesWithOldAccount = (oldAccount, newAccount) => {
 export const haveErrors = (errors) =>
   Object.values(errors).every((error) => !error);
 
-export const capitalizeFirstLetter = (string) =>
-  string[0].toUpperCase() + string.slice(1);
-
-export const generateId = () => Date.now();
+export const generateId = () => Date.now() + Math.floor(Math.random() * 100);
 
 export const getFormatDate = (dateForFormat) => {
   const dateInMilliseconds = dateForFormat
     ? new Date(dateForFormat)
     : new Date();
   let day = dateInMilliseconds.getDate();
-  console.log(day);
   if (String(day).length === 1) {
     day = `0${day}`;
   }
@@ -65,3 +57,23 @@ export const getFormatDate = (dateForFormat) => {
   const year = dateInMilliseconds.getFullYear();
   return `${day}.${month}.${year}`;
 };
+
+export const formatNumberWithSpace = (number) => {
+  let result = "";
+  const numberAsStringArray = String(number).split("");
+  for (let i = 1; i <= numberAsStringArray.length; i++) {
+    const j = numberAsStringArray.length - i;
+    result =
+      (!j || i % 3 ? numberAsStringArray[j] : " " + numberAsStringArray[j]) +
+      result;
+  }
+
+  return result;
+};
+
+export const getKeysDifferentFields = (firstObject, secondObject) =>
+  Object.keys(firstObject).reduce(
+    (acc, key) =>
+      firstObject[key] !== secondObject[key] ? [...acc, key] : acc,
+    []
+  );
