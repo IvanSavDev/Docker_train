@@ -1,10 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import useAccount from "../../hooks/useAccount";
-import { useForm } from "../../hooks/useForm";
+import useForm from "../../hooks/useForm";
 import Header from "../../components/Header/Header";
-import Input from "../../components/Inputs/Input";
 import StandardButton from "../../components/Buttons/StandardButton";
+import Input from "../../components/Inputs/Input";
 import {
   isMatchPassword,
   isValidCompanyName,
@@ -85,14 +85,16 @@ const PersonalCabinet = () => {
     }
   }, [form, account]);
 
-  const handleChange = ({ target }) => setForm({ [target.name]: target.value });
+  const handleChange = ({ target }) => {
+    setErrors((prevState) => ({ ...prevState, [target.name]: null }));
+    setForm({ [target.name]: target.value });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const { name, surname, companyName, email, password, newPassword } = form;
 
     const isExistsAccount = checkNewEmailOnValidation(account.email, email);
-    console.log("new password", newPassword);
 
     const checkOldPasswordErrors = () => {
       if (password.length === 0) {
@@ -124,7 +126,7 @@ const PersonalCabinet = () => {
       password: checkOldPasswordErrors(),
       newPassword: checkNewPasswordErrors(),
     };
-    console.log(checkedErrors);
+
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
@@ -142,9 +144,9 @@ const PersonalCabinet = () => {
         newPassword: "",
       });
       updateAccount(updatedAccount);
+    } else {
+      setErrors(checkedErrors);
     }
-
-    setErrors(checkedErrors);
   };
 
   return (
@@ -155,74 +157,83 @@ const PersonalCabinet = () => {
       />
       <div className={styles.container}>
         <Input
+          sx={{
+            gridArea: "name",
+          }}
           name="name"
-          type="text"
-          titleName="First name"
-          placeholder="First name"
-          containerStyles={styles.name}
+          label="First name"
+          error={Boolean(errors.name)}
+          helperText={errors.name}
+          onChange={handleChange}
           value={form.name}
-          error={errors.name}
-          onChange={handleChange}
-          autoFocus
         />
         <Input
+          sx={{
+            gridArea: "surname",
+          }}
           name="surname"
-          type="text"
-          titleName="Last name"
-          placeholder="Last name"
-          containerStyles={styles.surname}
+          label="Last name"
+          error={Boolean(errors.surname)}
+          helperText={errors.surname}
+          onChange={handleChange}
           value={form.surname}
-          error={errors.surname}
-          onChange={handleChange}
         />
         <Input
+          sx={{
+            gridArea: "companyName",
+          }}
           name="companyName"
-          type="text"
-          titleName="Company name"
-          placeholder="Company name"
-          containerStyles={styles.companyName}
+          label="Company name"
+          error={Boolean(errors.companyName)}
+          helperText={errors.companyName}
+          onChange={handleChange}
           value={form.companyName}
-          error={errors.companyName}
-          onChange={handleChange}
         />
         <Input
+          sx={{
+            gridArea: "email",
+          }}
           name="email"
-          type="text"
-          titleName="Email"
-          placeholder="Email"
-          containerStyles={styles.email}
+          label="Email"
+          error={Boolean(errors.email)}
+          helperText={errors.email}
+          onChange={handleChange}
           value={form.email}
-          error={errors.email}
-          onChange={handleChange}
         />
         <Input
+          sx={{
+            gridArea: "address",
+          }}
           name="address"
-          type="text"
-          titleName="Address"
-          placeholder="Enter your address"
-          containerStyles={styles.address}
+          label="Enter your address"
+          error={Boolean(errors.address)}
+          helperText={errors.address}
+          onChange={handleChange}
           value={form.address}
-          onChange={handleChange}
         />
         <Input
+          sx={{
+            gridArea: "oldPassword",
+          }}
+          type="password"
           name="password"
-          type="password"
-          titleName="Enter old password"
-          placeholder="Enter old password"
-          containerStyles={styles.oldPassword}
-          value={form.password}
-          error={errors.password}
+          label="Enter old password"
+          error={Boolean(errors.password)}
+          helperText={errors.password}
           onChange={handleChange}
+          value={form.password}
         />
         <Input
-          name="newPassword"
+          sx={{
+            gridArea: "newPassword",
+          }}
           type="password"
-          titleName="Enter a new password"
-          placeholder="Enter a new password"
-          containerStyles={styles.newPassword}
-          value={form.newPassword}
-          error={errors.newPassword}
+          name="newPassword"
+          label="Enter a new password"
+          error={Boolean(errors.newPassword)}
+          helperText={errors.newPassword}
           onChange={handleChange}
+          value={form.newPassword}
         />
       </div>
       <StandardButton type="submit" disabled={disabledButton}>

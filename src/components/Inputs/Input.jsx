@@ -1,23 +1,39 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-import styles from "./Input.module.css";
+const StyledTextField = styled(TextField)(({ theme, error }) => ({
+  "&": {
+    width: "100%",
+    marginBottom: error ? "0" : "24px",
+  },
+  "& .MuiInputBase-input": {
+    padding: "16px",
+    color: theme.palette.custom.main.grey,
+  },
+  "& .MuiFormHelperText-root": {
+    marginBottom: "1px",
+  },
+  '& .MuiFormLabel-root[data-shrink="false"]': {
+    color: "rgba(43,56,68,0.25)",
+  },
+  '& .MuiFormLabel-root[data-shrink="true"]': {
+    fontSize: "16px",
+  },
+}));
 
-const Input = ({ titleName, error, containerStyles, autoFocus, ...rest }) => {
+const ModalInput = ({ error, autoFocus, ...rest }) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (autoFocus) {
+    if (autoFocus && ref.current) {
       ref.current.focus();
     }
   }, [autoFocus]);
 
   return (
-    <div className={containerStyles}>
-      {titleName && <h2 className={styles.fieldName}>{titleName}</h2>}
-      <input className={styles.field} {...rest} ref={ref} />
-      <p className={styles.textError}>{error}</p>
-    </div>
+    <StyledTextField inputRef={ref} {...rest} error={error}></StyledTextField>
   );
 };
 
-export default Input;
+export default ModalInput;

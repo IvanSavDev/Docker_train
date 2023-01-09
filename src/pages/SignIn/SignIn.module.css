@@ -1,12 +1,3 @@
-.containerEmail {
-    width: 100%;
-}
-
-.containerPassword {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
 .containerError {
     position: relative;
     top: -20px;

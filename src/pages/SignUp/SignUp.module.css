@@ -1,12 +1,3 @@
-.containerPassword {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.containerInput {
-    width: 100%;
-}
-
 .containerError {
     position: relative;
     top: -20px;

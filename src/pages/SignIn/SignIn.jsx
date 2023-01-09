@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useForm } from "../../hooks/useForm";
+import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
 import useAccount from "../../hooks/useAccount";
 import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
@@ -14,6 +14,8 @@ import { getAccountByEmailAndPassword } from "../../utils/utils";
 import { Errors, KeysLocalStorage, Paths } from "../../consts/consts";
 
 import styles from "./SignIn.module.css";
+import useProducts from "../../hooks/useProducts";
+import useSales from "../../hooks/useSales";
 
 const SignIn = () => {
   const [errors, setErrors] = useState({
@@ -23,12 +25,16 @@ const SignIn = () => {
   });
   const { logIn } = useAuth();
   const { updateAccount } = useAccount();
+  const { updateProducts } = useProducts();
+  const { updateSales } = useSales();
+  const { loadAccountFromLocalStorage } = useAccount();
   const [form, setForm] = useForm({
     email: "",
     password: "",
   });
 
   const handleChange = ({ target }) => {
+    setErrors((prevState) => ({ ...prevState, [target.name]: null }));
     setForm({ [target.name]: target.value });
   };
 
@@ -48,6 +54,9 @@ const SignIn = () => {
     if (isExistsAccount) {
       setDataInLocalStorage(KeysLocalStorage.userId, account.id);
       updateAccount(account);
+      updateProducts();
+      updateSales();
+      loadAccountFromLocalStorage();
       logIn();
     } else {
       setErrors(checkedErrors);
@@ -57,27 +66,24 @@ const SignIn = () => {
   return (
     <ContainerSignInAndSignUp>
       <Form formName="Sign in" onSubmit={handleSubmit}>
-        <div className={styles.containerEmail}>
-          <Input
-            type="text"
-            name="email"
-            placeholder="Email"
-            titleName="Email"
-            error={errors.email}
-            onChange={handleChange}
-            autoFocus
-          />
-        </div>
-        <div className={styles.containerPassword}>
-          <Input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            titleName="Password"
-            error={errors.password}
-            onChange={handleChange}
-          />
-        </div>
+        <Input
+          name="email"
+          label="Email"
+          error={Boolean(errors.email)}
+          helperText={errors.email}
+          onChange={handleChange}
+          value={form.email}
+          autoFocus
+        />
+        <Input
+          type="password"
+          name="password"
+          label="Enter password"
+          error={Boolean(errors.password)}
+          helperText={errors.password}
+          onChange={handleChange}
+          value={form.password}
+        />
         <div className={styles.containerError}>
           {errors.existsAccount ||
             Boolean(errors.email) ||

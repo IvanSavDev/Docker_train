@@ -1,53 +1,37 @@
 import React, { useState } from "react";
-
 import DialogActions from "@mui/material/DialogActions";
-import { useForm } from "../../hooks/useForm";
-import { Errors } from "../../consts/consts";
-import {
-  capitalizeFirstLetter,
-  getFormatDate,
-  haveErrors,
-} from "../../utils/utils";
+
+import useAccount from "../../hooks/useAccount";
+import useProducts from "../../hooks/useProducts";
+import useForm from "../../hooks/useForm";
 import StandardButton from "../Buttons/StandardButton";
-import ModalInput from "./ModalInput";
+import Input from "../Inputs/Input";
 import ModalTitle from "./ModalTitle";
 import ModalInputContainer from "./ModalInputContainer";
 import ModalContainer from "./ModalContainer";
-import useAccount from "../../hooks/useAccount";
-import useProducts from "../../hooks/useProducts";
-
-const initialStateForm = {
-  store: "",
-  price: "",
-  productName: "",
-  category: "",
-  remains: "",
-  weight: "",
-};
-
-const initialStateErrors = {
-  store: null,
-  price: null,
-  productName: null,
-  category: null,
-  remains: null,
-  weight: null,
-};
-
-const fieldsNames = [
-  "store",
-  "price",
-  "productName",
-  "category",
-  "remains",
-  "weight",
-];
+import { Errors } from "../../consts/consts";
+import { haveErrors } from "../../utils/utils";
 
 const CreateProduct = ({ open, closeModal }) => {
-  const [errors, setErrors] = useState({ ...initialStateErrors });
-  const [form, setForm] = useForm({ ...initialStateForm });
+  const [errors, setErrors] = useState({
+    store: null,
+    price: null,
+    productName: null,
+    category: null,
+    remains: null,
+    weight: null,
+  });
+  const [form, setForm] = useForm({
+    store: "",
+    price: "",
+    productName: "",
+    category: "",
+    remains: "",
+    weight: "",
+  });
   const { addProduct } = useProducts();
   const { account } = useAccount();
+
   const handleSubmit = () => {
     const { store, price, productName, category, remains, weight } = form;
 
@@ -65,49 +49,79 @@ const CreateProduct = ({ open, closeModal }) => {
     };
 
     const isNotErrors = haveErrors(checkedErrors);
+
     if (isNotErrors) {
       addProduct({
-        productName,
-        store,
-        address: account.address || "-",
-        category,
-        creationDate: getFormatDate(),
+        ...form,
+        address: account.address,
         price: priceAsNumber,
         remains: remainsAsNumber,
         weight: weightAsNumber,
       });
       closeModal();
+    } else {
+      setErrors(checkedErrors);
     }
-
-    setErrors(checkedErrors);
   };
 
-  const handleChange = ({ target }) => setForm({ [target.name]: target.value });
-
-  const handleClose = () => {
-    setForm({ ...initialStateForm });
-    setErrors({ ...initialStateErrors });
-    closeModal();
+  const handleChange = ({ target }) => {
+    setErrors((prevState) => ({ ...prevState, [target.name]: null }));
+    setForm({ [target.name]: target.value });
   };
 
   return (
-    <ModalContainer open={open} onClose={handleClose}>
-      <ModalTitle handleClose={handleClose}>Creating a product</ModalTitle>
+    <ModalContainer open={open} onClose={closeModal}>
+      <ModalTitle handleClose={closeModal}>Creating a product</ModalTitle>
       <ModalInputContainer>
-        {fieldsNames.map((fieldName, index) => (
-          <ModalInput
-            key={fieldName}
-            id={fieldName}
-            name={fieldName}
-            label={capitalizeFirstLetter(fieldName)}
-            variant="outlined"
-            error={Boolean(errors[fieldName])}
-            helperText={errors[fieldName]}
-            onChange={handleChange}
-            value={form[fieldName]}
-            autoFocus={index === 0}
-          />
-        ))}
+        <Input
+          name="store"
+          label="Store"
+          error={Boolean(errors.store)}
+          helperText={errors.store}
+          onChange={handleChange}
+          value={form.store}
+          autoFocus
+        />
+        <Input
+          name="price"
+          label="Price"
+          error={Boolean(errors.price)}
+          helperText={errors.price}
+          onChange={handleChange}
+          value={form.price}
+        />
+        <Input
+          name="productName"
+          label="Product name"
+          error={Boolean(errors.productName)}
+          helperText={errors.productName}
+          onChange={handleChange}
+          value={form.productName}
+        />
+        <Input
+          name="category"
+          label="Category"
+          error={Boolean(errors.category)}
+          helperText={errors.category}
+          onChange={handleChange}
+          value={form.category}
+        />
+        <Input
+          name="remains"
+          label="Remains"
+          error={Boolean(errors.remains)}
+          helperText={errors.remains}
+          onChange={handleChange}
+          value={form.remains}
+        />
+        <Input
+          name="weight"
+          label="Weight"
+          error={Boolean(errors.weight)}
+          helperText={errors.weight}
+          onChange={handleChange}
+          value={form.weight}
+        />
       </ModalInputContainer>
       <DialogActions>
         <StandardButton onClick={handleSubmit} fullWidth>
