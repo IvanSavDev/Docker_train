@@ -1,30 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import StandardButton from "../Buttons/StandardButton";
-import { ReactComponent as CreateProduct } from "../../assets/img/createProduct.svg";
+import CreateProduct from "../Modals/CreateProduct";
+import { ReactComponent as CreateProductImg } from "../../assets/img/createProduct.svg";
 
 import styles from "./Header.module.css";
 
-const Header = ({
-  title,
-  description,
-  addProductPage = false,
-  handleClick,
-}) => {
+const StyledStandardButton = styled(StandardButton)(() => ({
+  gridArea: "addProduct",
+  justifySelf: "end",
+  gap: "8px",
+  paddingTop: "16px",
+  paddingBottom: "16px",
+}));
+
+const Header = ({ title, description, addProductPage = false }) => {
+  const [open, setOpen] = useState(false);
+  const openModal = () => setOpen(true);
+  const closeModal = () => setOpen(false);
+
   return (
     <header
       className={addProductPage ? styles.containerWithButton : styles.container}
     >
       <h1 className={styles.title}>{title}</h1>
       {addProductPage && (
-        <StandardButton
-          className={styles.addProduct}
-          sx={{ gap: "8px", paddingTop: "16px", paddingBottom: "16px" }}
-          onClick={handleClick}
-        >
-          <CreateProduct />
-          Create a product
-        </StandardButton>
+        <>
+          <StyledStandardButton onClick={openModal}>
+            <CreateProductImg />
+            Create a product
+          </StyledStandardButton>
+          <Modal open={open}>
+            <div>
+              <CreateProduct open={open} closeModal={closeModal} />
+            </div>
+          </Modal>
+        </>
       )}
       <p className={styles.text}>{description}</p>
     </header>

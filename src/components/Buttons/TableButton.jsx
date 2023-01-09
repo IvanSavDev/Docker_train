@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "../Modals/Modal";
-const TableButton = ({ id, children, render, ...rest }) => {
+import { styled } from "@mui/material/styles";
+
+const StyledButton = styled(Button)(() => ({
+  backgroundColor: "rgba(83,130,231,0.1)",
+  textTransform: "none",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "12px",
+  minWidth: "53px",
+  minHeight: "28px",
+}));
+
+const TableButton = ({ productId, render, children, ...rest }) => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <>
-      <Button
-        {...rest}
-        size="small"
-        sx={{
-          backgroundColor: "rgba(83,130,231,0.1)",
-          textTransform: "none",
-          fontWeight: 500,
-          fontSize: "12px",
-          lineHeight: "12px",
-          minWidth: "53px",
-          minHeight: "28px",
-        }}
-        onClick={handleClickOpen}
-      >
+      <StyledButton {...rest} size="small" onClick={handleClickOpen}>
         {children}
-      </Button>
+      </StyledButton>
       <Modal open={open}>
-        <div>{render(open, handleClose, id)}</div>
+        <div>{render(open, handleClose, productId)}</div>
       </Modal>
     </>
   );
