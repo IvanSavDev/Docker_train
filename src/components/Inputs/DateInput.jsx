@@ -4,10 +4,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { styled } from "@mui/material/styles";
 
+import Input from "./Input";
 import { Errors } from "../../consts/consts";
-import ModalInput from "./ModalInput";
 
-const StyledModalInput = styled(ModalInput)(({ error }) => ({
+const StyledModalInput = styled(Input)(({ error }) => ({
   "& .MuiFormHelperText-root": {
     display: error ? "block" : "none",
   },
