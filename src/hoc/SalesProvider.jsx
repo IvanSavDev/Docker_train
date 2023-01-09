@@ -5,7 +5,7 @@ import {
   getDataFromLocalStorage,
   setDataInLocalStorage,
 } from "../utils/localStorage";
-import { isEmptyObject } from "../utils/utils";
+import { generateId } from "../utils/utils";
 
 const SalesProvider = ({ children }) => {
   const [sales, setSales] = useState(null);
@@ -17,7 +17,10 @@ const SalesProvider = ({ children }) => {
     const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
     if (salesFromLocalStorage) {
       const accountSales = Object.values(salesFromLocalStorage)
-        .sort((a, b) => a.creationDate > b.creationDate)
+        .sort(
+          (firstProduct, secondProduct) =>
+            firstProduct.creationDate - secondProduct.creationDate
+        )
         .reduce((acc, sale) => {
           if (sale.accountId === accountId) {
             return { [sale.id]: { ...sale }, ...acc };
@@ -35,7 +38,11 @@ const SalesProvider = ({ children }) => {
 
   useEffect(() => {
     if (sales) {
+      const salesFromLocalStorage = getDataFromLocalStorage(
+        KeysLocalStorage.sales
+      );
       setDataInLocalStorage(KeysLocalStorage.sales, {
+        ...salesFromLocalStorage,
         ...sales,
       });
     }
@@ -44,25 +51,24 @@ const SalesProvider = ({ children }) => {
   const updateSale = (id, updatedSales) => {
     setSales((prevState) => ({
       ...prevState,
-      [id]: updatedSales,
+      [id]: { ...prevState[id], ...updatedSales },
     }));
   };
 
-  const getSale = (id) => sales[id];
-
-  const addSale = (product) => {
-    const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
-    const id = Date.now() + 1;
+  const addSale = (sale) => {
+    const id = generateId();
     const updatedProduct = {
-      [id]: { id, accountId: accountId, ...product },
+      [id]: { ...sale, id },
       ...sales,
     };
     setSales(updatedProduct);
   };
 
+  const getSale = (id) => sales[id];
+
   const salesInfo = useMemo(
-    () => ({ sales, updateSale, getSale, addSale }),
-    [sales, updateSale, getSale, addSale]
+    () => ({ sales, updateSale, addSale, getSale, updateSales }),
+    [sales, updateSale, addSale, getSale, updateSales]
   );
 
   return (

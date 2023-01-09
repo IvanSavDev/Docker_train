@@ -5,6 +5,7 @@ import {
   setDataInLocalStorage,
 } from "../utils/localStorage";
 import ProductsContext from "../context/ProductsContext";
+import { generateId } from "../utils/utils";
 
 const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState(null);
@@ -13,12 +14,13 @@ const ProductsProvider = ({ children }) => {
     const productsFromLocalStorage = getDataFromLocalStorage(
       KeysLocalStorage.products
     );
+
     const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
     if (productsFromLocalStorage) {
       const accountProductsReduce = Object.values(productsFromLocalStorage)
         .sort(
           (firstProduct, secondProduct) =>
-            firstProduct.creationDate > secondProduct.creationDate
+            firstProduct.creationDate - secondProduct.creationDate
         )
         .reduce((acc, product) => {
           if (product.accountId === accountId) {
@@ -27,6 +29,7 @@ const ProductsProvider = ({ children }) => {
             return acc;
           }
         }, {});
+
       setProducts(accountProductsReduce);
     }
   };
@@ -37,7 +40,11 @@ const ProductsProvider = ({ children }) => {
 
   useEffect(() => {
     if (products) {
+      const productsFromLocalStorage = getDataFromLocalStorage(
+        KeysLocalStorage.products
+      );
       setDataInLocalStorage(KeysLocalStorage.products, {
+        ...productsFromLocalStorage,
         ...products,
       });
     }
@@ -46,7 +53,7 @@ const ProductsProvider = ({ children }) => {
   const updateProduct = (id, updatedProduct) => {
     setProducts((prevState) => ({
       ...prevState,
-      [id]: updatedProduct,
+      [id]: { ...prevState[id], ...updatedProduct },
     }));
   };
 
@@ -60,24 +67,30 @@ const ProductsProvider = ({ children }) => {
 
   const addProduct = (product) => {
     const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
-    const id = Date.now() + 1;
-    const updatedProduct = {
-      [id]: { id, accountId: accountId, ...product },
-      ...products,
+    const id = generateId();
+    const createdProduct = {
+      ...product,
+      id,
+      accountId: accountId,
+      creationDate: Date.now(),
     };
-    setProducts(updatedProduct);
+
+    setProducts((prevState) => ({
+      [id]: createdProduct,
+      ...prevState,
+    }));
   };
 
   const productsInfo = useMemo(
     () => ({
       products,
       updateProduct,
+      updateProducts,
       addProduct,
       deleteProduct,
-      updateProducts,
       getProduct,
     }),
-    [products, updateProduct, addProduct, deleteProduct, getProduct]
+    [products, addProduct, deleteProduct, getProduct, updateProducts]
   );
 
   return (
