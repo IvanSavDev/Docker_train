@@ -14,7 +14,7 @@ import { StyledTableCell } from "../../components/Table/StyledTableCell";
 import { ReactComponent as Edit } from "../../assets/img/edit.svg";
 import { StyledTableRow } from "../../components/Table/StyledTableRow";
 import {
-  formatNumberWithSpace,
+  formatNumberWithSymbol,
   getFormatDate,
   isEmptyObject,
 } from "../../utils/utils";
@@ -70,7 +70,7 @@ const MyProduct = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {`$${formatNumberWithSpace(product.price)}`}
+                  {`$${formatNumberWithSymbol(product.price)}`}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {product.remains}

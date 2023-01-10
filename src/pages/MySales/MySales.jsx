@@ -9,7 +9,7 @@ import { StyledTableRow } from "../../components/Table/StyledTableRow";
 import { StyledTableCell } from "../../components/Table/StyledTableCell";
 import EmptyTable from "../../components/Table/EmptyTable";
 import {
-  formatNumberWithSpace,
+  formatNumberWithSymbol,
   getFormatDate,
   isEmptyObject,
 } from "../../utils/utils";
@@ -59,7 +59,7 @@ const MySales = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {`$${formatNumberWithSpace(sale.price)}`}
+                  {`$${formatNumberWithSymbol(sale.price)}`}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {sale.soldItems}
