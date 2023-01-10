@@ -5,7 +5,7 @@ import useSales from "../../hooks/useSales";
 import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
 import useAccount from "../../hooks/useAccount";
-import ContainerSignInAndSignUp from "../../components/ContainerSignInAndSignUp";
+import ContainerSignInAndSignUp from "../../components/Containers/ContainerSignInAndSignUp";
 import Form from "../../components/Form/Form";
 import RouteLink from "../../components/RouteLink/RouteLink";
 import Input from "../../components/Inputs/Input";
