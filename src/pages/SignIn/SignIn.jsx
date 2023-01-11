@@ -88,7 +88,7 @@ const SignIn = () => {
           {errors.existsAccount ||
             Boolean(errors.email) ||
             Boolean(errors.password) || (
-              <p className={styles.accountExist}>Invalid email or password</p>
+              <p className={styles.invalidValue}>Invalid email or password</p>
             )}
         </div>
         <StandardButton type="submit" sx={{ marginBottom: "32px" }} fullWidth>

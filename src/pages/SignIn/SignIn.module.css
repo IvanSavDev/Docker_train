@@ -9,7 +9,7 @@
     color: #2B3844;
 }
 
-.accountExist {
+.invalidValue {
     position: absolute;
     color: red;
 }
