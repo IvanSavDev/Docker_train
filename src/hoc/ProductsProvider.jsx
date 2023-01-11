@@ -61,6 +61,14 @@ const ProductsProvider = ({ children }) => {
   const getProduct = (id) => products[id];
 
   const deleteProduct = (id) => {
+    const productsFromLocalStorage = getDataFromLocalStorage(
+      KeysLocalStorage.products
+    );
+    delete productsFromLocalStorage[id];
+    setDataInLocalStorage(KeysLocalStorage.products, {
+      ...productsFromLocalStorage,
+    });
+
     const copyProducts = { ...products };
     delete copyProducts[id];
     setProducts(copyProducts);
