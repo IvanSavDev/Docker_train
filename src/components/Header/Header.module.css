@@ -46,6 +46,6 @@
     }
 
     .addProduct {
-        justify-self: left;
+        justify-self: start;
     }
 }

@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import { Modal } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import React, { useState } from 'react';
+import { Modal } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-import StandardButton from "../Buttons/StandardButton";
-import CreateProduct from "../Modals/CreateProduct";
-import { ReactComponent as CreateProductImg } from "../../assets/img/createProduct.svg";
+import StandardButton from '../Buttons/StandardButton';
+import CreateProduct from '../Modals/CreateProduct';
+import { ReactComponent as CreateProductImg } from '../../assets/img/createProduct.svg';
 
-import styles from "./Header.module.css";
+import styles from './Header.module.css';
 
-const StyledStandardButton = styled(StandardButton)(() => ({
-  gridArea: "addProduct",
-  justifySelf: "end",
-  gap: "8px",
-  paddingTop: "16px",
-  paddingBottom: "16px",
+const StyledStandardButton = styled(StandardButton)(({ theme }) => ({
+  gridArea: 'addProduct',
+  justifySelf: 'end',
+  gap: '8px',
+  paddingTop: '16px',
+  paddingBottom: '16px',
+
+  [theme.breakpoints.down('middle')]: {
+    justifySelf: 'start',
+  },
 }));
 
 const Header = ({ title, description, addProductPage = false }) => {
