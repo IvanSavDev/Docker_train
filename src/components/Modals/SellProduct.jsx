@@ -44,7 +44,9 @@ const SellProduct = ({ open, closeModal, productId }) => {
       dateSale:
         dateSale !== ""
           ? resultInsertedDate !== "Invalid Date"
-            ? null
+            ? new Date(resultInsertedDate).getTime() <= Date.now()
+              ? null
+              : Errors.date
             : Errors.date
           : Errors.date,
     };
