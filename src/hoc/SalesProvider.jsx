@@ -20,7 +20,7 @@ const SalesProvider = ({ children }) => {
       const accountSales = Object.values(salesFromLocalStorage)
         .sort(
           (firstProduct, secondProduct) =>
-            firstProduct.creationDate - secondProduct.creationDate
+            firstProduct.dateSale - secondProduct.dateSale
         )
         .reduce((acc, sale) => {
           if (sale.accountId === accountId) {
