@@ -58,13 +58,13 @@ export const getFormatDate = (dateForFormat) => {
   return `${day}.${month}.${year}`;
 };
 
-export const formatNumberWithSpace = (number) => {
+export const formatNumberWithSymbol = (number, symbol = " ") => {
   let result = "";
   const numberAsStringArray = String(number).split("");
   for (let i = 1; i <= numberAsStringArray.length; i++) {
     const j = numberAsStringArray.length - i;
     result =
-      (!j || i % 3 ? numberAsStringArray[j] : " " + numberAsStringArray[j]) +
+      (!j || i % 3 ? numberAsStringArray[j] : symbol + numberAsStringArray[j]) +
       result;
   }
 
@@ -77,3 +77,34 @@ export const getKeysDifferentFields = (firstObject, secondObject) =>
       firstObject[key] !== secondObject[key] ? [...acc, key] : acc,
     []
   );
+
+export const generateColor = () => {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+};
+
+export const addZeros = (number, count) => {
+  let result = String(number);
+  for (let i = 0; i < count; i++) {
+    result += "0";
+  }
+  return Number(result);
+};
+
+export const getMultipleOFFive = (number) => {
+  const numberAsString = String(number);
+  const countSymbolsInNumber = numberAsString.length;
+  const lengthWithoutTwoSymbols = numberAsString.length - 2;
+  if (countSymbolsInNumber === 1) {
+    return 10;
+  } else {
+    const lastSymbols = Number(String(number).slice(0, 2));
+    const nextSymbols = lastSymbols + 1;
+    const secondSymbol = Number(String(nextSymbols)[1]);
+
+    if (secondSymbol === 0 || secondSymbol === 5) {
+      return addZeros(nextSymbols, lengthWithoutTwoSymbols);
+    } else {
+      return getMultipleOFFive(addZeros(nextSymbols, lengthWithoutTwoSymbols));
+    }
+  }
+};
