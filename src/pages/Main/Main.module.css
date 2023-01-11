@@ -1,4 +1,22 @@
 .container {
+    display: grid;
+    grid-template-areas: 'PieChart BarChart'
+                         'LineChart BarChart';
+    grid-template-columns: 464px 1fr;
+    grid-template-rows: 326px 220px;
+    gap: 24px;
+    margin-top: 32px;
     padding-top: 40px;
-    max-width: 326px;
+    border-top: 1px solid rgba(43, 56, 68, 0.08);
+}
+
+@media (max-width: 1400px) {
+    .container {
+        grid-template-areas: 'BarChart'
+                            'PieChart'
+                            'LineChart';
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
 }

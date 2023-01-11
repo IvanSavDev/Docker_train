@@ -5,6 +5,7 @@ import Table from "@mui/material/Table";
 import { styled } from "@mui/material/styles";
 
 const StyledPaper = styled(Paper)(() => ({
+  marginTop: "48px",
   width: "100%",
   overflow: "hidden",
   boxShadow: "none",

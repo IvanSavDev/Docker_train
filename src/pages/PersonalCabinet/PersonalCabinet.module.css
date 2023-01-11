@@ -12,3 +12,16 @@
     border-top: 1px solid rgba(43, 56, 68, 0.08);
     max-width: 792px;
 }
+
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 'name'
+                            'surname'
+                            'companyName'
+                            'email'
+                            'address'
+                            'oldPassword'
+                            'newPassword';
+    }
+}

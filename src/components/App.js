@@ -18,7 +18,6 @@ const theme = createTheme({
       },
     },
   },
-
   components: {
     MuiInputBase: {
       styleOverrides: {
@@ -35,6 +34,11 @@ const theme = createTheme({
           fontSize: "14px",
         },
       },
+    },
+  },
+  breakpoints: {
+    values: {
+      middle: 720,
     },
   },
 });
