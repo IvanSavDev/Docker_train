@@ -1,8 +1,9 @@
 import React from "react";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
+
+import { ReactComponent as CloseModalImg } from "../../assets/img/closeModal.svg";
 
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   fontFamily: "InterBold",
@@ -16,9 +17,8 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 
 const StyledIconButton = styled(IconButton)(() => ({
   position: "absolute",
-  right: 8,
-  top: 8,
-  color: (theme) => theme.palette.grey[500],
+  right: -35,
+  top: -7,
 }));
 
 const ModalTitle = ({ handleClose, children }) => {
@@ -26,7 +26,7 @@ const ModalTitle = ({ handleClose, children }) => {
     <StyledDialogTitle>
       {children}
       <StyledIconButton aria-label="close" onClick={handleClose}>
-        <CloseIcon />
+        <CloseModalImg />
       </StyledIconButton>
     </StyledDialogTitle>
   );
