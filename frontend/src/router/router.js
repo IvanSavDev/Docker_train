@@ -10,7 +10,6 @@ import MySales from "../pages/MySales/MySales";
 import PersonalCabinet from "../pages/PersonalCabinet/PersonalCabinet";
 import useAuth from "../hooks/useAuth";
 import PersonalPage from "../pages/PersonalPage";
-import useAccount from "../hooks/useAccount";
 
 const routers = [
   {

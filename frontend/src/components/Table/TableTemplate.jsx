@@ -9,6 +9,16 @@ const StyledPaper = styled(Paper)(() => ({
   width: "100%",
   overflow: "hidden",
   boxShadow: "none",
+
+  "& .MuiTableContainer-root::-webkit-scrollbar": {
+    width: "6px",
+    height: "6px",
+  },
+
+  "& .MuiTableContainer-root::-webkit-scrollbar-thumb": {
+    backgroundColor: "var(--scroll-color)",
+    borderRadius: "100px",
+  },
 }));
 
 const TableTemplate = ({ children }) => (

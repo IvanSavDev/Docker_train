@@ -129,6 +129,7 @@ a[aria-current="page"] .activeLogo path {
         grid-template-areas: 'burger logo logOut';
         grid-template-columns: 40px 1fr 90px;
         align-items: center;
+        padding: 40px 25px;
     }
 
     .sections {

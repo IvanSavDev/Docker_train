@@ -1,6 +1,7 @@
 import React from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
+import CustomTooltip from "../CustomTooltip/CustomTooltip";
 import { formatNumberWithSymbol } from "../../../utils/utils";
 import useSales from "../../../hooks/useSales";
 
@@ -49,7 +50,11 @@ const Chart = () => {
             strokeWidth={4}
             dot={false}
           />
-          <Tooltip cursor={{ strokeWidth: 0 }} />
+          <Tooltip
+            content={CustomTooltip}
+            cursor={{ strokeWidth: 0 }}
+            showLabel
+          />
           <XAxis dataKey="name" hide />
         </LineChart>
       </ResponsiveContainer>

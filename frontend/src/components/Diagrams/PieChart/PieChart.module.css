@@ -18,8 +18,21 @@
     flex-direction: column;
     gap: 16px;
     width: 100%;
+    max-width: 169px;
     padding: 20px 0 20px 0;
     overflow-y: auto;
+}
+
+.list::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
 }
 
 .header {

@@ -2,6 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import styled from "@emotion/styled";
 
+import CustomTooltip from "../CustomTooltip/CustomTooltip";
 import useSales from "../../../hooks/useSales";
 import { generateColor, generateId } from "../../../utils/utils";
 
@@ -61,7 +62,7 @@ const Chart = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  outerRadius={80}
+                  outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -73,12 +74,12 @@ const Chart = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip content={CustomTooltip} />
               </PieChart>
             </ResponsiveContainer>
             <ul className={styles.list}>
               {chartData.map(({ color, name }) => (
-                <StyledItem key={generateId()} color={color}>
+                <StyledItem key={generateId() + name} color={color}>
                   {name}
                 </StyledItem>
               ))}

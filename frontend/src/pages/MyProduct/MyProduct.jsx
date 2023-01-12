@@ -113,7 +113,7 @@ const MyProduct = () => {
                   >
                     <Edit />
                   </TableButton>
-                  <DeleteButton onClick={() => deleteProduct(product.id)} />
+                  <DeleteButton handleClick={() => deleteProduct(product.id)} />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

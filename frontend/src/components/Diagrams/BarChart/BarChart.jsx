@@ -17,6 +17,29 @@ import styles from "./BarChart.module.css";
 
 const countTicks = 5;
 
+const getWidthYAxis = (maxValue) => {
+  const maxValueAsString = String(maxValue);
+
+  if (maxValueAsString.length < 4) {
+    return 60;
+  }
+  if (maxValueAsString.length < 6) {
+    return 65;
+  }
+  if (maxValueAsString.length < 7) {
+    return 75;
+  }
+  if (maxValueAsString.length < 8) {
+    return 85;
+  }
+  if (maxValueAsString.length < 9) {
+    return 95;
+  }
+  if (maxValueAsString.length < 10) {
+    return 105;
+  }
+};
+
 const Chart = () => {
   const { sales } = useSales();
 
@@ -54,7 +77,7 @@ const Chart = () => {
   )[0].totalCost;
 
   const interval = getMultipleOFFive(maxTotalCost) / countTicks;
-  console.log(getMultipleOFFive(maxTotalCost));
+
   const dataForYAxis = Array(countTicks)
     .fill(0)
     .reduce(
@@ -89,7 +112,7 @@ const Chart = () => {
             tickLine={false}
             tickMargin={17}
             tickCount={7}
-            width={80}
+            width={getWidthYAxis(maxTotalCost)}
             ticks={dataForYAxis}
             domain={[interval, maxTotalCost]}
           />
