@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import DialogActions from "@mui/material/DialogActions";
+import React, { useState } from 'react';
+import DialogActions from '@mui/material/DialogActions';
 
-import useSales from "../../hooks/useSales";
-import useProducts from "../../hooks/useProducts";
-import useForm from "../../hooks/useForm";
-import ModalContainer from "./ModalContainer";
-import ModalTitle from "./ModalTitle";
-import ModalInputContainer from "./ModalInputContainer";
-import Input from "../Inputs/Input";
-import DateInput from "../Inputs/DateInput";
-import StandardButton from "../Buttons/StandardButton";
-import { haveErrors } from "../../utils/utils";
-import { Errors } from "../../consts/consts";
+import useSales from '../../hooks/useSales';
+import useProducts from '../../hooks/useProducts';
+import useForm from '../../hooks/useForm';
+import ModalContainer from './ModalContainer';
+import ModalTitle from './ModalTitle';
+import ModalInputContainer from './ModalInputContainer';
+import Input from '../Inputs/Input';
+import DateInput from '../Inputs/DateInput';
+import StandardButton from '../Buttons/StandardButton';
+import { haveErrors } from '../../utils/utils';
+import { Errors } from '../../consts/consts';
 
 const initialStateErrors = { numberProducts: null, dateSale: null };
 
 const initialStateForm = {
-  numberProducts: "",
-  dateSale: "",
+  numberProducts: '',
+  dateSale: '',
 };
 
 const SellProduct = ({ open, closeModal, productId }) => {
@@ -30,7 +30,7 @@ const SellProduct = ({ open, closeModal, productId }) => {
     const { numberProducts, dateSale } = form;
 
     const numberProductsAsNumber = Number(numberProducts);
-    const resultInsertedDate = String(dateSale["$d"]);
+    const resultInsertedDate = String(dateSale.$d);
     const oldProduct = products[productId];
     const restProducts = oldProduct.remains - numberProducts;
 
@@ -42,8 +42,8 @@ const SellProduct = ({ open, closeModal, productId }) => {
             : Errors.notEnoughGoods
           : Errors.moreZero,
       dateSale:
-        dateSale !== ""
-          ? resultInsertedDate !== "Invalid Date"
+        dateSale !== ''
+          ? resultInsertedDate !== 'Invalid Date'
             ? new Date(resultInsertedDate).getTime() <= Date.now()
               ? null
               : Errors.date

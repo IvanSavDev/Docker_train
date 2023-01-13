@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import useProducts from "../../hooks/useProducts";
-import useSales from "../../hooks/useSales";
-import useForm from "../../hooks/useForm";
-import useAuth from "../../hooks/useAuth";
-import useAccount from "../../hooks/useAccount";
-import ContainerSignInAndSignUp from "../../components/Containers/ContainerSignInAndSignUp";
-import Form from "../../components/Form/Form";
-import RouteLink from "../../components/RouteLink/RouteLink";
-import Input from "../../components/Inputs/Input";
-import StandardButton from "../../components/Buttons/StandardButton";
+import useProducts from '../../hooks/useProducts';
+import useSales from '../../hooks/useSales';
+import useForm from '../../hooks/useForm';
+import useAuth from '../../hooks/useAuth';
+import useAccount from '../../hooks/useAccount';
+import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
+import Form from '../../components/Form/Form';
+import RouteLink from '../../components/RouteLink/RouteLink';
+import Input from '../../components/Inputs/Input';
+import StandardButton from '../../components/Buttons/StandardButton';
 import {
   isMatchPassword,
   isValidCompanyName,
   isValidEmail,
   isValidFullName,
   isValidPassword,
-} from "../../utils/validation";
-import { checkExistsAccountByEmail, haveErrors } from "../../utils/utils";
-import { Errors, Paths } from "../../consts/consts";
+} from '../../utils/validation';
+import { checkExistsAccountByEmail, haveErrors } from '../../utils/utils';
+import { Errors, Paths } from '../../consts/consts';
 
-import styles from "./SignUp.module.css";
+import styles from './SignUp.module.css';
 
 const SignUp = () => {
   const [errors, setErrors] = useState({
@@ -33,12 +33,12 @@ const SignUp = () => {
     accountExists: null,
   });
   const [form, setForm] = useForm({
-    name: "",
-    surname: "",
-    companyName: "",
-    email: "",
-    password: "",
-    repeatPassword: "",
+    name: '',
+    surname: '',
+    companyName: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
   });
   const { addAccount } = useAccount();
   const { updateProducts } = useProducts();
@@ -79,7 +79,7 @@ const SignUp = () => {
         companyName: form.companyName,
         email: form.email,
         password: form.password,
-        address: "",
+        address: '',
       });
       updateProducts();
       updateSales();
@@ -150,13 +150,13 @@ const SignUp = () => {
             <p className={styles.accountExists}>Account already exist</p>
           )}
         </div>
-        <StandardButton type="submit" sx={{ marginBottom: "32px" }} fullWidth>
+        <StandardButton type="submit" sx={{ marginBottom: '32px' }} fullWidth>
           Create account
         </StandardButton>
       </Form>
       <div>
         <span className={styles.alreadyHaveAccount}>
-          Already have an account?{" "}
+          Already have an account?{' '}
         </span>
         <RouteLink to={Paths.signIn}>Log in</RouteLink>
       </div>

@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import { useContext } from 'react';
 
-import ProductsContext from "../context/ProductsContext";
+import ProductsContext from '../context/ProductsContext';
 
 const useProducts = () => useContext(ProductsContext);
 

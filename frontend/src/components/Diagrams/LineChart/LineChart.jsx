@@ -1,28 +1,28 @@
-import React from "react";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import React from 'react';
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
-import CustomTooltip from "../CustomTooltip/CustomTooltip";
-import { formatNumberWithSymbol } from "../../../utils/utils";
-import useSales from "../../../hooks/useSales";
+import CustomTooltip from '../CustomTooltip/CustomTooltip';
+import { formatNumberWithSymbol } from '../../../utils/utils';
+import useSales from '../../../hooks/useSales';
 
-import styles from "./LineChart.module.css";
+import styles from './LineChart.module.css';
 
 const Chart = () => {
   const { sales } = useSales();
 
   const chartData = [
-    { name: "January", totalCost: 0 },
-    { name: "February", totalCost: 0 },
-    { name: "March", totalCost: 0 },
-    { name: "April", totalCost: 0 },
-    { name: "May", totalCost: 0 },
-    { name: "June", totalCost: 0 },
-    { name: "July", totalCost: 0 },
-    { name: "August", totalCost: 0 },
-    { name: "September", totalCost: 0 },
-    { name: "October", totalCost: 0 },
-    { name: "November", totalCost: 0 },
-    { name: "December", totalCost: 0 },
+    { name: 'January', totalCost: 0 },
+    { name: 'February', totalCost: 0 },
+    { name: 'March', totalCost: 0 },
+    { name: 'April', totalCost: 0 },
+    { name: 'May', totalCost: 0 },
+    { name: 'June', totalCost: 0 },
+    { name: 'July', totalCost: 0 },
+    { name: 'August', totalCost: 0 },
+    { name: 'September', totalCost: 0 },
+    { name: 'October', totalCost: 0 },
+    { name: 'November', totalCost: 0 },
+    { name: 'December', totalCost: 0 },
   ];
 
   if (sales) {
@@ -60,7 +60,7 @@ const Chart = () => {
       </ResponsiveContainer>
       <p className={styles.total}>{`$${formatNumberWithSymbol(
         chartData.reduce((acc, value) => acc + value.totalCost, 0),
-        ","
+        ',',
       )}`}</p>
     </div>
   );

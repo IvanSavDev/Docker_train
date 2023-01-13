@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   BarChart,
   Bar,
@@ -7,13 +7,13 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
-import CustomTooltip from "../CustomTooltip/CustomTooltip";
-import useSales from "../../../hooks/useSales";
-import { getMultipleOFFive } from "../../../utils/utils";
+import CustomTooltip from '../CustomTooltip/CustomTooltip';
+import useSales from '../../../hooks/useSales';
+import { getMultipleOFFive } from '../../../utils/utils';
 
-import styles from "./BarChart.module.css";
+import styles from './BarChart.module.css';
 
 const countTicks = 5;
 
@@ -35,9 +35,8 @@ const getWidthYAxis = (maxValue) => {
   if (maxValueAsString.length < 9) {
     return 95;
   }
-  if (maxValueAsString.length < 10) {
-    return 105;
-  }
+
+  return 105;
 };
 
 const Chart = () => {
@@ -46,18 +45,18 @@ const Chart = () => {
   const currentYear = new Date().getFullYear();
 
   const chartData = [
-    { name: "Jan", totalCost: 0 },
-    { name: "Feb", totalCost: 0 },
-    { name: "Mar", totalCost: 0 },
-    { name: "Apr", totalCost: 0 },
-    { name: "May", totalCost: 0 },
-    { name: "Jun", totalCost: 0 },
-    { name: "Jul", totalCost: 0 },
-    { name: "Aug", totalCost: 0 },
-    { name: "Sep", totalCost: 0 },
-    { name: "Oct", totalCost: 0 },
-    { name: "Nov", totalCost: 0 },
-    { name: "Dec", totalCost: 0 },
+    { name: 'Jan', totalCost: 0 },
+    { name: 'Feb', totalCost: 0 },
+    { name: 'Mar', totalCost: 0 },
+    { name: 'Apr', totalCost: 0 },
+    { name: 'May', totalCost: 0 },
+    { name: 'Jun', totalCost: 0 },
+    { name: 'Jul', totalCost: 0 },
+    { name: 'Aug', totalCost: 0 },
+    { name: 'Sep', totalCost: 0 },
+    { name: 'Oct', totalCost: 0 },
+    { name: 'Nov', totalCost: 0 },
+    { name: 'Dec', totalCost: 0 },
   ];
 
   if (sales) {
@@ -73,7 +72,7 @@ const Chart = () => {
   }
 
   const maxTotalCost = [...chartData].sort(
-    (first, second) => second.totalCost - first.totalCost
+    (first, second) => second.totalCost - first.totalCost,
   )[0].totalCost;
 
   const interval = getMultipleOFFive(maxTotalCost) / countTicks;
@@ -85,7 +84,7 @@ const Chart = () => {
         const lastValue = acc[acc.length - 1];
         return [...acc, lastValue + interval];
       },
-      [0]
+      [0],
     );
 
   const chartDataWithSizeShadow = chartData.map((data) => ({

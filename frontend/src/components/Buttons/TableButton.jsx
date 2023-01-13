@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 
-import Modal from "../Modals/Modal";
+import Modal from '../Modals/Modal';
 
 const StyledButton = styled(Button)(() => ({
-  backgroundColor: "rgba(83,130,231,0.1)",
-  textTransform: "none",
+  backgroundColor: 'rgba(83,130,231,0.1)',
+  textTransform: 'none',
   fontWeight: 500,
-  fontSize: "12px",
-  lineHeight: "12px",
-  minWidth: "53px",
-  minHeight: "28px",
+  fontSize: '12px',
+  lineHeight: '12px',
+  minWidth: '53px',
+  minHeight: '28px',
 }));
 
 const TableButton = ({ productId, render, children, ...rest }) => {

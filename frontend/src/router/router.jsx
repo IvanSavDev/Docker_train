@@ -1,15 +1,16 @@
-import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Paths } from "../consts/consts";
-import SignIn from "../pages/SignIn/SignIn";
-import SignUp from "../pages/SignUp/SignUp";
-import Main from "../pages/Main/Main";
-import MyProduct from "../pages/MyProduct/MyProduct";
-import MySales from "../pages/MySales/MySales";
-import PersonalCabinet from "../pages/PersonalCabinet/PersonalCabinet";
-import useAuth from "../hooks/useAuth";
-import PersonalPage from "../pages/PersonalPage";
+import { Paths } from '../consts/consts';
+import SignIn from '../pages/SignIn/SignIn';
+import SignUp from '../pages/SignUp/SignUp';
+import Main from '../pages/Main/Main';
+import MyProduct from '../pages/MyProduct/MyProduct';
+import MySales from '../pages/MySales/MySales';
+import PersonalCabinet from '../pages/PersonalCabinet/PersonalCabinet';
+import useAuth from '../hooks/useAuth';
+import PersonalPage from '../pages/PersonalPage';
+import { generateId } from '../utils/utils';
 
 const routers = [
   {
@@ -23,7 +24,7 @@ const routers = [
     private: false,
   },
   {
-    path: "*",
+    path: '*',
     element: <Navigate to={Paths.signIn} />,
     private: false,
   },
@@ -56,7 +57,7 @@ const routers = [
     ],
   },
   {
-    path: "*",
+    path: '*',
     element: <Navigate to={Paths.base} />,
     private: true,
   },
@@ -69,18 +70,18 @@ const AppRouter = () => {
     <Routes>
       {routers
         .filter((router) => (loggedIn ? router.private : !router.private))
-        .map((router, index) => (
-          <Route key={index} path={router.path} element={router.element}>
-            {router?.children?.map((childRouter, index) =>
+        .map((router) => (
+          <Route key={generateId()} path={router.path} element={router.element}>
+            {router?.children?.map((childRouter) =>
               childRouter.index ? (
-                <Route key={index} element={childRouter.element} index />
+                <Route key={generateId()} element={childRouter.element} index />
               ) : (
                 <Route
-                  key={index}
+                  key={generateId()}
                   path={childRouter.path}
                   element={childRouter.element}
                 />
-              )
+              ),
             )}
           </Route>
         ))}

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import styles from "./EmptyTable.module.css";
+import styles from './EmptyTable.module.css';
 
 const EmptyTable = ({ children }) => (
   <div className={styles.container}>{children}</div>

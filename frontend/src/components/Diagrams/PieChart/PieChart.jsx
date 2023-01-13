@@ -1,12 +1,12 @@
-import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import styled from "@emotion/styled";
+import React from 'react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import styled from '@emotion/styled';
 
-import CustomTooltip from "../CustomTooltip/CustomTooltip";
-import useSales from "../../../hooks/useSales";
-import { generateColor, generateId } from "../../../utils/utils";
+import CustomTooltip from '../CustomTooltip/CustomTooltip';
+import useSales from '../../../hooks/useSales';
+import { generateColor, generateId } from '../../../utils/utils';
 
-import styles from "./PieChart.module.css";
+import styles from './PieChart.module.css';
 
 const StyledItem = styled.li`
   position: relative;
@@ -15,7 +15,7 @@ const StyledItem = styled.li`
   list-style-type: none;
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     left: 12px;
     width: 12px;
@@ -32,7 +32,7 @@ const Chart = () => {
   const salesValues = sales ? Object.values(sales) : [];
 
   const allUniqCategories = Array.from(
-    new Set(salesValues.map((sale) => sale.category))
+    new Set(salesValues.map((sale) => sale.category)),
   );
 
   const chartData = allUniqCategories.map((category) =>
@@ -45,8 +45,8 @@ const Chart = () => {
               value: acc.value + sale.soldItems * sale.price,
               color: generateColor(),
             },
-      { value: 0 }
-    )
+      { value: 0 },
+    ),
   );
 
   return (

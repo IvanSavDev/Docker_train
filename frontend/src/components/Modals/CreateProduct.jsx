@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import DialogActions from "@mui/material/DialogActions";
+import React, { useState } from 'react';
+import DialogActions from '@mui/material/DialogActions';
 
-import useAccount from "../../hooks/useAccount";
-import useProducts from "../../hooks/useProducts";
-import useForm from "../../hooks/useForm";
-import StandardButton from "../Buttons/StandardButton";
-import Input from "../Inputs/Input";
-import ModalTitle from "./ModalTitle";
-import ModalInputContainer from "./ModalInputContainer";
-import ModalContainer from "./ModalContainer";
-import { Errors } from "../../consts/consts";
-import { haveErrors } from "../../utils/utils";
+import useAccount from '../../hooks/useAccount';
+import useProducts from '../../hooks/useProducts';
+import useForm from '../../hooks/useForm';
+import StandardButton from '../Buttons/StandardButton';
+import Input from '../Inputs/Input';
+import ModalTitle from './ModalTitle';
+import ModalInputContainer from './ModalInputContainer';
+import ModalContainer from './ModalContainer';
+import { Errors } from '../../consts/consts';
+import { haveErrors } from '../../utils/utils';
 
 const CreateProduct = ({ open, closeModal }) => {
   const [errors, setErrors] = useState({
@@ -22,12 +22,12 @@ const CreateProduct = ({ open, closeModal }) => {
     weight: null,
   });
   const [form, setForm] = useForm({
-    store: "",
-    price: "",
-    productName: "",
-    category: "",
-    remains: "",
-    weight: "",
+    store: '',
+    price: '',
+    productName: '',
+    category: '',
+    remains: '',
+    weight: '',
   });
   const { addProduct } = useProducts();
   const { account } = useAccount();

@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 
-import AccountContext from "../context/AccountContext";
-import { KeysLocalStorage } from "../consts/consts";
+import AccountContext from '../context/AccountContext';
+import { KeysLocalStorage } from '../consts/consts';
 import {
   getDataFromLocalStorage,
   setDataInLocalStorage,
-} from "../utils/localStorage";
-import { generateId } from "../utils/utils";
+} from '../utils/localStorage';
+import { generateId } from '../utils/utils';
 
 const AccountProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
@@ -50,7 +50,7 @@ const AccountProvider = ({ children }) => {
       addAccount,
       updateAccount,
     }),
-    [account, loadAccountFromLocalStorage, addAccount, updateAccount]
+    [account, loadAccountFromLocalStorage, addAccount, updateAccount],
   );
 
   return (

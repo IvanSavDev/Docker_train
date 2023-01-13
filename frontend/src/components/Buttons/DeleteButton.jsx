@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
-import { Snackbar } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
+import { Snackbar } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 
-import { ReactComponent as Delete } from "../../assets/img/delete.svg";
+import { ReactComponent as Delete } from '../../assets/img/delete.svg';
 
-import styles from "./DeleteButton.module.css";
+import styles from './DeleteButton.module.css';
 
 const StyledSnackbar = styled(Snackbar)(() => ({
-  position: "absolute",
+  position: 'absolute',
   left: -410,
   top: 10,
   maxWidth: 300,
 
-  "& .MuiPaper-root": {
-    flexWrap: "nowrap",
-    backgroundColor: "#2B3844",
+  '& .MuiPaper-root': {
+    flexWrap: 'nowrap',
+    backgroundColor: '#2B3844',
   },
 }));
 
@@ -28,7 +28,7 @@ const DeleteButton = ({ handleClick, ...props }) => {
   const handleClose = () => setOpen(false);
 
   const action = (
-    <React.Fragment>
+    <>
       <Button
         size="small"
         color="error"
@@ -47,7 +47,7 @@ const DeleteButton = ({ handleClick, ...props }) => {
       >
         <CloseIcon fontSize="small" />
       </IconButton>
-    </React.Fragment>
+    </>
   );
 
   return (
@@ -56,7 +56,7 @@ const DeleteButton = ({ handleClick, ...props }) => {
         {...props}
         size="small"
         sx={{
-          minWidth: "28px",
+          minWidth: '28px',
         }}
         onClick={handleOpen}
       >

@@ -1,16 +1,16 @@
-import React, { useLayoutEffect, useState } from "react";
-import DialogActions from "@mui/material/DialogActions";
+import React, { useLayoutEffect, useState } from 'react';
+import DialogActions from '@mui/material/DialogActions';
 
-import useForm from "../../hooks/useForm";
-import useProducts from "../../hooks/useProducts";
-import useAccount from "../../hooks/useAccount";
-import StandardButton from "../Buttons/StandardButton";
-import Input from "../Inputs/Input";
-import ModalTitle from "./ModalTitle";
-import ModalInputContainer from "./ModalInputContainer";
-import ModalContainer from "./ModalContainer";
-import { Errors } from "../../consts/consts";
-import { getKeysDifferentFields, haveErrors } from "../../utils/utils";
+import useForm from '../../hooks/useForm';
+import useProducts from '../../hooks/useProducts';
+import useAccount from '../../hooks/useAccount';
+import StandardButton from '../Buttons/StandardButton';
+import Input from '../Inputs/Input';
+import ModalTitle from './ModalTitle';
+import ModalInputContainer from './ModalInputContainer';
+import ModalContainer from './ModalContainer';
+import { Errors } from '../../consts/consts';
+import { getKeysDifferentFields, haveErrors } from '../../utils/utils';
 
 const EditProduct = ({ open, closeModal, productId }) => {
   const [errors, setErrors] = useState({
@@ -22,12 +22,12 @@ const EditProduct = ({ open, closeModal, productId }) => {
     weight: null,
   });
   const [form, setForm] = useForm({
-    store: "",
-    price: "",
-    productName: "",
-    category: "",
-    remains: "",
-    weight: "",
+    store: '',
+    price: '',
+    productName: '',
+    category: '',
+    remains: '',
+    weight: '',
   });
   const { getProduct, updateProduct, addProduct, deleteProduct } =
     useProducts();
@@ -58,7 +58,7 @@ const EditProduct = ({ open, closeModal, productId }) => {
     if (isNotErrors) {
       const oldProduct = getProduct(productId);
       const changedFields = getKeysDifferentFields(form, oldProduct);
-      if (changedFields.length === 1 && changedFields[0] === "remains") {
+      if (changedFields.length === 1 && changedFields[0] === 'remains') {
         updateProduct(productId, { remains: remainsAsNumber });
       } else {
         deleteProduct(oldProduct.id);

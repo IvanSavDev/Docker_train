@@ -1,34 +1,34 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 
-import useAccount from "../../hooks/useAccount";
-import useForm from "../../hooks/useForm";
-import Header from "../../components/Header/Header";
-import StandardButton from "../../components/Buttons/StandardButton";
-import Input from "../../components/Inputs/Input";
+import useAccount from '../../hooks/useAccount';
+import useForm from '../../hooks/useForm';
+import Header from '../../components/Header/Header';
+import StandardButton from '../../components/Buttons/StandardButton';
+import Input from '../../components/Inputs/Input';
 import {
   isMatchPassword,
   isValidCompanyName,
   isValidEmail,
   isValidFullName,
   isValidPassword,
-} from "../../utils/validation";
+} from '../../utils/validation';
 import {
   checkNewEmailOnValidation,
   haveErrors,
   isDifferencesWithOldAccount,
-} from "../../utils/utils";
-import { Errors } from "../../consts/consts";
+} from '../../utils/utils';
+import { Errors } from '../../consts/consts';
 
-import styles from "./PersonalCabinet.module.css";
+import styles from './PersonalCabinet.module.css';
 
 const initialStateForm = {
-  name: "",
-  surname: "",
-  companyName: "",
-  email: "",
-  password: "",
-  newPassword: "",
-  address: "",
+  name: '',
+  surname: '',
+  companyName: '',
+  email: '',
+  password: '',
+  newPassword: '',
+  address: '',
 };
 
 const initialStateErrors = {
@@ -68,8 +68,8 @@ const PersonalCabinet = () => {
             companyName: account.companyName,
             email: account.email,
             address: account.address,
-            password: "",
-            newPassword: "",
+            password: '',
+            newPassword: '',
           },
           {
             name: form.name,
@@ -79,8 +79,8 @@ const PersonalCabinet = () => {
             address: form.address,
             password: form.password,
             newPassword: form.newPassword,
-          }
-        )
+          },
+        ),
       );
     }
   }, [form, account]);
@@ -99,19 +99,17 @@ const PersonalCabinet = () => {
     const checkOldPasswordErrors = () => {
       if (password.length === 0) {
         return newPassword.length === 0 ? null : Errors.oldPassword;
-      } else {
-        return isMatchPassword(password, account.password)
-          ? null
-          : Errors.matchOldPassword;
       }
+      return isMatchPassword(password, account.password)
+        ? null
+        : Errors.matchOldPassword;
     };
 
     const checkNewPasswordErrors = () => {
       if (newPassword.length === 0) {
         return password.length === 0 ? null : Errors.newPassword;
-      } else {
-        return isValidPassword(newPassword) ? null : Errors.password;
       }
+      return isValidPassword(newPassword) ? null : Errors.password;
     };
 
     const checkedErrors = {
@@ -140,8 +138,8 @@ const PersonalCabinet = () => {
         address: form.address,
       };
       setForm({
-        password: "",
-        newPassword: "",
+        password: '',
+        newPassword: '',
       });
       updateAccount(updatedAccount);
     } else {
@@ -158,7 +156,7 @@ const PersonalCabinet = () => {
       <div className={styles.container}>
         <Input
           sx={{
-            gridArea: "name",
+            gridArea: 'name',
           }}
           name="name"
           label="First name"
@@ -169,7 +167,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "surname",
+            gridArea: 'surname',
           }}
           name="surname"
           label="Last name"
@@ -180,7 +178,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "companyName",
+            gridArea: 'companyName',
           }}
           name="companyName"
           label="Company name"
@@ -191,7 +189,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "email",
+            gridArea: 'email',
           }}
           name="email"
           label="Email"
@@ -202,7 +200,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "address",
+            gridArea: 'address',
           }}
           name="address"
           label="Enter your address"
@@ -213,7 +211,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "oldPassword",
+            gridArea: 'oldPassword',
           }}
           type="password"
           name="password"
@@ -225,7 +223,7 @@ const PersonalCabinet = () => {
         />
         <Input
           sx={{
-            gridArea: "newPassword",
+            gridArea: 'newPassword',
           }}
           type="password"
           name="newPassword"

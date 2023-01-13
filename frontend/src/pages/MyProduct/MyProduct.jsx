@@ -1,34 +1,34 @@
-import React from "react";
-import TableBody from "@mui/material/TableBody";
+import React from 'react';
+import TableBody from '@mui/material/TableBody';
 
-import useProducts from "../../hooks/useProducts";
-import Header from "../../components/Header/Header";
-import TableTemplate from "../../components/Table/TableTemplate";
-import EmptyTable from "../../components/Table/EmptyTable";
-import TableHeader from "../../components/Table/TableHeader";
-import TableButton from "../../components/Buttons/TableButton";
-import SellProduct from "../../components/Modals/SellProduct";
-import EditProduct from "../../components/Modals/EditProduct";
-import DeleteButton from "../../components/Buttons/DeleteButton";
-import { StyledTableCell } from "../../components/Table/StyledTableCell";
-import { ReactComponent as Edit } from "../../assets/img/edit.svg";
-import { StyledTableRow } from "../../components/Table/StyledTableRow";
+import useProducts from '../../hooks/useProducts';
+import Header from '../../components/Header/Header';
+import TableTemplate from '../../components/Table/TableTemplate';
+import EmptyTable from '../../components/Table/EmptyTable';
+import TableHeader from '../../components/Table/TableHeader';
+import TableButton from '../../components/Buttons/TableButton';
+import SellProduct from '../../components/Modals/SellProduct';
+import EditProduct from '../../components/Modals/EditProduct';
+import DeleteButton from '../../components/Buttons/DeleteButton';
+import { StyledTableCell } from '../../components/Table/StyledTableCell';
+import { ReactComponent as Edit } from '../../assets/img/edit.svg';
+import { StyledTableRow } from '../../components/Table/StyledTableRow';
 import {
   formatNumberWithSymbol,
   getFormatDate,
   isEmptyObject,
-} from "../../utils/utils";
+} from '../../utils/utils';
 
 const tableHeaders = [
-  "Product name",
-  "Store",
-  "Address",
-  "Category",
-  "Creation date",
-  "Price",
-  "Remains",
-  "Weight / Volume",
-  "Actions",
+  'Product name',
+  'Store',
+  'Address',
+  'Category',
+  'Creation date',
+  'Price',
+  'Remains',
+  'Weight / Volume',
+  'Actions',
 ];
 
 const MyProduct = () => {
@@ -56,7 +56,7 @@ const MyProduct = () => {
                   {product.store}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {product.address || "-"}
+                  {product.address || '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {product.category}
@@ -67,7 +67,7 @@ const MyProduct = () => {
                 <StyledTableCell
                   align="center"
                   sx={{
-                    whiteSpace: "nowrap",
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {`$${formatNumberWithSymbol(product.price)}`}
@@ -81,11 +81,11 @@ const MyProduct = () => {
                 <StyledTableCell
                   align="center"
                   sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "8px",
-                    "&": {
-                      padding: "13px 16px 13px 16px",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    '&': {
+                      padding: '13px 16px 13px 16px',
                     },
                   }}
                 >

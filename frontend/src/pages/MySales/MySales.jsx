@@ -1,29 +1,29 @@
-import React from "react";
+import React from 'react';
+import TableBody from '@mui/material/TableBody';
 
-import useSales from "../../hooks/useSales";
-import Header from "../../components/Header/Header";
-import TableTemplate from "../../components/Table/TableTemplate";
-import TableHeader from "../../components/Table/TableHeader";
-import TableBody from "@mui/material/TableBody";
-import { StyledTableRow } from "../../components/Table/StyledTableRow";
-import { StyledTableCell } from "../../components/Table/StyledTableCell";
-import EmptyTable from "../../components/Table/EmptyTable";
+import useSales from '../../hooks/useSales';
+import Header from '../../components/Header/Header';
+import TableTemplate from '../../components/Table/TableTemplate';
+import TableHeader from '../../components/Table/TableHeader';
+import { StyledTableRow } from '../../components/Table/StyledTableRow';
+import { StyledTableCell } from '../../components/Table/StyledTableCell';
+import EmptyTable from '../../components/Table/EmptyTable';
 import {
   formatNumberWithSymbol,
   getFormatDate,
   isEmptyObject,
-} from "../../utils/utils";
+} from '../../utils/utils';
 
 const tableHeaders = [
-  "Product name",
-  "Store",
-  "Address",
-  "Category",
-  "Creation date",
-  "Price",
-  "Sold items",
-  "Weight / Volume",
-  "Last sale",
+  'Product name',
+  'Store',
+  'Address',
+  'Category',
+  'Creation date',
+  'Price',
+  'Sold items',
+  'Weight / Volume',
+  'Last sale',
 ];
 
 const MySales = () => {
@@ -45,7 +45,7 @@ const MySales = () => {
                 </StyledTableCell>
                 <StyledTableCell align="center">{sale.store}</StyledTableCell>
                 <StyledTableCell align="center">
-                  {sale.address || "-"}
+                  {sale.address || '-'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {sale.category}
@@ -56,7 +56,7 @@ const MySales = () => {
                 <StyledTableCell
                   align="center"
                   sx={{
-                    whiteSpace: "nowrap",
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {`$${formatNumberWithSymbol(sale.price)}`}

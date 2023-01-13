@@ -1,19 +1,19 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 
-import ProductsContext from "../context/ProductsContext";
-import { KeysLocalStorage } from "../consts/consts";
+import ProductsContext from '../context/ProductsContext';
+import { KeysLocalStorage } from '../consts/consts';
 import {
   getDataFromLocalStorage,
   setDataInLocalStorage,
-} from "../utils/localStorage";
-import { generateId } from "../utils/utils";
+} from '../utils/localStorage';
+import { generateId } from '../utils/utils';
 
 const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState(null);
 
   const updateProducts = () => {
     const productsFromLocalStorage = getDataFromLocalStorage(
-      KeysLocalStorage.products
+      KeysLocalStorage.products,
     );
 
     const accountId = getDataFromLocalStorage(KeysLocalStorage.userId);
@@ -21,7 +21,7 @@ const ProductsProvider = ({ children }) => {
       const accountProductsReduce = Object.values(productsFromLocalStorage)
         .sort(
           (firstProduct, secondProduct) =>
-            firstProduct.creationDate - secondProduct.creationDate
+            firstProduct.creationDate - secondProduct.creationDate,
         )
         .reduce((acc, product) => {
           if (product.accountId === accountId) {
@@ -42,7 +42,7 @@ const ProductsProvider = ({ children }) => {
   useEffect(() => {
     if (products) {
       const productsFromLocalStorage = getDataFromLocalStorage(
-        KeysLocalStorage.products
+        KeysLocalStorage.products,
       );
       setDataInLocalStorage(KeysLocalStorage.products, {
         ...productsFromLocalStorage,
@@ -62,7 +62,7 @@ const ProductsProvider = ({ children }) => {
 
   const deleteProduct = (id) => {
     const productsFromLocalStorage = getDataFromLocalStorage(
-      KeysLocalStorage.products
+      KeysLocalStorage.products,
     );
     delete productsFromLocalStorage[id];
     setDataInLocalStorage(KeysLocalStorage.products, {
@@ -99,7 +99,7 @@ const ProductsProvider = ({ children }) => {
       deleteProduct,
       getProduct,
     }),
-    [products, addProduct, deleteProduct, getProduct, updateProducts]
+    [products, addProduct, deleteProduct, getProduct, updateProducts],
   );
 
   return (

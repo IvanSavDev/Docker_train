@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from 'react';
 
-import AuthContext from "../context/AuthContext";
-import { KeysLocalStorage } from "../consts/consts";
+import AuthContext from '../context/AuthContext';
+import { KeysLocalStorage } from '../consts/consts';
 
 const AuthProvider = ({ children }) => {
   const isLogged = !!localStorage.getItem(KeysLocalStorage.userId);
@@ -16,7 +16,7 @@ const AuthProvider = ({ children }) => {
 
   const authorizationInfo = useMemo(
     () => ({ loggedIn, logIn, logOut }),
-    [logIn, logOut, loggedIn]
+    [logIn, logOut, loggedIn],
   );
 
   return (
