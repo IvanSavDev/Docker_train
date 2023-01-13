@@ -1,0 +1,51 @@
+.container {
+    display: grid;
+    gap: 8px;
+    grid-template-areas: 'title'
+                            'text';
+    margin-top: 64px;
+}
+
+.containerWithButton {
+    display: grid;
+    gap: 8px;
+    grid-template-areas: 'title addProduct'
+                            'text text';
+    margin-top: 46px;
+}
+
+.title {
+    grid-area: title;
+    align-self: end;
+    font-size: 36px;
+    line-height: 1em;
+}
+
+.addProduct {
+    grid-area: addProduct;
+    justify-self: end;
+}
+
+.text {
+    grid-area: text;
+    font-size: 14px;
+    line-height: 1em;
+    color: rgba(43, 56, 68, 0.7);
+}
+
+@media (max-width: 720px) {
+    .container {
+        gap: 10px;
+    }
+
+    .containerWithButton {
+        grid-template-areas: 'title'
+                            'text '
+                            'addProduct';
+        gap: 10px;
+    }
+
+    .addProduct {
+        justify-self: start;
+    }
+}

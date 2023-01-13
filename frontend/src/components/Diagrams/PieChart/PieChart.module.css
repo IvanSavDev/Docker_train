@@ -1,0 +1,46 @@
+.pieChart {
+    grid-area: PieChart;
+    padding: 32px 32px 40px 32px;
+    background-color: #ffffff;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    max-height: 200px;
+    height: 100%;
+    margin-top: 37px;
+    gap: 28px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 169px;
+    padding: 20px 0 20px 0;
+    overflow-y: auto;
+}
+
+.list::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+.header {
+    font-size: 18px;
+    line-height: 1em;
+    margin-bottom: 24px;
+}
+
+.notSales {
+    align-self: center;
+}

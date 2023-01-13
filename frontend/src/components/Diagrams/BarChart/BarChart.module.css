@@ -1,0 +1,15 @@
+.barChart {
+    grid-area: BarChart;
+    padding: 32px 32px 40px 32px;
+    background-color: #ffffff;
+}
+
+.header {
+    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 1em;
+}
+
+.description {
+    margin-bottom: 70px;
+}

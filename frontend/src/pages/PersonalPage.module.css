@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    min-height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 0 56px 56px 56px;
+    background-color: #F8F8F8;
+    overflow: hidden;
+}
+
+@media (max-width: 920px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 720px) {
+    .wrapper {
+        padding: 0 25px 36px 25px;
+    }
+}
