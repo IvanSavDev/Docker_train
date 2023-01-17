@@ -10,12 +10,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    companyName: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
       unique: true,
     },
-    address: String,
+    address: {
+      type: String,
+    },
     passwordHash: {
       type: String,
       required: true,

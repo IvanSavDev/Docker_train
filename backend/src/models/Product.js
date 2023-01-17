@@ -18,6 +18,9 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+    },
     remains: {
       type: Number,
       required: true,

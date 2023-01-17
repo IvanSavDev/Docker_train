@@ -26,8 +26,11 @@ const SaleSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    lastSale: {
+    address: {
       type: String,
+    },
+    lastSale: {
+      type: Date,
       required: true,
     },
     userId: {
