@@ -1,7 +1,7 @@
-import { validationResult } from 'express-validator';
-
 import SaleModel from '../models/Sale.js';
-import { Errors } from '../consts/consts.js';
+
+import ProductModal from '../models/Product.js';
+import { ProductErrors, SaleErrors } from '../consts/consts.js';
 import { getFormatDate } from '../utils/utils.js';
 
 export const getSales = async (req, res) => {
@@ -11,52 +11,60 @@ export const getSales = async (req, res) => {
     });
 
     if (!sales) {
-      return res.status(400).json({
-        message: Errors.Not_found_sales,
+      return res.status(404).json({
+        message: SaleErrors.NOT_FOUND_SALES,
       });
     }
 
-    const formattedSales = sales.map((product) => ({
-      id: product._id,
-      store: product.store,
-      price: product.price,
-      name: product.name,
-      category: product.category,
-      remains: product.remains,
-      weight: product.weight,
-      creationDate: getFormatDate(product.createdAt),
-    }));
+    const formattedSales = [...sales]
+      .sort(
+        (firstSale, secondSale) =>
+          new Date(secondSale.lastSale).getTime() -
+          new Date(firstSale.lastSale).getTime(),
+      )
+      .map((sale) => ({
+        id: sale._id,
+        store: sale.store,
+        price: sale.price,
+        name: sale.name,
+        category: sale.category,
+        soldItems: sale.soldItems,
+        weight: sale.weight,
+        lastSale: getFormatDate(sale.lastSale),
+        creationDate: getFormatDate(sale.createdAt),
+      }));
 
     res.json(formattedSales);
   } catch (error) {
-    console.log('products', error);
-    res.status(500).json({ message: Errors.Get_sales });
+    console.log('Get sales', error);
+    res.status(500).json({ message: SaleErrors.GET_SALES });
   }
 };
 
 export const createSale = async (req, res) => {
   try {
-    const errors = validationResult(req);
+    const product = await ProductModal.findOne({
+      _id: req.body.productId,
+      userId: req.userId,
+    });
 
-    if (!errors.isEmpty()) {
-      console.log(errors);
-      return res.status(400).json({
-        message: Errors.Not_valid_sale,
-      });
+    if (!product) {
+      return res.status(404).json({ message: ProductErrors.NOT_FOUND_PRODUCT });
     }
-    console.log(req.body.productId);
+
     const doc = new SaleModel({
       userId: req.userId,
       productId: req.body.productId,
       store: req.body.store,
       price: req.body.price,
       name: req.body.name,
+      address: req.body.address,
       category: req.body.category,
       soldItems: req.body.soldItems,
       weight: req.body.weight,
       lastSale: req.body.lastSale,
     });
-    console.log(doc);
+
     const sale = await doc.save();
 
     const {
@@ -65,6 +73,7 @@ export const createSale = async (req, res) => {
       store,
       price,
       name,
+      address,
       category,
       soldItems,
       weight,
@@ -78,41 +87,38 @@ export const createSale = async (req, res) => {
       store,
       price,
       name,
+      address,
       category,
       soldItems,
       weight,
       creationDate: getFormatDate(creationDate),
-      lastSale,
+      lastSale: getFormatDate(lastSale),
     });
   } catch (error) {
     console.log('Create sale', error);
-    res.status(500).json({ message: Errors.Create_sale });
+    res.status(500).json({ message: SaleErrors.CREATE_SALE });
   }
 };
 
 export const updateSale = async (req, res) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: Errors.Not_valid_sale,
-      });
-    }
-
     const saleId = req.params.id;
 
-    const updatedSale = await SaleModel.findByIdAndUpdate(
-      saleId,
+    const updatedSale = await SaleModel.findOneAndUpdate(
+      { _id: saleId, userId: req.userId },
       {
         ...req.body,
       },
       { new: true },
     );
 
+    if (!updatedSale) {
+      return res.status(404).json({
+        message: SaleErrors.NOT_FOUND_SALE,
+      });
+    }
+
     const {
-      _id: id,
-      productId,
       store,
       price,
       name,
@@ -124,8 +130,6 @@ export const updateSale = async (req, res) => {
     } = updatedSale;
 
     res.json({
-      id,
-      productId,
       store,
       price,
       name,
@@ -133,10 +137,10 @@ export const updateSale = async (req, res) => {
       soldItems,
       weight,
       creationDate: getFormatDate(creationDate),
-      lastSale,
+      lastSale: getFormatDate(lastSale),
     });
   } catch (error) {
-    console.log('Edit sale', error);
-    res.status(500).json({ message: Errors.Edit_sale });
+    console.log('Update sale', error);
+    res.status(500).json({ message: SaleErrors.UPDATE_SALE });
   }
 };
