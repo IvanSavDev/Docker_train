@@ -1,22 +1,25 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { validationResult } from 'express-validator';
 
 import UserModal from '../models/User.js';
-import { Errors, KEY_JWT, TOKEN_LIFESPAN } from '../consts/consts.js';
-import { getFormatDate } from '../utils/utils.js';
+import {
+  Errors,
+  KEY_JWT,
+  TOKEN_LIFESPAN,
+  UserErrors,
+} from '../consts/consts.js';
 
 export const login = async (req, res) => {
   try {
     const user = await UserModal.findOne({ email: req.body.email });
 
     if (!user) {
-      return res.status(401).json({
-        message: Errors.Authentication_Error,
+      return res.status(404).json({
+        message: Errors.FAILED_IDENTIFICATION,
       });
     }
 
-    const { _id, name, surname, email, address, passwordHash } = user._doc;
+    const { _id, passwordHash } = user._doc;
 
     const isValidPassword = await bcrypt.compare(
       req.body.password,
@@ -24,8 +27,8 @@ export const login = async (req, res) => {
     );
 
     if (!isValidPassword) {
-      return res.status(401).json({
-        message: Errors.Authentication_Error,
+      return res.status(404).json({
+        message: Errors.FAILED_IDENTIFICATION,
       });
     }
 
@@ -37,23 +40,15 @@ export const login = async (req, res) => {
       { expiresIn: TOKEN_LIFESPAN },
     );
 
-    res.json({ _id, name, surname, email, address, token });
+    res.json({ token });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: Errors.Failed_Authorization });
+    console.log('Login', error);
+    res.status(500).json({ message: Errors.FAILED_AUTHORIZATION });
   }
 };
 
 export const registration = async (req, res) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: Errors.Invalid_Data,
-      });
-    }
-
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(req.body.password, salt);
 
@@ -61,13 +56,14 @@ export const registration = async (req, res) => {
       name: req.body.name,
       surname: req.body.surname,
       email: req.body.email,
+      companyName: req.body.companyName,
       address: '',
       passwordHash: hash,
     });
 
     const user = await doc.save();
 
-    const { _id, name, surname, email, address } = user._doc;
+    const { _id } = user._doc;
 
     const token = jwt.sign(
       {
@@ -77,56 +73,65 @@ export const registration = async (req, res) => {
       { expiresIn: TOKEN_LIFESPAN },
     );
 
-    res.json({ _id, name, surname, email, address, token });
+    res.json({ token });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: Errors.Failed_Registration });
+    console.log('Registration', error);
+    res.status(500).json({ message: Errors.FAILED_REGISTRATION });
   }
 };
 
 export const updateUser = async (req, res) => {
   try {
-    const errors = validationResult(req);
+    const { userId } = req;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: Errors.Not_valid_user,
-      });
+    let hash;
+
+    if (req.body.newPassword) {
+      const salt = await bcrypt.genSalt(10);
+      hash = await bcrypt.hash(req.body.newPassword, salt);
     }
 
-    const productId = req.params.id;
+    const { newPassword, ...rest } = req.body;
 
-    const updatedProduct = await UserModal.findByIdAndUpdate(
-      productId,
+    const updatedUser = await UserModal.findByIdAndUpdate(
+      userId,
       {
-        ...req.body,
+        ...rest,
+        passwordHash: hash,
       },
       { new: true },
     );
 
-    const {
-      _id: id,
-      store,
-      price,
-      name,
-      category,
-      remains,
-      weight,
-      createdAt: creationDate,
-    } = updatedProduct;
+    const { name, surname, companyName, email, address } = updatedUser;
 
     res.json({
-      id,
-      store,
-      price,
       name,
-      category,
-      remains,
-      weight,
-      creationDate: getFormatDate(creationDate),
+      surname,
+      companyName,
+      email,
+      address,
     });
   } catch (error) {
-    console.log('Edit user', error);
-    res.status(500).json({ message: Errors.Edit_user });
+    console.log('Update user', error);
+    res.status(500).json({ message: UserErrors.UPDATE_USER });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await UserModal.findOne({ _id: req.userId });
+
+    if (!user) {
+      return res.status(404).json({
+        message: Errors.FAILED_IDENTIFICATION,
+      });
+    }
+
+    const { name, surname, email, companyName, address } = user._doc;
+
+    res.json({ name, surname, companyName, email, address });
+  } catch (error) {
+    console.log('Get user', error);
+    res.status(500).json({ message: UserErrors.GET_USER });
   }
 };
