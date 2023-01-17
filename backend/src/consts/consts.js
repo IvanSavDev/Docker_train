@@ -3,19 +3,22 @@ export const KEY_JWT = 'Secret123';
 
 export const TOKEN_LIFESPAN = '30d';
 
+export const REG_PASSWORD =
+  /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 export const Errors = {
-  Permission_denied: 'Permission denied',
-  Invalid_Data: 'Invalid data',
-  Failed_Registration: 'Failed to registration',
-  Failed_Authorization: 'Failed to authorization',
-  Failed_Authentication: 'Failed to authentication',
-  Failed_Identification: 'Wrong email or password',
-  More_zero: 'Value must be greater than 0',
-  More_one_symbol: 'Minimum 1 character required',
-  More_three_symbol: 'Minimum 3 character required',
-  Integer: 'Value must be integer and greater than 0',
-  Invalid_Date: 'Invalid Date',
-  Not_valid_address: 'Not valid address',
+  PERMISSION_DENIED: 'Permission denied',
+  INVALID_DATA: 'Invalid data',
+  FAILED_REGISTRATION: 'Failed to registration',
+  FAILED_AUTHORIZATION: 'Failed to authorization',
+  FAILED_AUTHENTICATION: 'Failed to authentication',
+  FAILED_IDENTIFICATION: 'Wrong email or password',
+  MORE_ZERO: 'Value must be greater than 0',
+  MORE_ONE_SYMBOL: 'Minimum 1 string character required',
+  MORE_THREE_SYMBOLS: 'Minimum 3 string characters required',
+  INTEGER: 'Value must be integer and greater than 0',
+  INVALID_DATE: 'Invalid Date',
+  NOT_VALID_ADDRESS: 'Not valid address',
 };
 
 export const EmailErrors = {
@@ -26,6 +29,7 @@ export const EmailErrors = {
 export const UserErrors = {
   UPDATE_USER: 'Error during editing user',
   NOT_VALID_USER: 'Not valid user data',
+  GET_USER: 'Error during getting user',
 };
 
 export const ProductErrors = {
@@ -66,6 +70,3 @@ export const Routes = {
   Registration: '/registration',
   User: '/user',
 };
-
-export const REG_PASSWORD =
-  /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
