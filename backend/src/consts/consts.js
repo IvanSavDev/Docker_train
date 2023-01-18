@@ -1,5 +1,5 @@
 export const PORT = 4000;
-export const KEY_JWT = 'Secret123';
+export const KEY_JWT = 'SuperSecret';
 
 export const TOKEN_LIFESPAN = '30d';
 
