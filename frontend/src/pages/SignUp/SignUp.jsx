@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
-import useProducts from '../../hooks/useProducts';
-import useSales from '../../hooks/useSales';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
-import useAccount from '../../hooks/useAccount';
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Form from '../../components/Form/Form';
 import RouteLink from '../../components/RouteLink/RouteLink';
@@ -17,10 +16,13 @@ import {
   isValidFullName,
   isValidPassword,
 } from '../../utils/validation';
-import { checkExistsAccountByEmail, haveErrors } from '../../utils/utils';
+import { haveErrors } from '../../utils/utils';
 import { Errors, Paths } from '../../consts/consts';
+import routes from '../../routes';
 
 import styles from './SignUp.module.css';
+import { getSales } from '../../slices/salesSlice';
+import { getUser } from '../../slices/userSlice';
 
 const SignUp = () => {
   const [errors, setErrors] = useState({
@@ -40,23 +42,18 @@ const SignUp = () => {
     password: '',
     repeatPassword: '',
   });
-  const { addAccount } = useAccount();
-  const { updateProducts } = useProducts();
-  const { updateSales } = useSales();
-  const { loadAccountFromLocalStorage } = useAccount();
   const { logIn } = useAuth();
+  const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     setErrors((prevState) => ({ ...prevState, [target.name]: null }));
     setForm({ [target.name]: target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { name, surname, companyName, email, password, repeatPassword } =
       form;
-
-    const isExistsAccount = checkExistsAccountByEmail(email);
 
     const checkedErrors = {
       name: isValidFullName(name) ? null : Errors.fullname,
@@ -67,24 +64,37 @@ const SignUp = () => {
       repeatPassword: isMatchPassword(password, repeatPassword)
         ? null
         : Errors.matchPassword,
-      accountExists: !isExistsAccount ? null : Errors.accountExists,
     };
 
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
-      addAccount({
-        name: form.name,
-        surname: form.surname,
-        companyName: form.companyName,
-        email: form.email,
-        password: form.password,
-        address: '', // удалить когда прикрутишь бэк
-      });
-      updateProducts();
-      updateSales();
-      loadAccountFromLocalStorage();
-      logIn();
+      try {
+        const response = await axios.post(routes.registrationPath(), {
+          name: form.name,
+          surname: form.surname,
+          companyName: form.companyName,
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.repeatPassword,
+        });
+        localStorage.setItem('userId', response.data.token);
+        dispatch(getSales());
+        logIn();
+      } catch (error) {
+        const errorsInfo = error.response.data.errors;
+        const formattedErrors = errorsInfo.reduce(
+          (acc, errorInfo) => ({
+            ...acc,
+            [errorInfo.parameter]: errorInfo.message,
+          }),
+          {},
+        );
+        setErrors((prevState) => ({
+          ...prevState,
+          ...formattedErrors,
+        }));
+      }
     } else {
       setErrors(checkedErrors);
     }

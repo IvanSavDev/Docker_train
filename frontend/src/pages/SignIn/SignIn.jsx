@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
-import useProducts from '../../hooks/useProducts';
-import useSales from '../../hooks/useSales';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
-import useAccount from '../../hooks/useAccount';
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Input from '../../components/Inputs/Input';
 import RouteLink from '../../components/RouteLink/RouteLink';
 import Form from '../../components/Form/Form';
 import StandardButton from '../../components/Buttons/StandardButton';
-import { setDataInLocalStorage } from '../../utils/localStorage';
 import { isValidEmail, isValidPassword } from '../../utils/validation';
-import { getAccountByEmailAndPassword } from '../../utils/utils';
-import { Errors, KeysLocalStorage, Paths } from '../../consts/consts';
+import { haveErrors } from '../../utils/utils';
+import { Errors, Paths } from '../../consts/consts';
+import routes from '../../routes';
+import { getSales } from '../../slices/salesSlice';
+import { getUser } from '../../slices/userSlice';
 
 import styles from './SignIn.module.css';
 
@@ -21,13 +22,10 @@ const SignIn = () => {
   const [errors, setErrors] = useState({
     email: null,
     password: null,
-    existsAccount: true,
+    invalidAccount: null,
   });
+  const dispatch = useDispatch();
   const { logIn } = useAuth();
-  const { updateAccount } = useAccount();
-  const { updateProducts } = useProducts();
-  const { updateSales } = useSales();
-  const { loadAccountFromLocalStorage } = useAccount();
   const [form, setForm] = useForm({
     email: '',
     password: '',
@@ -38,29 +36,53 @@ const SignIn = () => {
     setForm({ [target.name]: target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = form;
-
-    const account = getAccountByEmailAndPassword(email, password);
-    const isExistsAccount = Boolean(account);
 
     const checkedErrors = {
       email: isValidEmail(email) ? null : Errors.email,
       password: isValidPassword(password) ? null : Errors.password,
-      existsAccount: isExistsAccount,
     };
 
-    if (isExistsAccount) {
-      setDataInLocalStorage(KeysLocalStorage.userId, account.id);
-      updateAccount(account);
-      updateProducts();
-      updateSales();
-      loadAccountFromLocalStorage();
-      logIn();
+    const isNotErrors = haveErrors(checkedErrors);
+
+    if (isNotErrors) {
+      try {
+        const response = await axios.post(routes.loginPath(), {
+          name: form.name,
+          surname: form.surname,
+          companyName: form.companyName,
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.repeatPassword,
+        });
+        localStorage.setItem('userId', response.data.token);
+        dispatch(getSales());
+        logIn();
+      } catch (error) {
+        const errorsInfo = error.response.data.errors;
+        const formattedErrors = errorsInfo.reduce(
+          (acc, errorInfo) => ({
+            ...acc,
+            [errorInfo.parameter]: errorInfo.message,
+          }),
+          {},
+        );
+        setErrors((prevState) => ({
+          ...prevState,
+          ...formattedErrors,
+        }));
+      }
     } else {
       setErrors(checkedErrors);
     }
+  };
+  const isInvalidAccount = () => {
+    if (errors.invalidAccount) {
+      return errors.email || errors.password;
+    }
+    return true;
   };
 
   return (
@@ -85,18 +107,16 @@ const SignIn = () => {
           value={form.password}
         />
         <div className={styles.containerError}>
-          {errors.existsAccount ||
-            Boolean(errors.email) ||
-            Boolean(errors.password) || (
-              <p className={styles.invalidValue}>Invalid email or password</p>
-            )}
+          {isInvalidAccount() || (
+            <p className={styles.invalidValue}>Invalid email or password</p>
+          )}
         </div>
         <StandardButton type="submit" sx={{ marginBottom: '32px' }} fullWidth>
           Log in
         </StandardButton>
         <div>
           <span className={styles.haveAccountText}>
-            Don't have an account?{' '}
+            {`Don't have an account? `}
           </span>
           <RouteLink to={Paths.signUp}>Create account</RouteLink>
         </div>
