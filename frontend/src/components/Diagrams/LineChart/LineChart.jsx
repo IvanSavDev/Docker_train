@@ -1,5 +1,6 @@
 import React from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { useSelector } from 'react-redux';
 
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import { formatNumberWithSymbol } from '../../../utils/utils';
@@ -7,9 +8,9 @@ import useSales from '../../../hooks/useSales';
 
 import styles from './LineChart.module.css';
 
-const Chart = () => {
-  const { sales } = useSales();
-
+const Chart = ({ data }) => {
+  // const { sales } = useSales();
+  // const { sales } = useSelector((state) => state.sales);
   const chartData = [
     { name: 'January', totalCost: 0 },
     { name: 'February', totalCost: 0 },
@@ -25,19 +26,21 @@ const Chart = () => {
     { name: 'December', totalCost: 0 },
   ];
 
-  if (sales) {
-    Object.values(sales).forEach((sale) => {
-      const date = new Date(sale.dateSale);
+  if (data) {
+    data.forEach((sale) => {
+      const date = new Date(sale.lastSale);
       const monthNumber = date.getMonth();
       const year = date.getFullYear();
       const currentYear = new Date().getFullYear();
 
       if (year === currentYear) {
-        chartData[monthNumber].totalCost += sale.soldItems * sale.price;
+        chartData[monthNumber].totalCost += Math.floor(
+          sale.soldItems * sale.price,
+        );
       }
     });
   }
-
+  console.log(chartData);
   return (
     <div className={styles.lineChart}>
       <h2 className={styles.header}>Total earned this year</h2>

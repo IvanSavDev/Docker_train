@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useSelector } from 'react-redux';
 
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import useSales from '../../../hooks/useSales';
@@ -39,8 +40,9 @@ const getWidthYAxis = (maxValue) => {
   return 105;
 };
 
-const Chart = () => {
-  const { sales } = useSales();
+const Chart = ({ data }) => {
+  // const { sales } = useSales();
+  // const { sales } = useSelector((state) => state.sales);
 
   const currentYear = new Date().getFullYear();
 
@@ -59,14 +61,16 @@ const Chart = () => {
     { name: 'Dec', totalCost: 0 },
   ];
 
-  if (sales) {
-    Object.values(sales).forEach((sale) => {
-      const date = new Date(sale.dateSale);
+  if (data) {
+    data.forEach((sale) => {
+      const date = new Date(sale.lastSale);
       const monthNumber = date.getMonth();
       const year = date.getFullYear();
 
       if (year === currentYear) {
-        chartData[monthNumber].totalCost += sale.soldItems * sale.price;
+        chartData[monthNumber].totalCost += Math.floor(
+          sale.soldItems * sale.price,
+        );
       }
     });
   }
@@ -87,8 +91,8 @@ const Chart = () => {
       [0],
     );
 
-  const chartDataWithSizeShadow = chartData.map((data) => ({
-    ...data,
+  const chartDataWithSizeShadow = chartData.map((value) => ({
+    ...value,
     sizeShadow: -interval,
   }));
 

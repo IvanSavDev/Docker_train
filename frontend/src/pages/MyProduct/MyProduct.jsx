@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TableBody from '@mui/material/TableBody';
+import { useDispatch, useSelector } from 'react-redux';
 
-import useProducts from '../../hooks/useProducts';
 import Header from '../../components/Header/Header';
 import TableTemplate from '../../components/Table/TableTemplate';
 import EmptyTable from '../../components/Table/EmptyTable';
@@ -18,6 +18,8 @@ import {
   getFormatDate,
   isEmptyObject,
 } from '../../utils/utils';
+import { deleteProduct, getProducts } from '../../slices/productsSlice';
+import { getUser } from '../../slices/userSlice';
 
 const tableHeaders = [
   'Product name',
@@ -32,26 +34,33 @@ const tableHeaders = [
 ];
 
 const MyProduct = () => {
-  const { products, deleteProduct } = useProducts();
-
-  const isExistProducts = products ? !isEmptyObject(products) : false;
+  // const { products, deleteProduct } = useProducts();
+  const { products, user } = useSelector((state) => ({
+    products: state.products.products,
+    user: state.user.user,
+  }));
+  console.log(products);
+  const dispatch = useDispatch();
+  console.log(products);
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(getProducts());
+    }
+    if (isEmptyObject(user)) {
+      dispatch(getUser());
+    }
+  }, []);
 
   return (
     <>
-      <Header
-        title="My product"
-        description="Product table"
-        addProductPage={true}
-      />
-      {isExistProducts ? (
+      <Header title="My product" description="Product table" addProductPage />
+      {products.length !== 0 ? (
         <TableTemplate>
           <TableHeader headers={tableHeaders} />
           <TableBody>
-            {Object.values(products).map((product) => (
-              <StyledTableRow key={product.store + Math.random()}>
-                <StyledTableCell align="center">
-                  {product.productName}
-                </StyledTableCell>
+            {products.map((product) => (
+              <StyledTableRow key={product.id}>
+                <StyledTableCell align="center">{product.name}</StyledTableCell>
                 <StyledTableCell align="center">
                   {product.store}
                 </StyledTableCell>
@@ -62,7 +71,7 @@ const MyProduct = () => {
                   {product.category}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {getFormatDate(product.creationDate)}
+                  {product.creationDate}
                 </StyledTableCell>
                 <StyledTableCell
                   align="center"
@@ -113,7 +122,9 @@ const MyProduct = () => {
                   >
                     <Edit />
                   </TableButton>
-                  <DeleteButton handleClick={() => deleteProduct(product.id)} />
+                  <DeleteButton
+                    handleClick={() => dispatch(deleteProduct(product.id))}
+                  />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
