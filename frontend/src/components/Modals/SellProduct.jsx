@@ -20,6 +20,27 @@ const initialStateForm = {
   dateSale: '',
 };
 
+const checkErrors = (numberProducts, restProducts, dateSale) => {
+  const resultInsertedDate = String(dateSale.$d);
+  console.log(resultInsertedDate);
+  return {
+    numberProducts:
+      numberProducts > 0
+        ? restProducts >= 0
+          ? null
+          : Errors.notEnoughGoods
+        : Errors.moreZero,
+    dateSale:
+      dateSale !== ''
+        ? resultInsertedDate !== 'Invalid Date'
+          ? new Date(resultInsertedDate).getTime() <= Date.now()
+            ? null
+            : Errors.date
+          : Errors.date
+        : Errors.date,
+  };
+};
+
 const SellProduct = ({ open, closeModal, productId }) => {
   const [errors, setErrors] = useState({ ...initialStateErrors });
   const [form, setForm] = useForm({ ...initialStateForm });
@@ -29,34 +50,20 @@ const SellProduct = ({ open, closeModal, productId }) => {
   const handleSubmit = () => {
     const { numberProducts, dateSale } = form;
 
-    const numberProductsAsNumber = Number(numberProducts);
-    const resultInsertedDate = String(dateSale.$d);
     const oldProduct = products[productId];
     const restProducts = oldProduct.remains - numberProducts;
-
-    const checkedErrors = {
-      numberProducts:
-        numberProductsAsNumber > 0
-          ? restProducts >= 0
-            ? null
-            : Errors.notEnoughGoods
-          : Errors.moreZero,
-      dateSale:
-        dateSale !== ''
-          ? resultInsertedDate !== 'Invalid Date'
-            ? new Date(resultInsertedDate).getTime() <= Date.now()
-              ? null
-              : Errors.date
-            : Errors.date
-          : Errors.date,
-    };
-
+    const numberProductsAsNumber = Number(numberProducts);
+    const checkedErrors = checkErrors(
+      numberProductsAsNumber,
+      restProducts,
+      dateSale,
+    );
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
+      const resultInsertedDate = String(dateSale.$d);
       const date = new Date(resultInsertedDate).getTime();
       const product = getProduct(productId);
-
       const existedSale = sales
         ? Object.values(sales).find((sale) => sale.productId === productId)
         : null;

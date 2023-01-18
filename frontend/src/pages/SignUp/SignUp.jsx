@@ -79,7 +79,7 @@ const SignUp = () => {
         companyName: form.companyName,
         email: form.email,
         password: form.password,
-        address: '',
+        address: '', // удалить когда прикрутишь бэк
       });
       updateProducts();
       updateSales();
