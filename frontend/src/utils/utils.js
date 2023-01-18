@@ -41,21 +41,8 @@ export const haveErrors = (errors) =>
 
 export const generateId = () => Date.now() + Math.floor(Math.random() * 100);
 
-export const getFormatDate = (dateForFormat) => {
-  const dateInMilliseconds = dateForFormat
-    ? new Date(dateForFormat)
-    : new Date();
-  let day = dateInMilliseconds.getDate();
-  if (String(day).length === 1) {
-    day = `0${day}`;
-  }
-  let month = dateInMilliseconds.getMonth() + 1;
-  if (String(month).length === 1) {
-    month = `0${month}`;
-  }
-  const year = dateInMilliseconds.getFullYear();
-  return `${day}.${month}.${year}`;
-};
+export const getFormatDate = (dateForFormat) =>
+  new Date(dateForFormat).toLocaleDateString();
 
 export const formatNumberWithSymbol = (number, symbol = ' ') => {
   let result = '';
