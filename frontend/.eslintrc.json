@@ -35,6 +35,8 @@
         "no-alert": "off",
         "react/jsx-props-no-spreading": "off",
         "no-console": "off",
-        "no-nested-ternary": "off"
+        "no-nested-ternary": "off",
+        "no-unused-vars": "off",
+        "no-param-reassign": "off"
     }
 }
