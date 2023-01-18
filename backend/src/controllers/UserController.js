@@ -19,7 +19,7 @@ export const login = async (req, res) => {
       });
     }
 
-    const { _id, passwordHash } = user._doc;
+    const { _id, passwordHash } = user;
 
     const isValidPassword = await bcrypt.compare(
       req.body.password,
@@ -63,7 +63,7 @@ export const registration = async (req, res) => {
 
     const user = await doc.save();
 
-    const { _id } = user._doc;
+    const { _id } = user;
 
     const token = jwt.sign(
       {
@@ -127,7 +127,7 @@ export const getUser = async (req, res) => {
       });
     }
 
-    const { name, surname, email, companyName, address } = user._doc;
+    const { name, surname, email, companyName, address } = user;
 
     res.json({ name, surname, companyName, email, address });
   } catch (error) {

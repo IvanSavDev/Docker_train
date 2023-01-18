@@ -79,7 +79,7 @@ export const createSale = async (req, res) => {
       weight,
       createdAt: creationDate,
       lastSale,
-    } = sale._doc;
+    } = sale;
 
     res.json({
       id,

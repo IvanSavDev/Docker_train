@@ -64,7 +64,7 @@ export const createProduct = async (req, res) => {
       remains,
       weight,
       createdAt: creationDate,
-    } = product._doc;
+    } = product;
 
     res.json({
       id,
