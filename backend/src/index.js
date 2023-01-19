@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 import {
   getUser,
@@ -43,7 +44,13 @@ mongoose
 
 const app = express();
 
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200,
+};
+
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get(Routes.Sales, checkAuth, getSales);
 app.post(
@@ -54,7 +61,7 @@ app.post(
   createSale,
 );
 app.patch(
-  `${Routes.Sale}/:id`,
+  `${Routes.Sales}/:id`,
   checkAuth,
   updateSaleValidator,
   handleValidationErrors,
@@ -86,7 +93,7 @@ app.post(
   handleValidationErrors,
   registration,
 );
-app.post(
+app.patch(
   Routes.User,
   checkAuth,
   updateUserValidator,
