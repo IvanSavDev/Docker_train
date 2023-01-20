@@ -1,64 +1,108 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import useAccount from '../../hooks/useAccount';
-import useProducts from '../../hooks/useProducts';
 import useForm from '../../hooks/useForm';
 import StandardButton from '../Buttons/StandardButton';
 import Input from '../Inputs/Input';
 import ModalTitle from './ModalTitle';
 import ModalInputContainer from './ModalInputContainer';
-import ModalContainer from './ModalContainer';
-import { Errors } from '../../consts/consts';
-import { haveErrors } from '../../utils/utils';
+import { Errors, FetchErrors, Statuses } from '../../consts/consts';
+import { formatErrors, haveErrors } from '../../utils/utils';
+import { createProduct } from '../../slices/productsSlice';
 
-const CreateProduct = ({ open, closeModal }) => {
-  const [errors, setErrors] = useState({
-    store: null,
-    price: null,
-    productName: null,
-    category: null,
-    remains: null,
-    weight: null,
-  });
-  const [form, setForm] = useForm({
-    store: '',
-    price: '',
-    productName: '',
-    category: '',
-    remains: '',
-    weight: '',
-  });
-  const { addProduct } = useProducts();
-  const { account } = useAccount();
+const checkErrors = (form) => {
+  const { store, price, name, category, remains, weight } = form;
+  return {
+    store: store.length > 0 ? null : Errors.REQUIRED_FIELD,
+    price: Number.isInteger(price)
+      ? price > 0
+        ? null
+        : Errors.MORE_ZERO
+      : Errors.PRICE_INTEGER,
+    name: name.length > 0 ? null : Errors.REQUIRED_FIELD,
+    category: category.length > 0 ? null : Errors.REQUIRED_FIELD,
+    remains: Number.isInteger(remains)
+      ? remains > 0
+        ? null
+        : Errors.MORE_ZERO
+      : Errors.PRICE_INTEGER,
+    weight: weight > 0 ? null : Errors.MORE_ZERO,
+  };
+};
 
-  const handleSubmit = () => {
-    const { store, price, productName, category, remains, weight } = form;
+const initialStateErrors = {
+  store: null,
+  price: null,
+  name: null,
+  category: null,
+  remains: null,
+  weight: null,
+};
+
+const initialStateForm = {
+  store: '',
+  price: '',
+  name: '',
+  category: '',
+  remains: '',
+  weight: '',
+};
+
+const CreateProduct = ({ closeModal }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const { status } = useSelector((state) => state.products);
+  const [errors, setErrors] = useState(initialStateErrors);
+  const [form, setForm] = useForm(initialStateForm);
+
+  const handleClose = () => {
+    if (status !== Statuses.PENDING) {
+      closeModal();
+    }
+  };
+
+  const handleSubmit = async () => {
+    const { price, remains, weight } = form;
 
     const priceAsNumber = Number(price);
     const remainsAsNumber = Number(remains);
     const weightAsNumber = Number(weight);
 
-    const checkedErrors = {
-      store: store.length > 0 ? null : Errors.requiredField,
-      price: priceAsNumber > 0 ? null : Errors.moreZero,
-      productName: productName.length > 0 ? null : Errors.requiredField,
-      category: category.length > 0 ? null : Errors.requiredField,
-      remains: remainsAsNumber > 0 ? null : Errors.moreZero,
-      weight: weightAsNumber > 0 ? null : Errors.moreZero,
+    const updatedForm = {
+      ...form,
+      price: priceAsNumber,
+      remains: remainsAsNumber,
+      weight: weightAsNumber,
     };
 
+    const checkedErrors = checkErrors(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
-      addProduct({
-        ...form,
-        address: account.address,
-        price: priceAsNumber,
-        remains: remainsAsNumber,
-        weight: weightAsNumber,
-      });
-      closeModal();
+      try {
+        await dispatch(
+          createProduct({
+            ...updatedForm,
+            address: user.address,
+          }),
+        ).unwrap();
+        closeModal();
+      } catch (error) {
+        const formattedErrors = formatErrors(error.errors);
+        if (error.status === 401) {
+          toast.error(FetchErrors.AUTHORIZATION);
+        }
+        if (error.status === 400) {
+          setErrors((prevState) => ({
+            ...prevState,
+            ...formattedErrors,
+          }));
+        } else {
+          toast.error(FetchErrors.UNEXPECTED);
+        }
+      }
     } else {
       setErrors(checkedErrors);
     }
@@ -70,8 +114,8 @@ const CreateProduct = ({ open, closeModal }) => {
   };
 
   return (
-    <ModalContainer open={open} onClose={closeModal}>
-      <ModalTitle handleClose={closeModal}>Creating a product</ModalTitle>
+    <>
+      <ModalTitle handleClose={handleClose}>Creating a product</ModalTitle>
       <ModalInputContainer>
         <Input
           name="store"
@@ -91,12 +135,12 @@ const CreateProduct = ({ open, closeModal }) => {
           value={form.price}
         />
         <Input
-          name="productName"
+          name="name"
           label="Product name"
-          error={Boolean(errors.productName)}
-          helperText={errors.productName}
+          error={Boolean(errors.name)}
+          helperText={errors.name}
           onChange={handleChange}
-          value={form.productName}
+          value={form.name}
         />
         <Input
           name="category"
@@ -124,11 +168,15 @@ const CreateProduct = ({ open, closeModal }) => {
         />
       </ModalInputContainer>
       <DialogActions>
-        <StandardButton onClick={handleSubmit} fullWidth>
+        <StandardButton
+          onClick={handleSubmit}
+          fullWidth
+          disabled={status === Statuses.PENDING}
+        >
           Add Product +
         </StandardButton>
       </DialogActions>
-    </ModalContainer>
+    </>
   );
 };
 

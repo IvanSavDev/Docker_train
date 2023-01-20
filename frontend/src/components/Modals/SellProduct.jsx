@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
+import { useDispatch, useSelector } from 'react-redux';
 
-import useSales from '../../hooks/useSales';
-import useProducts from '../../hooks/useProducts';
 import useForm from '../../hooks/useForm';
-import ModalContainer from './ModalContainer';
 import ModalTitle from './ModalTitle';
 import ModalInputContainer from './ModalInputContainer';
 import Input from '../Inputs/Input';
@@ -12,87 +10,94 @@ import DateInput from '../Inputs/DateInput';
 import StandardButton from '../Buttons/StandardButton';
 import { haveErrors } from '../../utils/utils';
 import { Errors } from '../../consts/consts';
+import { createSale, updateSale } from '../../slices/salesSlice';
+import { updateProduct } from '../../slices/productsSlice';
 
-const initialStateErrors = { numberProducts: null, dateSale: null };
+const initialStateErrors = { numberProducts: null, lastSale: null };
 
 const initialStateForm = {
-  numberProducts: '',
-  dateSale: '',
+  soldItems: '',
+  lastSale: '',
 };
 
-const checkErrors = (numberProducts, restProducts, dateSale) => {
-  const resultInsertedDate = String(dateSale.$d);
-  console.log(resultInsertedDate);
+const checkErrors = (numberProducts, restProducts, lastSale) => {
+  const resultInsertedDate = String(lastSale.$d);
   return {
-    numberProducts:
+    soldItems:
       numberProducts > 0
         ? restProducts >= 0
           ? null
-          : Errors.notEnoughGoods
-        : Errors.moreZero,
-    dateSale:
-      dateSale !== ''
+          : Errors.NOT_ENOUGH_GOODS
+        : Errors.MORE_ZERO,
+    lastSale:
+      lastSale !== ''
         ? resultInsertedDate !== 'Invalid Date'
           ? new Date(resultInsertedDate).getTime() <= Date.now()
             ? null
-            : Errors.date
-          : Errors.date
-        : Errors.date,
+            : Errors.INVALID_DATE
+          : Errors.INVALID_DATE
+        : Errors.INVALID_DATE,
   };
 };
 
 const SellProduct = ({ open, closeModal, productId }) => {
+  const { sales, products } = useSelector((state) => ({
+    products: state.products.products,
+    sales: state.sales.sales,
+  }));
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState({ ...initialStateErrors });
   const [form, setForm] = useForm({ ...initialStateForm });
-  const { sales, addSale, updateSale } = useSales();
-  const { products, updateProduct, getProduct } = useProducts();
 
   const handleSubmit = () => {
-    const { numberProducts, dateSale } = form;
+    const { soldItems, lastSale } = form;
 
-    const oldProduct = products[productId];
-    const restProducts = oldProduct.remains - numberProducts;
-    const numberProductsAsNumber = Number(numberProducts);
+    const soldProduct = products.find((product) => product.id === productId);
+    const soldItemsAsNumber = Number(soldItems);
+    const productRemains = soldProduct.remains - soldItemsAsNumber;
     const checkedErrors = checkErrors(
-      numberProductsAsNumber,
-      restProducts,
-      dateSale,
+      soldItemsAsNumber,
+      productRemains,
+      lastSale,
     );
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
-      const resultInsertedDate = String(dateSale.$d);
-      const date = new Date(resultInsertedDate).getTime();
-      const product = getProduct(productId);
-      const existedSale = sales
-        ? Object.values(sales).find((sale) => sale.productId === productId)
-        : null;
+      const resultInsertedDate = String(lastSale.$d);
+      const date = new Date(resultInsertedDate).toISOString();
+      const existedSale = sales.find((sale) => sale.productId === productId);
 
       if (existedSale) {
-        updateSale(existedSale.id, {
-          soldItems: existedSale.soldItems + numberProductsAsNumber,
-          dateSale: date,
-        });
+        dispatch(
+          updateSale({
+            id: existedSale.id,
+            soldItems: existedSale.soldItems + soldItemsAsNumber,
+            lastSale: date,
+          }),
+        );
       } else {
-        addSale({
-          productId,
-          accountId: product.accountId,
-          productName: product.productName,
-          store: product.store,
-          address: product.address,
-          category: product.category,
-          creationDate: product.creationDate,
-          price: product.price,
-          soldItems: numberProductsAsNumber,
-          weight: product.weight,
-          dateSale: date,
-        });
+        dispatch(
+          createSale({
+            productId,
+            name: soldProduct.name,
+            store: soldProduct.store,
+            address: soldProduct.address,
+            category: soldProduct.category,
+            creationDate: soldProduct.creationDate,
+            price: soldProduct.price,
+            soldItems: soldItemsAsNumber,
+            weight: soldProduct.weight,
+            lastSale: date,
+          }),
+        );
       }
 
-      updateProduct(productId, {
-        ...products[productId],
-        remains: products[productId].remains - numberProductsAsNumber,
-      });
+      dispatch(
+        updateProduct({
+          id: productId,
+          remains: productRemains,
+        }),
+      );
 
       closeModal();
     } else {
@@ -106,16 +111,16 @@ const SellProduct = ({ open, closeModal, productId }) => {
   };
 
   const handleChangeDate = (date) => {
-    setErrors((prevState) => ({ ...prevState, dateSale: null }));
-    setForm({ dateSale: date });
+    setErrors((prevState) => ({ ...prevState, lastSale: null }));
+    setForm({ lastSale: date });
   };
 
   return (
-    <ModalContainer open={open} onClose={closeModal}>
+    <>
       <ModalTitle handleClose={closeModal}>Sell the product</ModalTitle>
       <ModalInputContainer errors={errors}>
         <Input
-          name="numberProducts"
+          name="soldItems"
           label="Number of products"
           error={Boolean(errors.numberProducts)}
           helperText={errors.numberProducts}
@@ -126,9 +131,9 @@ const SellProduct = ({ open, closeModal, productId }) => {
         <DateInput
           label="Date of sale"
           inputFormat="DD/MM/YYYY"
-          value={form.dateSale}
+          value={form.lastSale}
           onChange={handleChangeDate}
-          error={Boolean(errors.dateSale)}
+          error={Boolean(errors.lastSale)}
         />
       </ModalInputContainer>
       <DialogActions>
@@ -136,7 +141,7 @@ const SellProduct = ({ open, closeModal, productId }) => {
           Sell product
         </StandardButton>
       </DialogActions>
-    </ModalContainer>
+    </>
   );
 };
 

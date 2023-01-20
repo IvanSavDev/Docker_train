@@ -1,6 +1,12 @@
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import { styled } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { closeModal } from '../../slices/modalSlice';
+import CreateProduct from './CreateProduct';
+import EditProduct from './EditProduct';
+import SellProduct from './SellProduct';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiPaper-root': {
@@ -25,11 +31,34 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const ModalContainer = ({ children, ...rest }) => {
+const mapping = {
+  createProduct: CreateProduct,
+  editProduct: EditProduct,
+  sellProduct: SellProduct,
+};
+
+const ModalContainer = () => {
+  const dispatch = useDispatch();
+  const isOpened = useSelector((state) => state.modal.isOpened);
+  const { status } = useSelector((state) => state.modal.status);
+
+  const handleClose = () => {
+    if (status === 'pending') dispatch(closeModal());
+  };
+
+  const modalType = useSelector((state) => state.modal.type);
+
+  const Component = mapping[modalType];
   return (
-    <StyledDialog {...rest} aria-labelledby="customized-dialog-title">
-      {children}
-    </StyledDialog>
+    Component && (
+      <StyledDialog
+        aria-labelledby="customized-dialog-title"
+        open={isOpened}
+        onClose={handleClose}
+      >
+        <Component closeModal={handleClose} />
+      </StyledDialog>
+    )
   );
 };
 
