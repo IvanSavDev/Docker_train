@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
@@ -16,34 +16,57 @@ import {
   isValidFullName,
   isValidPassword,
 } from '../../utils/validation';
-import { haveErrors } from '../../utils/utils';
-import { Errors, Paths } from '../../consts/consts';
-import routes from '../../routes';
+import { formatErrors, haveErrors } from '../../utils/utils';
+import {
+  Errors,
+  FetchErrors,
+  KeysLocalStorage,
+  PasswordErrors,
+  Paths,
+  Routes,
+} from '../../consts/consts';
 
 import styles from './SignUp.module.css';
-import { getSales } from '../../slices/salesSlice';
-import { getUser } from '../../slices/userSlice';
+
+const checkErrors = (form) => {
+  const { name, surname, companyName, email, password, confirmPassword } = form;
+
+  return {
+    name: isValidFullName(name) ? null : Errors.FULL_NAME,
+    surname: isValidFullName(surname) ? null : Errors.FULL_NAME,
+    companyName: isValidCompanyName(companyName) ? null : Errors.COMPANY_NAME,
+    email: isValidEmail(email) ? null : Errors.EMAIL,
+    password: isValidPassword(password)
+      ? null
+      : PasswordErrors.INVALID_PASSWORD,
+    confirmPassword: isMatchPassword(password, confirmPassword)
+      ? null
+      : PasswordErrors.MATCH_PASSWORD,
+  };
+};
+
+const initialStateErrors = {
+  name: null,
+  surname: null,
+  companyName: null,
+  email: null,
+  password: null,
+  confirmPassword: null,
+};
+
+const initialStateForm = {
+  name: '',
+  surname: '',
+  companyName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
 
 const SignUp = () => {
-  const [errors, setErrors] = useState({
-    name: null,
-    surname: null,
-    companyName: null,
-    email: null,
-    password: null,
-    repeatPassword: null,
-    accountExists: null,
-  });
-  const [form, setForm] = useForm({
-    name: '',
-    surname: '',
-    companyName: '',
-    email: '',
-    password: '',
-    repeatPassword: '',
-  });
+  const [errors, setErrors] = useState(initialStateErrors);
+  const [form, setForm] = useForm(initialStateForm);
   const { logIn } = useAuth();
-  const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     setErrors((prevState) => ({ ...prevState, [target.name]: null }));
@@ -52,48 +75,42 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { name, surname, companyName, email, password, repeatPassword } =
+    const { name, surname, companyName, email, password, confirmPassword } =
       form;
-
-    const checkedErrors = {
-      name: isValidFullName(name) ? null : Errors.fullname,
-      surname: isValidFullName(surname) ? null : Errors.fullname,
-      companyName: isValidCompanyName(companyName) ? null : Errors.companyName,
-      email: isValidEmail(email) ? null : Errors.email,
-      password: isValidPassword(password) ? null : Errors.password,
-      repeatPassword: isMatchPassword(password, repeatPassword)
-        ? null
-        : Errors.matchPassword,
-    };
-
+    const checkedErrors = checkErrors(form);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
       try {
-        const response = await axios.post(routes.registrationPath(), {
-          name: form.name,
-          surname: form.surname,
-          companyName: form.companyName,
-          email: form.email,
-          password: form.password,
-          confirmPassword: form.repeatPassword,
-        });
-        localStorage.setItem('userId', response.data.token);
-        dispatch(getSales());
+        setErrors(initialStateErrors);
+        const response = await axios.post(
+          `http://localhost:4000/${Routes.REGISTRATION}`,
+          {
+            name,
+            surname,
+            companyName,
+            email,
+            password,
+            confirmPassword,
+          },
+        );
+        localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
         const errorsInfo = error.response.data.errors;
-        const formattedErrors = errorsInfo.reduce(
-          (acc, errorInfo) => ({
-            ...acc,
-            [errorInfo.parameter]: errorInfo.message,
-          }),
-          {},
-        );
-        setErrors((prevState) => ({
-          ...prevState,
-          ...formattedErrors,
-        }));
+        if (
+          error.name === 'AxiosError' &&
+          error.response.status === 400 &&
+          errorsInfo
+        ) {
+          const formattedErrors = formatErrors(errorsInfo);
+          setErrors((prevState) => ({
+            ...prevState,
+            ...formattedErrors,
+          }));
+        } else {
+          toast.error(FetchErrors.UNEXPECTED);
+        }
       }
     } else {
       setErrors(checkedErrors);
@@ -148,18 +165,13 @@ const SignUp = () => {
         />
         <Input
           type="password"
-          name="repeatPassword"
+          name="confirmPassword"
           label="Repeat password"
-          error={Boolean(errors.repeatPassword)}
-          helperText={errors.repeatPassword}
+          error={Boolean(errors.confirmPassword)}
+          helperText={errors.confirmPassword}
           onChange={handleChange}
-          value={form.repeatPassword}
+          value={form.confirmPassword}
         />
-        <div className={styles.containerError}>
-          {errors.accountExists && (
-            <p className={styles.accountExists}>Account already exist</p>
-          )}
-        </div>
         <StandardButton type="submit" sx={{ marginBottom: '32px' }} fullWidth>
           Create account
         </StandardButton>
@@ -168,7 +180,7 @@ const SignUp = () => {
         <span className={styles.alreadyHaveAccount}>
           Already have an account?{' '}
         </span>
-        <RouteLink to={Paths.signIn}>Log in</RouteLink>
+        <RouteLink to={Paths.SIGN_IN}>Log in</RouteLink>
       </div>
     </ContainerSignInAndSignUp>
   );

@@ -1,32 +1,33 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import useAccount from '../../hooks/useAccount';
 import useForm from '../../hooks/useForm';
 import Header from '../../components/Header/Header';
 import StandardButton from '../../components/Buttons/StandardButton';
 import Input from '../../components/Inputs/Input';
 import {
-  isMatchPassword,
   isValidCompanyName,
   isValidEmail,
   isValidFullName,
   isValidPassword,
 } from '../../utils/validation';
 import {
-  checkNewEmailOnValidation,
+  getChangedFields,
   haveErrors,
   isDifferencesWithOldAccount,
+  isEmptyObject,
 } from '../../utils/utils';
-import { Errors } from '../../consts/consts';
+import { Errors, PasswordErrors } from '../../consts/consts';
 
 import styles from './PersonalCabinet.module.css';
+import { getUser, updateUser } from '../../slices/userSlice';
 
 const initialStateForm = {
   name: '',
   surname: '',
   companyName: '',
   email: '',
-  password: '',
+  oldPassword: '',
   newPassword: '',
   address: '',
 };
@@ -36,39 +37,42 @@ const initialStateErrors = {
   surname: null,
   companyName: null,
   email: null,
-  password: null,
+  oldPassword: null,
   newPassword: null,
 };
 
 const PersonalCabinet = () => {
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [form, setForm] = useForm({ ...initialStateForm });
   const [errors, setErrors] = useState({ ...initialStateErrors });
-  const { account, updateAccount } = useAccount();
   const [disabledButton, setDisabledButton] = useState(true);
 
   useLayoutEffect(() => {
-    if (account) {
+    if (!isEmptyObject(user)) {
       setForm({
-        name: account.name,
-        surname: account.surname,
-        companyName: account.companyName,
-        email: account.email,
-        address: account.address,
+        name: user.name,
+        surname: user.surname,
+        companyName: user.companyName,
+        email: user.email,
+        address: user.address,
       });
+    } else {
+      dispatch(getUser());
     }
-  }, [setForm, account]);
+  }, [setForm, user]);
 
   useEffect(() => {
-    if (account) {
+    if (form) {
       setDisabledButton(
         isDifferencesWithOldAccount(
           {
-            name: account.name,
-            surname: account.surname,
-            companyName: account.companyName,
-            email: account.email,
-            address: account.address,
-            password: '',
+            name: user.name,
+            surname: user.surname,
+            companyName: user.companyName,
+            email: user.email,
+            address: user.address,
+            oldPassword: '',
             newPassword: '',
           },
           {
@@ -77,71 +81,103 @@ const PersonalCabinet = () => {
             companyName: form.companyName,
             email: form.email,
             address: form.address,
-            password: form.password,
+            oldPassword: form.oldPassword,
             newPassword: form.newPassword,
           },
         ),
       );
     }
-  }, [form, account]);
+  }, [form, user]);
 
   const handleChange = ({ target }) => {
     setErrors((prevState) => ({ ...prevState, [target.name]: null }));
     setForm({ [target.name]: target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { name, surname, companyName, email, password, newPassword } = form;
-
-    const isExistsAccount = checkNewEmailOnValidation(account.email, email);
+    const { name, surname, companyName, email, oldPassword, newPassword } =
+      form;
 
     const checkOldPasswordErrors = () => {
-      if (password.length === 0) {
-        return newPassword.length === 0 ? null : Errors.oldPassword;
+      if (oldPassword.length === 0) {
+        return newPassword.length === 0 ? null : PasswordErrors.OLD_PASSWORD;
       }
-      return isMatchPassword(password, account.password)
+      if (isValidPassword(oldPassword)) {
+        return newPassword !== oldPassword
+          ? null
+          : PasswordErrors.SAME_PASSWORD;
+      }
+      return isValidPassword(oldPassword)
         ? null
-        : Errors.matchOldPassword;
+        : PasswordErrors.INVALID_PASSWORD;
     };
 
     const checkNewPasswordErrors = () => {
       if (newPassword.length === 0) {
-        return password.length === 0 ? null : Errors.newPassword;
+        return oldPassword.length === 0 ? null : PasswordErrors.NEW_PASSWORD;
       }
-      return isValidPassword(newPassword) ? null : Errors.password;
+      if (isValidPassword(oldPassword)) {
+        return newPassword !== oldPassword
+          ? null
+          : PasswordErrors.SAME_PASSWORD;
+      }
+      return isValidPassword(newPassword)
+        ? null
+        : PasswordErrors.INVALID_PASSWORD;
     };
 
     const checkedErrors = {
-      name: isValidFullName(name) ? null : Errors.fullname,
-      surname: isValidFullName(surname) ? null : Errors.fullname,
-      companyName: isValidCompanyName(companyName) ? null : Errors.companyName,
-      email: isValidEmail(email)
-        ? !isExistsAccount
-          ? null
-          : Errors.accountExists
-        : Errors.email,
-      password: checkOldPasswordErrors(),
+      name: isValidFullName(name) ? null : Errors.FULL_NAME,
+      surname: isValidFullName(surname) ? null : Errors.FULL_NAME,
+      companyName: isValidCompanyName(companyName) ? null : Errors.COMPANY_NAME,
+      email: isValidEmail(email) ? null : Errors.EMAIL,
+      oldPassword: checkOldPasswordErrors(),
       newPassword: checkNewPasswordErrors(),
     };
 
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
-      const updatedAccount = {
-        id: account.id,
-        name: form.name,
-        surname: form.surname,
-        companyName: form.companyName,
-        email: form.email,
-        password: form.newPassword ? form.newPassword : account.password,
-        address: form.address,
-      };
-      setForm({
-        password: '',
-        newPassword: '',
-      });
-      updateAccount(updatedAccount);
+      const changedFields = getChangedFields(
+        {
+          name: user.name,
+          surname: user.surname,
+          companyName: user.companyName,
+          email: user.email,
+          address: user.address,
+          oldPassword: '',
+          newPassword: '',
+        },
+        {
+          name: form.name,
+          surname: form.surname,
+          companyName: form.companyName,
+          email: form.email,
+          address: form.address,
+          oldPassword: form.oldPassword,
+          newPassword: form.newPassword,
+        },
+      );
+      try {
+        await dispatch(updateUser(changedFields)).unwrap();
+        setForm({
+          oldPassword: '',
+          newPassword: '',
+        });
+        setErrors(initialStateErrors);
+      } catch (err) {
+        const formattedErrors = err.reduce((acc, error) => {
+          return {
+            ...acc,
+            [error.parameter]: error.message,
+          };
+        }, {});
+        setErrors((prevState) => ({
+          ...prevState,
+          ...formattedErrors,
+        }));
+      }
     } else {
       setErrors(checkedErrors);
     }
@@ -214,12 +250,12 @@ const PersonalCabinet = () => {
             gridArea: 'oldPassword',
           }}
           type="password"
-          name="password"
+          name="oldPassword"
           label="Enter old password"
-          error={Boolean(errors.password)}
-          helperText={errors.password}
+          error={Boolean(errors.oldPassword)}
+          helperText={errors.oldPassword}
           onChange={handleChange}
-          value={form.password}
+          value={form.oldPassword}
         />
         <Input
           sx={{

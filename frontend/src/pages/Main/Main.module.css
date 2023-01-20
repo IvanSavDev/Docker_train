@@ -5,6 +5,7 @@
     grid-template-columns: 464px 1fr;
     grid-template-rows: 326px 220px;
     gap: 24px;
+    flex-grow: 1;
     margin-top: 32px;
     padding-top: 40px;
     border-top: 1px solid rgba(43, 56, 68, 0.08);

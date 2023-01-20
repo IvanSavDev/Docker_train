@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
@@ -11,25 +11,51 @@ import Form from '../../components/Form/Form';
 import StandardButton from '../../components/Buttons/StandardButton';
 import { isValidEmail, isValidPassword } from '../../utils/validation';
 import { haveErrors } from '../../utils/utils';
-import { Errors, Paths } from '../../consts/consts';
+import {
+  Errors,
+  FetchErrors,
+  KeysLocalStorage,
+  PasswordErrors,
+  Paths,
+  Routes,
+} from '../../consts/consts';
 import routes from '../../routes';
-import { getSales } from '../../slices/salesSlice';
-import { getUser } from '../../slices/userSlice';
 
 import styles from './SignIn.module.css';
 
+const isInvalidAccount = (errors) => {
+  if (errors.invalidAccount) {
+    return Boolean(errors.email || errors.password);
+  }
+  return true;
+};
+
+const checkErrors = (form) => {
+  const { email, password } = form;
+
+  return {
+    email: isValidEmail(email) ? null : Errors.EMAIL,
+    password: isValidPassword(password)
+      ? null
+      : PasswordErrors.INVALID_PASSWORD,
+  };
+};
+
+const initialStateErrors = {
+  email: null,
+  password: null,
+  invalidAccount: null,
+};
+
+const initialStateForm = {
+  email: '',
+  password: '',
+};
+
 const SignIn = () => {
-  const [errors, setErrors] = useState({
-    email: null,
-    password: null,
-    invalidAccount: null,
-  });
-  const dispatch = useDispatch();
+  const [errors, setErrors] = useState(initialStateErrors);
+  const [form, setForm] = useForm(initialStateForm);
   const { logIn } = useAuth();
-  const [form, setForm] = useForm({
-    email: '',
-    password: '',
-  });
 
   const handleChange = ({ target }) => {
     setErrors((prevState) => ({ ...prevState, [target.name]: null }));
@@ -39,50 +65,47 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = form;
-
-    const checkedErrors = {
-      email: isValidEmail(email) ? null : Errors.email,
-      password: isValidPassword(password) ? null : Errors.password,
-    };
-
+    const checkedErrors = checkErrors(form);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
       try {
-        const response = await axios.post(routes.loginPath(), {
-          name: form.name,
-          surname: form.surname,
-          companyName: form.companyName,
-          email: form.email,
-          password: form.password,
-          confirmPassword: form.repeatPassword,
-        });
-        localStorage.setItem('userId', response.data.token);
-        dispatch(getSales());
+        setErrors(initialStateErrors);
+        const response = await axios.post(
+          `http://localhost:4000/${Routes.LOGIN}`,
+          {
+            email,
+            password,
+          },
+        );
+        localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
         const errorsInfo = error.response.data.errors;
-        const formattedErrors = errorsInfo.reduce(
-          (acc, errorInfo) => ({
-            ...acc,
-            [errorInfo.parameter]: errorInfo.message,
-          }),
-          {},
-        );
-        setErrors((prevState) => ({
-          ...prevState,
-          ...formattedErrors,
-        }));
+        if (
+          error.name === 'AxiosError' &&
+          (error.response.status === 404 || error.response.status === 400) &&
+          errorsInfo
+        ) {
+          const formattedErrors = errorsInfo.reduce(
+            (acc, errorInfo) => ({
+              ...acc,
+              [errorInfo.parameter]: errorInfo.message,
+            }),
+            {},
+          );
+
+          setErrors((prevState) => ({
+            ...prevState,
+            ...formattedErrors,
+          }));
+        } else {
+          toast.error(FetchErrors.UNEXPECTED);
+        }
       }
     } else {
       setErrors(checkedErrors);
     }
-  };
-  const isInvalidAccount = () => {
-    if (errors.invalidAccount) {
-      return errors.email || errors.password;
-    }
-    return true;
   };
 
   return (
@@ -107,7 +130,7 @@ const SignIn = () => {
           value={form.password}
         />
         <div className={styles.containerError}>
-          {isInvalidAccount() || (
+          {isInvalidAccount(errors) || (
             <p className={styles.invalidValue}>Invalid email or password</p>
           )}
         </div>
@@ -118,7 +141,7 @@ const SignIn = () => {
           <span className={styles.haveAccountText}>
             {`Don't have an account? `}
           </span>
-          <RouteLink to={Paths.signUp}>Create account</RouteLink>
+          <RouteLink to={Paths.SIGN_UP}>Create account</RouteLink>
         </div>
       </Form>
     </ContainerSignInAndSignUp>
