@@ -1,25 +1,25 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { Paths } from "../../consts/consts";
-import { ReactComponent as Home } from "../../assets/img/home.svg";
-import { ReactComponent as MyProduct } from "../../assets/img/doc.svg";
-import { ReactComponent as MySales } from "../../assets/img/percent.svg";
-import { ReactComponent as PersonalCabinet } from "../../assets/img/user.svg";
-import { ReactComponent as LogOut } from "../../assets/img/logOut.svg";
-import useAuth from "../../hooks/useAuth";
+import useAuth from '../../hooks/useAuth';
+import { Paths } from '../../consts/consts';
+import { ReactComponent as Home } from '../../assets/img/home.svg';
+import { ReactComponent as MyProduct } from '../../assets/img/doc.svg';
+import { ReactComponent as MySales } from '../../assets/img/percent.svg';
+import { ReactComponent as PersonalCabinet } from '../../assets/img/user.svg';
+import { ReactComponent as LogOut } from '../../assets/img/logOut.svg';
 
-import styles from "./Sidebar.module.css";
+import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
   const { logOut } = useAuth();
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.background}></div>
+      <div className={styles.background} />
       <nav className={styles.sections}>
         <NavLink
-          to={Paths.base}
+          to={Paths.BASE}
           className={({ isActive }) =>
             isActive ? styles.active : styles.noActive
           }
@@ -28,7 +28,7 @@ const Sidebar = () => {
           Main page
         </NavLink>
         <NavLink
-          to={Paths.myProduct}
+          to={Paths.MY_PRODUCT}
           className={({ isActive }) =>
             isActive ? styles.active : styles.noActive
           }
@@ -37,7 +37,7 @@ const Sidebar = () => {
           My products
         </NavLink>
         <NavLink
-          to={Paths.mySales}
+          to={Paths.MY_SALES}
           className={({ isActive }) =>
             isActive ? styles.active : styles.noActive
           }
@@ -46,7 +46,7 @@ const Sidebar = () => {
           My sales
         </NavLink>
         <NavLink
-          to={Paths.personalCabinet}
+          to={Paths.PERSONAL_CABINET}
           className={({ isActive }) =>
             isActive ? styles.active : styles.noActive
           }
@@ -58,7 +58,13 @@ const Sidebar = () => {
       <div className={styles.burgerMenu}>burger</div>
       <div className={styles.wrapperPadding}>
         <div className={styles.wrapperButton}>
-          <button type="button" className={styles.button} onClick={logOut}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => {
+              logOut();
+            }}
+          >
             <LogOut />
             Log out
           </button>

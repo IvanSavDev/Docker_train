@@ -14,43 +14,43 @@ import { generateId } from '../utils/utils';
 
 const routers = [
   {
-    path: Paths.signUp,
+    path: Paths.SIGN_UP,
     element: <SignUp />,
     private: false,
   },
   {
-    path: Paths.signIn,
+    path: Paths.SIGN_IN,
     element: <SignIn />,
     private: false,
   },
   {
     path: '*',
-    element: <Navigate to={Paths.signIn} />,
+    element: <Navigate to={Paths.SIGN_IN} />,
     private: false,
   },
   {
-    path: Paths.base,
+    path: Paths.BASE,
     element: <PersonalPage />,
     private: true,
     children: [
       {
-        path: Paths.main,
+        path: Paths.MAIN,
         element: <Main />,
         private: true,
         index: true,
       },
       {
-        path: Paths.myProduct,
+        path: Paths.MY_PRODUCT,
         element: <MyProduct />,
         private: true,
       },
       {
-        path: Paths.mySales,
+        path: Paths.MY_SALES,
         element: <MySales />,
         private: true,
       },
       {
-        path: Paths.personalCabinet,
+        path: Paths.PERSONAL_CABINET,
         element: <PersonalCabinet />,
         private: true,
       },
@@ -58,7 +58,7 @@ const routers = [
   },
   {
     path: '*',
-    element: <Navigate to={Paths.base} />,
+    element: <Navigate to={Paths.BASE} />,
     private: true,
   },
 ];
