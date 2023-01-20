@@ -1,34 +1,4 @@
-import { getDataFromLocalStorage } from './localStorage';
-import { KeysLocalStorage } from '../consts/consts';
-
 export const isEmptyObject = (object) => Object.keys(object).length === 0;
-
-export const checkExistsAccountByEmail = (email) => {
-  const accounts = getDataFromLocalStorage(KeysLocalStorage.accounts);
-  if (accounts) {
-    const account = Object.values(accounts).find(
-      (currentAccount) => currentAccount.email === email,
-    );
-    return Boolean(account);
-  }
-  return null;
-};
-
-export const getAccountByEmailAndPassword = (email, password) => {
-  const accounts = getDataFromLocalStorage(KeysLocalStorage.accounts);
-  return accounts
-    ? Object.values(accounts).find(
-        (account) => account.email === email && account.password === password,
-      )
-    : null;
-};
-
-export const checkNewEmailOnValidation = (oldEmail, newEmail) => {
-  if (oldEmail === newEmail) {
-    return false;
-  }
-  return checkExistsAccountByEmail(newEmail);
-};
 
 export const isDifferencesWithOldAccount = (oldAccount, newAccount) => {
   return Object.keys(oldAccount).every(
@@ -40,9 +10,6 @@ export const haveErrors = (errors) =>
   Object.values(errors).every((error) => !error);
 
 export const generateId = () => Date.now() + Math.floor(Math.random() * 100);
-
-export const getFormatDate = (dateForFormat) =>
-  new Date(dateForFormat).toLocaleDateString();
 
 export const formatNumberWithSymbol = (number, symbol = ' ') => {
   let result = '';
@@ -91,3 +58,37 @@ export const getMultipleOFFive = (number) => {
   }
   return getMultipleOFFive(addZeros(nextSymbols, lengthWithoutTwoSymbols));
 };
+
+export const parseDate = (date) => {
+  const [day, month, year] = date.split('.');
+  return new Date(year, month - 1, day);
+};
+
+export const getChangedFields = (firstObject, secondObject) => {
+  return Object.keys(firstObject).reduce((acc, key) => {
+    return firstObject[key] === secondObject[key]
+      ? acc
+      : { ...acc, [key]: secondObject[key] };
+  }, {});
+};
+
+export const debounceAsyncFunction = (fun, timeout = 3000) =>
+  new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const result = await fun();
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    }, timeout);
+  });
+
+export const formatErrors = (errors) =>
+  errors.reduce(
+    (acc, errorInfo) => ({
+      ...acc,
+      [errorInfo.parameter]: errorInfo.message,
+    }),
+    {},
+  );
