@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
 
 import AppRouter from '../router/router';
 import AuthProvider from '../hoc/AuthProvider';
-import AccountProvider from '../hoc/AccountProvider';
-import ProductsProvider from '../hoc/ProductsProvider';
-import SalesProvider from '../hoc/SalesProvider';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme({
   typography: {
@@ -47,15 +47,10 @@ const theme = createTheme({
 const App = () => (
   <ThemeProvider theme={theme}>
     <AuthProvider>
-      <AccountProvider>
-        <ProductsProvider>
-          <SalesProvider>
-            <BrowserRouter>
-              <AppRouter />
-            </BrowserRouter>
-          </SalesProvider>
-        </ProductsProvider>
-      </AccountProvider>
+      <BrowserRouter>
+        <AppRouter />
+        <ToastContainer />
+      </BrowserRouter>
     </AuthProvider>
   </ThemeProvider>
 );
