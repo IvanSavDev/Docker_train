@@ -8,11 +8,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { useSelector } from 'react-redux';
 
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
-import useSales from '../../../hooks/useSales';
-import { getMultipleOFFive } from '../../../utils/utils';
+import { getMultipleOFFive, parseDate } from '../../../utils/utils';
 
 import styles from './BarChart.module.css';
 
@@ -41,11 +39,6 @@ const getWidthYAxis = (maxValue) => {
 };
 
 const Chart = ({ data }) => {
-  // const { sales } = useSales();
-  // const { sales } = useSelector((state) => state.sales);
-
-  const currentYear = new Date().getFullYear();
-
   const chartData = [
     { name: 'Jan', totalCost: 0 },
     { name: 'Feb', totalCost: 0 },
@@ -63,9 +56,10 @@ const Chart = ({ data }) => {
 
   if (data) {
     data.forEach((sale) => {
-      const date = new Date(sale.lastSale);
+      const date = parseDate(sale.lastSale);
       const monthNumber = date.getMonth();
       const year = date.getFullYear();
+      const currentYear = new Date().getFullYear();
 
       if (year === currentYear) {
         chartData[monthNumber].totalCost += Math.floor(

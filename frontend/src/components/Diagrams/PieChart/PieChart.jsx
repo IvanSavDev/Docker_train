@@ -1,11 +1,9 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
 
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
-import useSales from '../../../hooks/useSales';
-import { generateColor, generateId } from '../../../utils/utils';
+import { generateId } from '../../../utils/utils';
 
 import styles from './PieChart.module.css';
 
@@ -28,8 +26,6 @@ const StyledItem = styled.li`
 `;
 
 const Chart = ({ data }) => {
-  // const salesValues = sales ? Object.values(sales) : [];
-
   const allUniqCategories = Array.from(
     new Set(data.map((sale) => sale.category)),
   );
@@ -42,12 +38,12 @@ const Chart = ({ data }) => {
           : {
               name: category,
               value: acc.value + Math.floor(sale.soldItems * sale.price),
-              color: generateColor(),
+              color: sale.color,
             },
       { value: 0 },
     ),
   );
-  console.log(chartData);
+
   return (
     <div className={styles.pieChart}>
       <h2 className={styles.header}>Sales schedule by category</h2>
