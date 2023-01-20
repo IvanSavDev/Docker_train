@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Modal } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
 
+import { closeModal, openModal } from '../../slices/modalSlice';
 import StandardButton from '../Buttons/StandardButton';
 import CreateProduct from '../Modals/CreateProduct';
 import { ReactComponent as CreateProductImg } from '../../assets/img/createProduct.svg';
@@ -21,9 +23,12 @@ const StyledStandardButton = styled(StandardButton)(({ theme }) => ({
 }));
 
 const Header = ({ title, description, addProductPage = false }) => {
-  const [open, setOpen] = useState(false);
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+  // const [open, setOpen] = useState(false);
+  // const openModal = () => setOpen(true);
+  // const closeModal = () => setOpen(false);
+  const dispatch = useDispatch();
+
+  const handleOpen = () => dispatch(openModal({ type: 'createProduct' }));
 
   return (
     <header
@@ -31,17 +36,10 @@ const Header = ({ title, description, addProductPage = false }) => {
     >
       <h1 className={styles.title}>{title}</h1>
       {addProductPage && (
-        <>
-          <StyledStandardButton onClick={openModal}>
-            <CreateProductImg />
-            Create a product
-          </StyledStandardButton>
-          <Modal open={open}>
-            <div>
-              <CreateProduct open={open} closeModal={closeModal} />
-            </div>
-          </Modal>
-        </>
+        <StyledStandardButton onClick={handleOpen}>
+          <CreateProductImg />
+          Create a product
+        </StyledStandardButton>
       )}
       <p className={styles.text}>{description}</p>
     </header>
