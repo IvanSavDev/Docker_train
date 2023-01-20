@@ -24,6 +24,7 @@ export const getSales = async (req, res) => {
       )
       .map((sale) => ({
         id: sale._id,
+        productId: sale.productId,
         store: sale.store,
         price: sale.price,
         name: sale.name,

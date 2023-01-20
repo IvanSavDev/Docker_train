@@ -5,6 +5,7 @@ import UserModal from '../models/User.js';
 import {
   Errors,
   KEY_JWT,
+  SALT_ROUNDS,
   TOKEN_LIFESPAN,
   UserErrors,
 } from '../consts/consts.js';
@@ -15,7 +16,12 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: Errors.FAILED_IDENTIFICATION,
+        errors: [
+          {
+            parameter: 'invalidAccount',
+            message: Errors.FAILED_IDENTIFICATION,
+          },
+        ],
       });
     }
 
@@ -28,7 +34,12 @@ export const login = async (req, res) => {
 
     if (!isValidPassword) {
       return res.status(404).json({
-        message: Errors.FAILED_IDENTIFICATION,
+        errors: [
+          {
+            parameter: 'invalidAccount',
+            message: Errors.FAILED_IDENTIFICATION,
+          },
+        ],
       });
     }
 
@@ -49,7 +60,7 @@ export const login = async (req, res) => {
 
 export const registration = async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(SALT_ROUNDS);
     const hash = await bcrypt.hash(req.body.password, salt);
 
     const doc = new UserModal({
@@ -87,7 +98,7 @@ export const updateUser = async (req, res) => {
     let hash;
 
     if (req.body.newPassword) {
-      const salt = await bcrypt.genSalt(10);
+      const salt = await bcrypt.genSalt(SALT_ROUNDS);
       hash = await bcrypt.hash(req.body.newPassword, salt);
     }
 

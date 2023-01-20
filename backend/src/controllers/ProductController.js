@@ -17,8 +17,8 @@ export const getProducts = async (req, res) => {
     const formattedProducts = [...products]
       .sort(
         (firstProduct, secondProduct) =>
-          new Date(secondProduct.creationDate).getTime() -
-          new Date(firstProduct.creationDate).getTime(),
+          new Date(secondProduct.createdAt).getTime() -
+          new Date(firstProduct.createdAt).getTime(),
       )
       .map((product) => ({
         id: product._id,
@@ -102,6 +102,7 @@ export const updateProduct = async (req, res) => {
     }
 
     const {
+      _id: id,
       store,
       price,
       name,
@@ -112,6 +113,7 @@ export const updateProduct = async (req, res) => {
     } = updatedProduct;
 
     res.json({
+      id,
       store,
       price,
       name,

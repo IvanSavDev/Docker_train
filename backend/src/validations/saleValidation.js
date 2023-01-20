@@ -15,7 +15,10 @@ const isValidDate = (value) => {
 };
 
 export const createSaleValidator = [
-  body('productId', Errors.MORE_ONE_SYMBOL).isString().isLength({ min: 1 }),
+  body('productId', Errors.MORE_ONE_SYMBOL)
+    .isString()
+    .bail()
+    .isLength({ min: 1 }),
   body('store', Errors.MORE_ONE_SYMBOL).isString().bail().isLength({ min: 1 }),
   body('price', Errors.MORE_ZERO).isFloat({ gt: 0 }),
   body('name', Errors.MORE_ONE_SYMBOL).isString().bail().isLength({ min: 1 }),
