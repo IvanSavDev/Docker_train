@@ -1,84 +1,138 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
-  products: [],
-};
+import { Routes, Statuses } from '../consts/consts';
+import { debounceAsyncFunction } from '../utils/utils';
 
 export const getProducts = createAsyncThunk(
-  'getProducts',
-  async (_, { extra: { axios, routes } }) => {
+  'products/getProducts',
+  async (_, { extra: { axios }, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('userId');
-      console.log(token);
-      const request = await axios.get(routes.productsPath(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const request = await axios.get(Routes.PRODUCTS);
       return request.data;
     } catch (error) {
-      return console.log(error);
+      return rejectWithValue({
+        status: error.response?.status,
+        errors: error.response?.data?.errors || [],
+      });
     }
   },
 );
 
 export const deleteProduct = createAsyncThunk(
-  'deleteProduct',
-  async (id, { extra: { axios, routes } }) => {
+  'products/deleteProduct',
+  async (id, { extra: { axios }, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('userId');
-      await axios.delete(`${routes.productsPath()}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(`${Routes.PRODUCTS}/${id}`);
       return id;
     } catch (error) {
-      return console.log(error);
+      return rejectWithValue({
+        status: error.response?.status,
+        errors: error.response?.data?.errors || [],
+      });
     }
   },
 );
 
 export const createProduct = createAsyncThunk(
-  'createProduct',
-  async (data, { extra: { axios, routes } }) => {
+  'products/createProduct',
+  async (data, { extra: { axios }, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('userId');
-      // console.log(token);
-      console.log(data);
-      const req = await fetch(routes.productPath(), {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
-      // const request = await axios.post(routes.productPath(), {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-      return true;
+      const request = () =>
+        axios({
+          method: 'post',
+          url: Routes.PRODUCT,
+          data,
+        });
+      const result = await debounceAsyncFunction(request, 3000);
+      return result.data;
     } catch (error) {
-      return console.log(error);
+      return rejectWithValue({
+        status: error.response?.status,
+        errors: error.response?.data?.errors || [],
+      });
     }
   },
 );
 
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async (data, { extra: { axios }, rejectWithValue }) => {
+    try {
+      const request = () =>
+        axios({
+          method: 'patch',
+          url: `${Routes.PRODUCTS}/${data.id}`,
+          data,
+        });
+      const result = await debounceAsyncFunction(request, 3000);
+      return result.data;
+    } catch (error) {
+      return rejectWithValue({
+        status: error.response?.status,
+        errors: error.response?.data?.errors || [],
+      });
+    }
+  },
+);
+
+const initialState = {
+  products: [],
+  status: Statuses.FULFILLED,
+};
+
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
-  extraReducers: {
-    [deleteProduct.fulfilled]: (state, { payload }) => {
-      state.products = state.products.filter(
-        (product) => product.id !== payload,
-      );
-    },
-    [getProducts.fulfilled]: (state, { payload }) => {
-      state.products = payload;
+  reducers: {
+    clearProducts: (state) => {
+      state.products = { ...initialState.products };
+      state.status = Statuses.FULFILLED;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getProducts.fulfilled, (state, { payload }) => {
+        state.products = payload;
+      })
+      .addCase(createProduct.fulfilled, (state, { payload }) => {
+        state.products = [{ ...payload }, ...state.products];
+      })
+      .addCase(updateProduct.fulfilled, (state, { payload }) => {
+        state.products = state.products.map((product) =>
+          product.id === payload.id ? payload : product,
+        );
+      })
+      .addCase(deleteProduct.fulfilled, (state, { payload }) => {
+        state.products = state.products.filter(
+          (product) => product.id !== payload,
+        );
+      });
+    // .addMatcher(
+    //   (action) =>
+    //     action.type.startsWith('products') &&
+    //     action.type.endsWith(Statuses.FULFILLED),
+    //   (state) => {
+    //     state.status = Statuses.FULFILLED;
+    //   },
+    // )
+    // .addMatcher(
+    //   (action) =>
+    //     action.type.startsWith('products') &&
+    //     action.type.endsWith(Statuses.PENDING),
+    //   (state) => {
+    //     state.status = Statuses.PENDING;
+    //   },
+    // )
+    // .addMatcher(
+    //   (action) =>
+    //     action.type.startsWith('products') &&
+    //     action.type.endsWith(Statuses.REJECTED),
+    //   (state, { payload }) => {
+    //     state.status = Statuses.REJECTED;
+    //   },
+    // );
+  },
 });
+
+export const { clearProducts, clearErrors } = productsSlice.actions;
 
 export default productsSlice.reducer;
