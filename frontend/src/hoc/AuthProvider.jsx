@@ -1,16 +1,24 @@
 import React, { useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import AuthContext from '../context/AuthContext';
 import { KeysLocalStorage } from '../consts/consts';
+import { clearSales } from '../slices/salesSlice';
+import { clearProducts } from '../slices/productsSlice';
+import { clearUser } from '../slices/userSlice';
 
 const AuthProvider = ({ children }) => {
-  const isLogged = !!localStorage.getItem(KeysLocalStorage.userId);
+  const isLogged = !!localStorage.getItem(KeysLocalStorage.TOKEN);
+  const dispatch = useDispatch();
 
   const [loggedIn, setLoggedIn] = useState(isLogged);
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
-    localStorage.removeItem(KeysLocalStorage.userId);
+    localStorage.removeItem(KeysLocalStorage.TOKEN);
+    dispatch(clearProducts());
+    dispatch(clearUser());
+    dispatch(clearSales());
     setLoggedIn(false);
   };
 
