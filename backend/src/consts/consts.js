@@ -1,6 +1,8 @@
 export const PORT = 4000;
 export const KEY_JWT = 'SuperSecret';
 
+export const SALT_ROUNDS = 10;
+
 export const TOKEN_LIFESPAN = '30d';
 
 export const REG_PASSWORD =
@@ -23,7 +25,7 @@ export const Errors = {
 
 export const EmailErrors = {
   EMAIL_EXIST: 'Email exist',
-  INVALID_EMAIL: 'Not valid email',
+  INVALID_EMAIL: 'Invalid email',
 };
 
 export const UserErrors = {
