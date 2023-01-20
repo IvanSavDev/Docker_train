@@ -1,23 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
-import axios from 'axios';
 
-import routes from '../routes';
-import productsSlice from '../slices/productsSlice';
 import salesSlice from '../slices/salesSlice';
+import productsSlice from '../slices/productsSlice';
 import userSlice from '../slices/userSlice';
+import modalsSlice from '../slices/modalSlice';
+import updatedAxios from '../utils/axios';
 
 const store = configureStore({
   reducer: {
     products: productsSlice,
     sales: salesSlice,
     user: userSlice,
+    modal: modalsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {
         extraArgument: {
-          axios,
-          routes,
+          axios: updatedAxios,
         },
       },
     }),
