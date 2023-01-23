@@ -1,7 +1,7 @@
 export const isEmptyObject = (object) => Object.keys(object).length === 0;
 
-export const isDifferencesWithOldAccount = (oldAccount, newAccount) => {
-  return Object.keys(oldAccount).every(
+export const isDifferentFields = (oldAccount, newAccount) => {
+  return !Object.keys(oldAccount).every(
     (key) => oldAccount[key] === newAccount[key],
   );
 };
@@ -72,7 +72,7 @@ export const getChangedFields = (firstObject, secondObject) => {
   }, {});
 };
 
-export const debounceAsyncFunction = (fun, timeout = 3000) =>
+export const debounceAsyncFunction = (fun, timeout = 1000) =>
   new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
@@ -85,10 +85,23 @@ export const debounceAsyncFunction = (fun, timeout = 3000) =>
   });
 
 export const formatErrors = (errors) =>
-  errors.reduce(
-    (acc, errorInfo) => ({
+  Array.isArray(errors)
+    ? errors.reduce(
+        (acc, errorInfo) => ({
+          ...acc,
+          [errorInfo.parameter]: errorInfo.message,
+        }),
+        {},
+      )
+    : {};
+
+export const trimObjectValues = (object) => {
+  const keys = Object.keys(object);
+  return keys.reduce((acc, key) => {
+    const value = object[key];
+    return {
       ...acc,
-      [errorInfo.parameter]: errorInfo.message,
-    }),
-    {},
-  );
+      [key]: typeof value === 'string' ? value.trim() : value,
+    };
+  }, {});
+};
