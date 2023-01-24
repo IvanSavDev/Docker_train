@@ -105,3 +105,17 @@ export const trimObjectValues = (object) => {
     };
   }, {});
 };
+
+export const throttle = (fun, delay = 500) => {
+  let timer = null;
+
+  return function perform(...args) {
+    if (timer) return;
+
+    timer = setTimeout(() => {
+      fun(...args);
+      clearTimeout(timer);
+      timer = null;
+    }, delay);
+  };
+};
