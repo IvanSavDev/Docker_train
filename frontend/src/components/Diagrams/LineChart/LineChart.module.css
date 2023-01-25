@@ -17,3 +17,21 @@
     line-height: 1em;
     font-weight: 600;
 }
+
+.lineChart::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.lineChart::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+@media (max-width: 600px) {
+    .lineChart {
+        overflow: auto;
+    }
+}

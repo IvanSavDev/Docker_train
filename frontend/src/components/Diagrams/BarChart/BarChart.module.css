@@ -13,3 +13,21 @@
 .description {
     margin-bottom: 70px;
 }
+
+.barChart::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.barChart::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+@media (max-width: 600px) {
+    .barChart {
+        overflow: auto;
+    }
+}

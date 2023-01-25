@@ -2,23 +2,26 @@
     grid-area: PieChart;
     padding: 32px 32px 40px 32px;
     background-color: #ffffff;
+    overflow: auto;
 }
 
 .wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     max-height: 200px;
     height: 100%;
-    margin-top: 37px;
     gap: 28px;
 }
 
+.wrapperPieChart {
+    min-width: 200px;
+    min-height: 200px;
+}
+
 .list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex-grow: 1;
     width: 100%;
-    max-width: 169px;
+    min-width: 169px;
     padding: 20px 0 20px 0;
     overflow-y: auto;
 }
@@ -35,12 +38,42 @@
     border: 6px solid transparent;
 }
 
+.pieChart::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.pieChart::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+.containerItems {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: min-content;
+    min-width: 169px;
+}
+
 .header {
     font-size: 18px;
     line-height: 1em;
-    margin-bottom: 24px;
+    margin-bottom: 37px;
 }
 
-.notSales {
-    align-self: center;
+.noSales {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 1;
+}
+
+@media (max-width: 600px) {
+    .pieChart {
+        overflow: auto;
+    }
 }
