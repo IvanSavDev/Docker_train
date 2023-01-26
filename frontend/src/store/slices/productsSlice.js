@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Routes, Statuses } from '../consts/consts';
-import { debounceAsyncFunction } from '../utils/utils';
+import { Routes, Statuses } from '../../consts/consts';
+import { debounceAsyncFunction } from '../../utils/utils';
 
 export const getProducts = createAsyncThunk(
   'products/getProducts',
   async (_, { extra: { axios }, rejectWithValue }) => {
     try {
-      const request = await axios.get(Routes.PRODUCTS);
+      const req = () => axios.get(Routes.PRODUCTS);
+      const request = await debounceAsyncFunction(req);
       return request.data;
     } catch (error) {
       return rejectWithValue({
@@ -21,7 +22,8 @@ export const deleteProduct = createAsyncThunk(
   'products/deleteProduct',
   async (id, { extra: { axios }, rejectWithValue }) => {
     try {
-      await axios.delete(`${Routes.PRODUCTS}/${id}`);
+      const req = () => axios.delete(`${Routes.PRODUCTS}/${id}`);
+      await debounceAsyncFunction(req);
       return id;
     } catch (error) {
       return rejectWithValue({
@@ -36,14 +38,9 @@ export const createProduct = createAsyncThunk(
   'products/createProduct',
   async (data, { extra: { axios }, rejectWithValue }) => {
     try {
-      const request = () =>
-        axios({
-          method: 'post',
-          url: Routes.PRODUCT,
-          data,
-        });
-      const result = await debounceAsyncFunction(request, 3000);
-      return result.data;
+      const req = () => axios.post(Routes.PRODUCT, data);
+      const request = await debounceAsyncFunction(req);
+      return request.data;
     } catch (error) {
       return rejectWithValue({
         status: error.response?.status,
@@ -57,14 +54,9 @@ export const updateProduct = createAsyncThunk(
   'products/updateProduct',
   async (data, { extra: { axios }, rejectWithValue }) => {
     try {
-      const request = () =>
-        axios({
-          method: 'patch',
-          url: `${Routes.PRODUCTS}/${data.id}`,
-          data,
-        });
-      const result = await debounceAsyncFunction(request, 3000);
-      return result.data;
+      const req = () => axios.patch(`${Routes.PRODUCTS}/${data.id}`, data);
+      const request = await debounceAsyncFunction(req);
+      return request.data;
     } catch (error) {
       return rejectWithValue({
         status: error.response?.status,
@@ -75,7 +67,7 @@ export const updateProduct = createAsyncThunk(
 );
 
 const initialState = {
-  products: [],
+  products: null,
   status: Statuses.FULFILLED,
 };
 
@@ -84,7 +76,7 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     clearProducts: (state) => {
-      state.products = { ...initialState.products };
+      state.products = [];
       state.status = Statuses.FULFILLED;
     },
   },
@@ -105,31 +97,31 @@ const productsSlice = createSlice({
         state.products = state.products.filter(
           (product) => product.id !== payload,
         );
-      });
-    // .addMatcher(
-    //   (action) =>
-    //     action.type.startsWith('products') &&
-    //     action.type.endsWith(Statuses.FULFILLED),
-    //   (state) => {
-    //     state.status = Statuses.FULFILLED;
-    //   },
-    // )
-    // .addMatcher(
-    //   (action) =>
-    //     action.type.startsWith('products') &&
-    //     action.type.endsWith(Statuses.PENDING),
-    //   (state) => {
-    //     state.status = Statuses.PENDING;
-    //   },
-    // )
-    // .addMatcher(
-    //   (action) =>
-    //     action.type.startsWith('products') &&
-    //     action.type.endsWith(Statuses.REJECTED),
-    //   (state, { payload }) => {
-    //     state.status = Statuses.REJECTED;
-    //   },
-    // );
+      })
+      .addMatcher(
+        (action) =>
+          action.type.startsWith('products') &&
+          action.type.endsWith(Statuses.FULFILLED),
+        (state) => {
+          state.status = Statuses.FULFILLED;
+        },
+      )
+      .addMatcher(
+        (action) =>
+          action.type.startsWith('products') &&
+          action.type.endsWith(Statuses.PENDING),
+        (state) => {
+          state.status = Statuses.PENDING;
+        },
+      )
+      .addMatcher(
+        (action) =>
+          action.type.startsWith('products') &&
+          action.type.endsWith(Statuses.REJECTED),
+        (state, { payload }) => {
+          state.status = Statuses.REJECTED;
+        },
+      );
   },
 });
 
