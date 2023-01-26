@@ -21,6 +21,8 @@ export const Errors = {
   INTEGER: 'Value must be integer and greater than 0',
   INVALID_DATE: 'Invalid Date',
   NOT_VALID_ADDRESS: 'Not valid address',
+  FILE: 'File upload error',
+  UNKNOWN: 'Unknown error',
 };
 
 export const EmailErrors = {
@@ -64,11 +66,13 @@ export const PasswordErrors = {
 };
 
 export const Routes = {
-  Sale: '/sale',
-  Sales: '/sales',
-  Product: '/product',
-  Products: '/products',
-  Login: '/login',
-  Registration: '/registration',
-  User: '/user',
+  SALE: '/sale',
+  SALES: '/sales',
+  PRODUCT: '/product',
+  PRODUCTS: '/products',
+  LOGIN: '/login',
+  REGISTRATION: '/registration',
+  USER: '/user',
+  UPLOAD_AVATAR: '/upload/avatar',
+  UPLOAD_BACKGROUND: '/upload/background',
 };
