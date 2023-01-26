@@ -4,6 +4,7 @@ import { Drawer } from '@mui/material';
 
 import { NavList } from './NavList';
 import { Logo } from './Logo';
+
 import { throttle } from '../../utils/utils';
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({

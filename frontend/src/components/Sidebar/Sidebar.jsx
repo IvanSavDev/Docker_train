@@ -1,75 +1,66 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+
+import { NavList } from './NavList';
+import { LeftSidebar } from './LeftSidebar';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 import useAuth from '../../hooks/useAuth';
-import { Paths } from '../../consts/consts';
-import { ReactComponent as Home } from '../../assets/img/home.svg';
-import { ReactComponent as MyProduct } from '../../assets/img/doc.svg';
-import { ReactComponent as MySales } from '../../assets/img/percent.svg';
-import { ReactComponent as PersonalCabinet } from '../../assets/img/user.svg';
-import { ReactComponent as LogOut } from '../../assets/img/logOut.svg';
 
 import styles from './Sidebar.module.css';
 
+import { ReactComponent as LogOut } from '../../assets/img/logOut.svg';
+
+const StyledBurgerMenu = styled(BurgerMenu)(({ theme }) => ({
+  display: 'none',
+  paddingInline: 0,
+
+  [theme.breakpoints.down('middle')]: {
+    display: 'inline-flex',
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  textTransform: 'none',
+  color: '#2B3844',
+  fontSize: '14px',
+  opacity: 0.4,
+  whiteSpace: 'nowrap',
+  minWidth: 'auto',
+
+  [theme.breakpoints.down('lessSmall')]: {
+    fontSize: 0,
+
+    '& .MuiButton-startIcon': {
+      margin: 0,
+    },
+  },
+}));
+
 const Sidebar = () => {
   const { logOut } = useAuth();
+  const [open, setOpen] = useState(false);
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.background} />
-      <nav className={styles.sections}>
-        <NavLink
-          to={Paths.BASE}
-          className={({ isActive }) =>
-            isActive ? styles.active : styles.noActive
-          }
-        >
-          <Home className={styles.activeLogo} />
-          Main page
-        </NavLink>
-        <NavLink
-          to={Paths.MY_PRODUCT}
-          className={({ isActive }) =>
-            isActive ? styles.active : styles.noActive
-          }
-        >
-          <MyProduct className={styles.activeLogo} />
-          My products
-        </NavLink>
-        <NavLink
-          to={Paths.MY_SALES}
-          className={({ isActive }) =>
-            isActive ? styles.active : styles.noActive
-          }
-        >
-          <MySales className={styles.activeLogo} />
-          My sales
-        </NavLink>
-        <NavLink
-          to={Paths.PERSONAL_CABINET}
-          className={({ isActive }) =>
-            isActive ? styles.active : styles.noActive
-          }
-        >
-          <PersonalCabinet className={styles.activeLogo} />
-          Personal cabinet
-        </NavLink>
+      <div className={styles.logo} />
+      <nav className={styles.navigation}>
+        <NavList />
       </nav>
-      <div className={styles.burgerMenu}>burger</div>
+      <StyledBurgerMenu onClick={() => setOpen(true)} />
       <div className={styles.wrapperPadding}>
         <div className={styles.wrapperButton}>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => {
-              logOut();
-            }}
+          <StyledButton
+            variant="text"
+            startIcon={<LogOut stroke="#2B3844" />}
+            onClick={() => logOut()}
           >
-            <LogOut />
             Log out
-          </button>
+          </StyledButton>
         </div>
       </div>
+      <LeftSidebar open={open} handleClose={() => setOpen(false)} />
     </aside>
   );
 };
