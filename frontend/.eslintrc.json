@@ -37,6 +37,7 @@
         "no-console": "off",
         "no-nested-ternary": "off",
         "no-unused-vars": "off",
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "import/no-extraneous-dependencies": "off"
     }
 }
