@@ -1,41 +1,27 @@
 import React, { useLayoutEffect, useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
-import useForm from '../../hooks/useForm';
 import StandardButton from '../Buttons/StandardButton';
 import Input from '../Inputs/Input';
 import ModalTitle from './ModalTitle';
 import ModalInputContainer from './ModalInputContainer';
-import { Errors, FetchErrors, Statuses } from '../../consts/consts';
+
+import { notifyFormsErrors } from '../../utils/notifyErrors';
 import {
-  formatErrors,
   getKeysDifferentFields,
   haveErrors,
+  isDifferentFields,
+  trimObjectValues,
 } from '../../utils/utils';
+import useForm from '../../hooks/useForm';
+import { Statuses } from '../../consts/consts';
 import {
   createProduct,
   deleteProduct,
   updateProduct,
-} from '../../slices/productsSlice';
-
-const checkErrors = (form) => {
-  const { store, price, name, category, remains, weight } = form;
-
-  return {
-    store: store.length > 0 ? null : Errors.REQUIRED_FIELD,
-    price: Number.isInteger(price)
-      ? price > 0
-        ? null
-        : Errors.MORE_ZERO
-      : Errors.PRICE_INTEGER,
-    name: name.length > 0 ? null : Errors.REQUIRED_FIELD,
-    category: category.length > 0 ? null : Errors.REQUIRED_FIELD,
-    remains: remains > 0 ? null : Errors.MORE_ZERO,
-    weight: weight > 0 ? null : Errors.MORE_ZERO,
-  };
-};
+} from '../../store/slices/productsSlice';
+import { checkProductForValidation } from '../../validations/productValidation';
 
 const initialStateErrors = {
   store: null,
@@ -59,18 +45,20 @@ const initialStateForm = {
 const EditProduct = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { products } = useSelector((state) => state.products);
+  const { products, status } = useSelector((state) => state.products);
   const { extra: productId } = useSelector((state) => state.modal);
-  const [errors, setErrors] = useState(initialStateErrors);
-  const [form, setForm] = useForm(initialStateForm);
-  const [fetch, setFetch] = useState(false);
+  const [errors, setErrors] = useState({ ...initialStateErrors });
+  const [form, setForm] = useForm({ ...initialStateForm });
+  const [oldProduct, setOldProduct] = useState({});
 
   useLayoutEffect(() => {
-    setForm(products.find((product) => product.id === productId));
+    const foundProduct = products.find((product) => product.id === productId);
+    setOldProduct(foundProduct);
+    setForm(foundProduct);
   }, [setForm, productId]);
 
   const handleClose = () => {
-    if (!fetch) {
+    if (status !== Statuses.PENDING) {
       closeModal();
     }
   };
@@ -78,29 +66,27 @@ const EditProduct = ({ closeModal }) => {
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
 
-    const priceAsNumber = Number(price);
-    const remainsAsNumber = Number(remains);
-    const weightAsNumber = Number(weight);
+    const priceAsNumber = price === '' ? null : Number(price);
+    const remainsAsNumber = remains === '' ? null : Number(remains);
+    const weightAsNumber = weight === '' ? null : Number(weight);
 
     const updatedForm = {
-      ...form,
+      ...trimObjectValues(form),
       price: priceAsNumber,
       remains: remainsAsNumber,
       weight: weightAsNumber,
     };
 
-    const checkedErrors = checkErrors(updatedForm);
+    const checkedErrors = checkProductForValidation(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
-      const oldProduct = products.find((product) => product.id === productId);
-      const changedFields = getKeysDifferentFields(
-        { ...form, address: oldProduct.address },
-        oldProduct,
-      );
-
       try {
-        setFetch(true);
+        setErrors({ ...initialStateErrors });
+        const changedFields = getKeysDifferentFields(
+          { ...updatedForm, address: oldProduct.address },
+          oldProduct,
+        );
         if (changedFields.length === 1 && changedFields[0] === 'remains') {
           await dispatch(
             updateProduct({
@@ -109,32 +95,18 @@ const EditProduct = ({ closeModal }) => {
             }),
           ).unwrap();
         } else {
-          await dispatch(deleteProduct(oldProduct.id)).unwrap();
           await dispatch(
             createProduct({
               ...updatedForm,
               address: user.address,
             }),
           ).unwrap();
+          await dispatch(deleteProduct(oldProduct.id)).unwrap();
         }
-        console.log('clos');
-        setFetch(false);
         closeModal();
       } catch (error) {
-        const formattedErrors = formatErrors(error.errors);
-        if (error.status === 401) {
-          toast.error(FetchErrors.AUTHORIZATION);
-        }
-        if (error.status === 400) {
-          setErrors((prevState) => ({
-            ...prevState,
-            ...formattedErrors,
-          }));
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyFormsErrors(error, setErrors);
       }
-      setFetch(false);
     } else {
       setErrors(checkedErrors);
     }
@@ -157,7 +129,7 @@ const EditProduct = ({ closeModal }) => {
           onChange={handleChange}
           value={form.store}
           autoFocus
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="price"
@@ -166,7 +138,7 @@ const EditProduct = ({ closeModal }) => {
           helperText={errors.price}
           onChange={handleChange}
           value={form.price}
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="name"
@@ -175,7 +147,7 @@ const EditProduct = ({ closeModal }) => {
           helperText={errors.name}
           onChange={handleChange}
           value={form.name}
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="category"
@@ -184,7 +156,7 @@ const EditProduct = ({ closeModal }) => {
           helperText={errors.category}
           onChange={handleChange}
           value={form.category}
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="remains"
@@ -193,7 +165,7 @@ const EditProduct = ({ closeModal }) => {
           helperText={errors.remains}
           onChange={handleChange}
           value={form.remains}
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="weight"
@@ -202,11 +174,17 @@ const EditProduct = ({ closeModal }) => {
           helperText={errors.weight}
           onChange={handleChange}
           value={form.weight}
-          disabled={fetch}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
       </ModalInputContainer>
       <DialogActions>
-        <StandardButton fullWidth onClick={handleSubmit} disabled={fetch}>
+        <StandardButton
+          fullWidth
+          onClick={handleSubmit}
+          disabled={Boolean(
+            status === Statuses.PENDING || !isDifferentFields(oldProduct, form),
+          )}
+        >
           Save changes
         </StandardButton>
       </DialogActions>

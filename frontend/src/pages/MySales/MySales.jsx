@@ -2,18 +2,19 @@ import React, { useEffect } from 'react';
 import TableBody from '@mui/material/TableBody';
 import { useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
-import { toast } from 'react-toastify';
 
+import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Header from '../../components/Header/Header';
 import TableTemplate from '../../components/Table/TableTemplate';
 import TableHeader from '../../components/Table/TableHeader';
 import { StyledTableRow } from '../../components/Table/StyledTableRow';
 import { StyledTableCell } from '../../components/Table/StyledTableCell';
-import { formatNumberWithSymbol } from '../../utils/utils';
-import { getSales } from '../../slices/salesSlice';
-import CenteringContainer from '../../components/Containers/CenteringContainer';
-import { getProducts } from '../../slices/productsSlice';
-import { FetchErrors, Statuses } from '../../consts/consts';
+
+import { formatNumberWithSymbol, isEmptyObject } from '../../utils/utils';
+import { notifyPageErrors } from '../../utils/notifyErrors';
+import { Statuses } from '../../consts/consts';
+import { getSales } from '../../store/slices/salesSlice';
+import { getUser } from '../../store/slices/userSlice';
 
 const tableHeaders = [
   'Product name',
@@ -29,22 +30,30 @@ const tableHeaders = [
 
 const MySales = () => {
   const { sales, status } = useSelector((state) => state.sales);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (sales.length === 0) {
+        if (!sales) {
           await dispatch(getSales()).unwrap();
         }
       } catch (error) {
-        if (error.status === 401) {
-          toast.error(FetchErrors.AUTHORIZATION);
-        } else if (error.status === 404) {
-          toast.error(FetchErrors.LOAD_DATA);
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
+        notifyPageErrors(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isEmptyObject(user)) {
+          await dispatch(getUser()).unwrap();
         }
+      } catch (error) {
+        notifyPageErrors(error);
       }
     };
     fetchData();
@@ -58,12 +67,12 @@ const MySales = () => {
           <CircularProgress />
         </CenteringContainer>
       )}
-      {sales.length === 0 && status !== Statuses.PENDING && (
+      {status !== Statuses.PENDING && sales?.length === 0 && (
         <CenteringContainer>
           The table is empty, you need to sell goods
         </CenteringContainer>
       )}
-      {sales.length !== 0 && status === Statuses.FULFILLED && (
+      {status === Statuses.FULFILLED && sales && sales.length > 0 && (
         <TableTemplate>
           <TableHeader headers={tableHeaders} />
           <TableBody>

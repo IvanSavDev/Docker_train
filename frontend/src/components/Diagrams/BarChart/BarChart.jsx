@@ -12,11 +12,12 @@ import { styled } from '@mui/material/styles';
 
 import ContainerDiagrams from '../ContainerDiagrams';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
+
 import { getMultipleOFFive, parseDate } from '../../../utils/utils';
 
 import styles from './BarChart.module.css';
 
-const countTicks = 5;
+const COUNT_TICKS = 5;
 
 const getWidthYAxis = (maxValue) => {
   const maxValueAsString = String(maxValue);
@@ -81,9 +82,9 @@ const Chart = ({ data }) => {
     (first, second) => second.totalCost - first.totalCost,
   )[0].totalCost;
 
-  const interval = getMultipleOFFive(maxTotalCost) / countTicks;
+  const interval = getMultipleOFFive(maxTotalCost) / COUNT_TICKS;
 
-  const dataForYAxis = Array(countTicks)
+  const dataForYAxis = Array(COUNT_TICKS)
     .fill(0)
     .reduce(
       (acc) => {

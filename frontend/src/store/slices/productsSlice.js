@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Routes, Statuses } from '../../consts/consts';
+
 import { debounceAsyncFunction } from '../../utils/utils';
+import { Routes, Statuses } from '../../consts/consts';
 
 export const getProducts = createAsyncThunk(
   'products/getProducts',

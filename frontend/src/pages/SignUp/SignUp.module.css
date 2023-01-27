@@ -1,20 +1,9 @@
-.containerError {
-    position: relative;
-    top: -20px;
-    width: 100%;
-    font-size: 12px;
-}
-
 .containerFullName {
     display: flex;
     gap: 16px;
 }
 
 .alreadyHaveAccount {
-    color: #2B3844;
+    color: var(--main-dark-blue);
 }
 
-.accountExists {
-    position: absolute;
-    color: red;
-}

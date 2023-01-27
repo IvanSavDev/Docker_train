@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import styled from '@emotion/styled';
 
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
+
 import { generateId } from '../../../utils/utils';
 
 import styles from './PieChart.module.css';

@@ -12,5 +12,5 @@
     text-align: center;
     font-size: 36px;
     line-height: 48px;
-    color: #2B3844;
+    color: var(--main-dark-blue);
 }

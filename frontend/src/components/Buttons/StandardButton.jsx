@@ -2,11 +2,11 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
-const StyledButton = styled(Button)(() => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   padding: '19px 32px 19px 32px',
   lineHeight: '1em',
   textTransform: 'none',
-  backgroundColor: '#5382E7',
+  backgroundColor: theme.palette.custom.main.blue,
 }));
 
 const StandardButton = ({ children, ...rest }) => (

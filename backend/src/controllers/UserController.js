@@ -19,7 +19,7 @@ export const login = async (req, res) => {
         errors: [
           {
             parameter: 'invalidAccount',
-            message: Errors.FAILED_IDENTIFICATION,
+            message: Errors.FAILED_AUTHENTICATION,
           },
         ],
       });
@@ -37,7 +37,7 @@ export const login = async (req, res) => {
         errors: [
           {
             parameter: 'invalidAccount',
-            message: Errors.FAILED_IDENTIFICATION,
+            message: Errors.FAILED_AUTHENTICATION,
           },
         ],
       });
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.log('Login', error);
-    res.status(500).json({ message: Errors.FAILED_AUTHORIZATION });
+    res.status(500).json({ message: Errors.FAILED_AUTHENTICATION });
   }
 };
 
@@ -94,15 +94,14 @@ export const registration = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { userId } = req;
+    const { newPassword, ...rest } = req.body;
 
     let hash;
 
-    if (req.body.newPassword) {
+    if (newPassword) {
       const salt = await bcrypt.genSalt(SALT_ROUNDS);
-      hash = await bcrypt.hash(req.body.newPassword, salt);
+      hash = await bcrypt.hash(newPassword, salt);
     }
-
-    const { newPassword, ...rest } = req.body;
 
     const updatedUser = await UserModal.findByIdAndUpdate(
       userId,
@@ -134,13 +133,29 @@ export const getUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: Errors.FAILED_IDENTIFICATION,
+        message: Errors.FAILED_AUTHENTICATION,
       });
     }
 
-    const { name, surname, email, companyName, address } = user;
+    const {
+      name,
+      surname,
+      email,
+      companyName,
+      address,
+      urlImg,
+      urlBackgroundImg,
+    } = user;
 
-    res.json({ name, surname, companyName, email, address });
+    res.json({
+      name,
+      surname,
+      companyName,
+      email,
+      address,
+      urlImg,
+      urlBackgroundImg,
+    });
   } catch (error) {
     console.log('Get user', error);
     res.status(500).json({ message: UserErrors.GET_USER });

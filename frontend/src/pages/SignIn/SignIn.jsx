@@ -2,15 +2,24 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import useForm from '../../hooks/useForm';
-import useAuth from '../../hooks/useAuth';
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Input from '../../components/Inputs/Input';
 import RouteLink from '../../components/RouteLink/RouteLink';
 import Form from '../../components/Form/Form';
 import StandardButton from '../../components/Buttons/StandardButton';
-import { isValidEmail, isValidPassword } from '../../utils/validation';
-import { haveErrors } from '../../utils/utils';
+
+import {
+  isInvalidAccount,
+  isValidEmail,
+  isValidPassword,
+} from '../../utils/validation';
+import {
+  formattingErrorsFromBackend,
+  haveErrors,
+  trimObjectValues,
+} from '../../utils/utils';
+import useForm from '../../hooks/useForm';
+import useAuth from '../../hooks/useAuth';
 import {
   Errors,
   FetchErrors,
@@ -18,17 +27,10 @@ import {
   PasswordErrors,
   Paths,
   Routes,
+  SERVER_ROUTE,
 } from '../../consts/consts';
-import routes from '../../routes';
 
 import styles from './SignIn.module.css';
-
-const isInvalidAccount = (errors) => {
-  if (errors.invalidAccount) {
-    return Boolean(errors.email || errors.password);
-  }
-  return true;
-};
 
 const checkErrors = (form) => {
   const { email, password } = form;
@@ -64,37 +66,23 @@ const SignIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { email, password } = form;
-    const checkedErrors = checkErrors(form);
+    const updatedForm = trimObjectValues(form);
+    const checkedErrors = checkErrors(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
       try {
-        setErrors(initialStateErrors);
+        setErrors({ ...initialStateErrors });
         const response = await axios.post(
-          `http://localhost:4000/${Routes.LOGIN}`,
-          {
-            email,
-            password,
-          },
+          `${SERVER_ROUTE}${Routes.LOGIN}`,
+          updatedForm,
         );
         localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
-        const errorsInfo = error.response.data.errors;
-        if (
-          error.name === 'AxiosError' &&
-          (error.response.status === 404 || error.response.status === 400) &&
-          errorsInfo
-        ) {
-          const formattedErrors = errorsInfo.reduce(
-            (acc, errorInfo) => ({
-              ...acc,
-              [errorInfo.parameter]: errorInfo.message,
-            }),
-            {},
-          );
-
+        if (error.response.status === 404 || error.response.status === 400) {
+          const errorsInfo = error.response?.data?.errors;
+          const formattedErrors = formattingErrorsFromBackend(errorsInfo);
           setErrors((prevState) => ({
             ...prevState,
             ...formattedErrors,

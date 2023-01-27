@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import TableBody from '@mui/material/TableBody';
 import { useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
-import { toast } from 'react-toastify';
 
+import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Header from '../../components/Header/Header';
 import TableTemplate from '../../components/Table/TableTemplate';
 import TableHeader from '../../components/Table/TableHeader';
 import TableButton from '../../components/Buttons/TableButton';
-import SellProduct from '../../components/Modals/SellProduct';
-import EditProduct from '../../components/Modals/EditProduct';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import { StyledTableCell } from '../../components/Table/StyledTableCell';
 import { ReactComponent as Edit } from '../../assets/img/edit.svg';
 import { StyledTableRow } from '../../components/Table/StyledTableRow';
+
 import { formatNumberWithSymbol, isEmptyObject } from '../../utils/utils';
-import { deleteProduct, getProducts } from '../../slices/productsSlice';
-import { getUser } from '../../slices/userSlice';
-import { FetchErrors, Statuses } from '../../consts/consts';
-import CenteringContainer from '../../components/Containers/CenteringContainer';
+import { notifyPageErrors } from '../../utils/notifyErrors';
+import { ModalsTypes, Statuses } from '../../consts/consts';
+import { getProducts } from '../../store/slices/productsSlice';
+import { getUser } from '../../store/slices/userSlice';
+import { getSales } from '../../store/slices/salesSlice';
 
 const tableHeaders = [
   'Product name',
@@ -33,49 +33,64 @@ const tableHeaders = [
 ];
 
 const MyProduct = () => {
-  const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { products, status } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
-  const [fetch, setFetch] = useState(false);
-  console.log(products, user);
+  const { sales } = useSelector((state) => state.sales);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (products.length === 0) {
-          setFetch(true);
+        if (!products) {
           await dispatch(getProducts()).unwrap();
         }
+      } catch (error) {
+        notifyPageErrors(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         if (isEmptyObject(user)) {
           await dispatch(getUser()).unwrap();
         }
       } catch (error) {
-        if (error.status === 401) {
-          toast.error(FetchErrors.AUTHORIZATION);
-        } else if (error.status === 404) {
-          toast.error(FetchErrors.LOAD_DATA);
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyPageErrors(error);
       }
-      setFetch(false);
     };
     fetchData();
   }, []);
-  console.log('my prod');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!sales) {
+          await dispatch(getSales()).unwrap();
+        }
+      } catch (error) {
+        notifyPageErrors(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <Header title="My product" description="Product table" addProductPage />
-      {fetch && (
+      {status === Statuses.PENDING && !products && (
         <CenteringContainer>
           <CircularProgress />
         </CenteringContainer>
       )}
-      {!fetch && products.length === 0 && (
+      {status !== Statuses.PENDING && products?.length === 0 && (
         <CenteringContainer>
           The table is empty, you need to add a product
         </CenteringContainer>
       )}
-      {!fetch && products.length !== 0 && (
+      {products && products.length !== 0 && (
         <TableTemplate>
           <TableHeader headers={tableHeaders} />
           <TableBody>
@@ -103,10 +118,10 @@ const MyProduct = () => {
                   {`$${formatNumberWithSymbol(product.price)}`}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {product.remains}
+                  {formatNumberWithSymbol(product.remains)}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {`${product.weight}kg`}
+                  {`${formatNumberWithSymbol(product.weight)}kg`}
                 </StyledTableCell>
                 <StyledTableCell
                   align="center"
@@ -121,33 +136,17 @@ const MyProduct = () => {
                 >
                   <TableButton
                     productId={product.id}
-                    type="sellProduct"
-                    // render={(open, closeModal, productId) => (
-                    //   <SellProduct
-                    //     productId={productId}
-                    //     open={open}
-                    //     closeModal={closeModal}
-                    //   />
-                    // )}
+                    type={ModalsTypes.SELL_PRODUCT}
                   >
                     Sell
                   </TableButton>
                   <TableButton
                     productId={product.id}
-                    type="editProduct"
-                    // render={(open, closeModal, productId) => (
-                    //   <EditProduct
-                    //     productId={productId}
-                    //     open={open}
-                    //     closeModal={closeModal}
-                    //   />
-                    // )}
+                    type={ModalsTypes.EDIT_PRODUCT}
                   >
                     <Edit />
                   </TableButton>
-                  <DeleteButton
-                    handleClick={() => dispatch(deleteProduct(product.id))}
-                  />
+                  <DeleteButton id={product.id} />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

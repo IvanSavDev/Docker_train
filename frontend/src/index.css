@@ -1,5 +1,12 @@
 :root {
-  --scroll-color: rgba(169, 169, 169, 0.4)
+  --scroll-color: rgba(169, 169, 169, 0.4);
+  --main-blue: #5382E7;
+  --main-dark-blue: #2B3844;
+  --background-diagrams: #FFFFFF;
+  --main-background: #F8F8F8;
+  --main-error: #FF0000;
+  --main-border: rgba(43, 56, 68, 0.08);
+  --sidebar-border: #E8EBEF;
 }
 
 @font-face {
@@ -27,7 +34,7 @@
 body {
   font-family: "InterRegular", sans-serif;
   height: 100vh;
-  color: #2B3844;
+  color: var(--main-dark-blue);
   font-size: 14px;
   line-height: 14px;
 }

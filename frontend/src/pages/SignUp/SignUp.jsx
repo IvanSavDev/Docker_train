@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import useForm from '../../hooks/useForm';
-import useAuth from '../../hooks/useAuth';
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Form from '../../components/Form/Form';
 import RouteLink from '../../components/RouteLink/RouteLink';
 import Input from '../../components/Inputs/Input';
 import StandardButton from '../../components/Buttons/StandardButton';
+
 import {
   isMatchPassword,
   isValidCompanyName,
@@ -16,7 +15,13 @@ import {
   isValidFullName,
   isValidPassword,
 } from '../../utils/validation';
-import { formatErrors, haveErrors } from '../../utils/utils';
+import {
+  formattingErrorsFromBackend,
+  haveErrors,
+  trimObjectValues,
+} from '../../utils/utils';
+import useForm from '../../hooks/useForm';
+import useAuth from '../../hooks/useAuth';
 import {
   Errors,
   FetchErrors,
@@ -24,6 +29,7 @@ import {
   PasswordErrors,
   Paths,
   Routes,
+  SERVER_ROUTE,
 } from '../../consts/consts';
 
 import styles from './SignUp.module.css';
@@ -75,35 +81,23 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { name, surname, companyName, email, password, confirmPassword } =
-      form;
-    const checkedErrors = checkErrors(form);
+    const updatedForm = trimObjectValues(form);
+    const checkedErrors = checkErrors(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
       try {
-        setErrors(initialStateErrors);
+        setErrors({ ...initialStateErrors });
         const response = await axios.post(
-          `http://localhost:4000/${Routes.REGISTRATION}`,
-          {
-            name,
-            surname,
-            companyName,
-            email,
-            password,
-            confirmPassword,
-          },
+          `${SERVER_ROUTE}${Routes.REGISTRATION}`,
+          updatedForm,
         );
         localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
-        const errorsInfo = error.response.data.errors;
-        if (
-          error.name === 'AxiosError' &&
-          error.response.status === 400 &&
-          errorsInfo
-        ) {
-          const formattedErrors = formatErrors(errorsInfo);
+        if (error.response.status === 400) {
+          const errorsInfo = error.response?.data?.errors;
+          const formattedErrors = formattingErrorsFromBackend(errorsInfo);
           setErrors((prevState) => ({
             ...prevState,
             ...formattedErrors,

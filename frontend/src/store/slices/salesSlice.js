@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
 import { debounceAsyncFunction, generateColor } from '../../utils/utils';
 import { Routes, Statuses } from '../../consts/consts';
 
@@ -61,9 +62,6 @@ const salesSlice = createSlice({
   reducers: {
     clearSales: (state) => {
       state.sales = [];
-      state.status = Statuses.FULFILLED;
-    },
-    clearStatus: (state) => {
       state.status = Statuses.FULFILLED;
     },
   },

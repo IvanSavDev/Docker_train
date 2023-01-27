@@ -1,7 +1,7 @@
 import SaleModel from '../models/Sale.js';
 
 import ProductModal from '../models/Product.js';
-import { ProductErrors, SaleErrors } from '../consts/consts.js';
+import { Errors, ProductErrors, SaleErrors } from '../consts/consts.js';
 import { getFormatDate } from '../utils/utils.js';
 
 export const getSales = async (req, res) => {
@@ -51,6 +51,20 @@ export const createSale = async (req, res) => {
 
     if (!product) {
       return res.status(404).json({ message: ProductErrors.NOT_FOUND_PRODUCT });
+    }
+
+    const restProduct = product.remains - req.body.soldItems;
+
+    if (restProduct < 0) {
+      return res.status(400).json({
+        errors: [
+          {
+            message: Errors.NOT_ENOUGH_GOODS,
+            parameter: 'soldItems',
+            value: restProduct,
+          },
+        ],
+      });
     }
 
     const doc = new SaleModel({
@@ -120,6 +134,7 @@ export const updateSale = async (req, res) => {
     }
 
     const {
+      _id: id,
       store,
       price,
       name,
@@ -131,6 +146,7 @@ export const updateSale = async (req, res) => {
     } = updatedSale;
 
     res.json({
+      id,
       store,
       price,
       name,

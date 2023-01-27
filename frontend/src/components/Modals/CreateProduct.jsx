@@ -3,34 +3,18 @@ import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import useForm from '../../hooks/useForm';
 import StandardButton from '../Buttons/StandardButton';
 import Input from '../Inputs/Input';
 import ModalTitle from './ModalTitle';
 import ModalInputContainer from './ModalInputContainer';
-import { Errors, FetchErrors, Statuses } from '../../consts/consts';
-import { formatErrors, haveErrors } from '../../utils/utils';
-import { createProduct } from '../../slices/productsSlice';
 
-const checkErrors = (form) => {
-  const { store, price, name, category, remains, weight } = form;
-  return {
-    store: store.length > 0 ? null : Errors.REQUIRED_FIELD,
-    price: Number.isInteger(price)
-      ? price > 0
-        ? null
-        : Errors.MORE_ZERO
-      : Errors.PRICE_INTEGER,
-    name: name.length > 0 ? null : Errors.REQUIRED_FIELD,
-    category: category.length > 0 ? null : Errors.REQUIRED_FIELD,
-    remains: Number.isInteger(remains)
-      ? remains > 0
-        ? null
-        : Errors.MORE_ZERO
-      : Errors.PRICE_INTEGER,
-    weight: weight > 0 ? null : Errors.MORE_ZERO,
-  };
-};
+import { haveErrors, isEmptyObject, trimObjectValues } from '../../utils/utils';
+import { notifyFormsErrors } from '../../utils/notifyErrors';
+import useForm from '../../hooks/useForm';
+import { Errors, Statuses } from '../../consts/consts';
+import { createProduct } from '../../store/slices/productsSlice';
+import { getUser } from '../../store/slices/userSlice';
+import { checkProductForValidation } from '../../validations/productValidation';
 
 const initialStateErrors = {
   store: null,
@@ -54,8 +38,21 @@ const CreateProduct = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { status } = useSelector((state) => state.products);
-  const [errors, setErrors] = useState(initialStateErrors);
-  const [form, setForm] = useForm(initialStateForm);
+  const [errors, setErrors] = useState({ ...initialStateErrors });
+  const [form, setForm] = useForm({ ...initialStateForm });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isEmptyObject(user)) {
+          await dispatch(getUser()).unwrap();
+        }
+      } catch (error) {
+        toast.error(Errors.MODAL);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleClose = () => {
     if (status !== Statuses.PENDING) {
@@ -65,23 +62,28 @@ const CreateProduct = ({ closeModal }) => {
 
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
-
-    const priceAsNumber = Number(price);
-    const remainsAsNumber = Number(remains);
-    const weightAsNumber = Number(weight);
+    console.log(form);
+    const priceAsNumber = price === '' ? null : Number(price);
+    const remainsAsNumber = remains === '' ? null : Number(remains);
+    const weightAsNumber = weight === '' ? null : Number(weight);
 
     const updatedForm = {
-      ...form,
+      ...trimObjectValues(form),
       price: priceAsNumber,
       remains: remainsAsNumber,
       weight: weightAsNumber,
     };
 
-    const checkedErrors = checkErrors(updatedForm);
+    const checkedErrors = checkProductForValidation(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {
+      if (user.address === undefined) {
+        toast.error(Errors.MODAL);
+        return;
+      }
       try {
+        setErrors({ ...initialStateErrors });
         await dispatch(
           createProduct({
             ...updatedForm,
@@ -90,18 +92,7 @@ const CreateProduct = ({ closeModal }) => {
         ).unwrap();
         closeModal();
       } catch (error) {
-        const formattedErrors = formatErrors(error.errors);
-        if (error.status === 401) {
-          toast.error(FetchErrors.AUTHORIZATION);
-        }
-        if (error.status === 400) {
-          setErrors((prevState) => ({
-            ...prevState,
-            ...formattedErrors,
-          }));
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyFormsErrors(error, setErrors);
       }
     } else {
       setErrors(checkedErrors);
@@ -125,6 +116,7 @@ const CreateProduct = ({ closeModal }) => {
           onChange={handleChange}
           value={form.store}
           autoFocus
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="price"
@@ -133,6 +125,7 @@ const CreateProduct = ({ closeModal }) => {
           helperText={errors.price}
           onChange={handleChange}
           value={form.price}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="name"
@@ -141,6 +134,7 @@ const CreateProduct = ({ closeModal }) => {
           helperText={errors.name}
           onChange={handleChange}
           value={form.name}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="category"
@@ -149,6 +143,7 @@ const CreateProduct = ({ closeModal }) => {
           helperText={errors.category}
           onChange={handleChange}
           value={form.category}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="remains"
@@ -157,6 +152,7 @@ const CreateProduct = ({ closeModal }) => {
           helperText={errors.remains}
           onChange={handleChange}
           value={form.remains}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
         <Input
           name="weight"
@@ -165,13 +161,14 @@ const CreateProduct = ({ closeModal }) => {
           helperText={errors.weight}
           onChange={handleChange}
           value={form.weight}
+          disabled={Boolean(status === Statuses.PENDING)}
         />
       </ModalInputContainer>
       <DialogActions>
         <StandardButton
           onClick={handleSubmit}
           fullWidth
-          disabled={status === Statuses.PENDING}
+          disabled={Boolean(status === Statuses.PENDING)}
         >
           Add Product +
         </StandardButton>

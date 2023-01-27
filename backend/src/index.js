@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import multer from 'multer';
 import cors from 'cors';
 
 import {
@@ -35,6 +36,10 @@ import {
   createSaleValidator,
   updateSaleValidator,
 } from './validations/saleValidation.js';
+import {
+  loadBackgroundImage,
+  loadImage,
+} from './controllers/ImageController.js';
 
 mongoose.set('strictQuery', false);
 mongoose
@@ -49,56 +54,76 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(express.json());
-app.use(cors(corsOptions));
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-app.get(Routes.Sales, checkAuth, getSales);
+const upload = multer({ storage });
+
+app.use(express.json({ limit: '50mb' }));
+app.use(cors(corsOptions));
+app.use('/uploads', express.static('uploads'));
+
+app.get(Routes.SALES, checkAuth, getSales);
 app.post(
-  Routes.Sale,
+  Routes.SALE,
   checkAuth,
   createSaleValidator,
   handleValidationErrors,
   createSale,
 );
 app.patch(
-  `${Routes.Sales}/:id`,
+  `${Routes.SALES}/:id`,
   checkAuth,
   updateSaleValidator,
   handleValidationErrors,
   updateSale,
 );
 
-app.get(Routes.Products, checkAuth, getProducts);
+app.get(Routes.PRODUCTS, checkAuth, getProducts);
 app.post(
-  Routes.Product,
+  Routes.PRODUCT,
   checkAuth,
   createProductValidator,
   handleValidationErrors,
   createProduct,
 );
 app.patch(
-  `${Routes.Products}/:id`,
+  `${Routes.PRODUCTS}/:id`,
   checkAuth,
   updateProductValidator,
   handleValidationErrors,
   updateProduct,
 );
-app.delete(`${Routes.Products}/:id`, checkAuth, deleteProduct);
+app.delete(`${Routes.PRODUCTS}/:id`, checkAuth, deleteProduct);
 
-app.get(Routes.User, checkAuth, getUser);
-app.post(Routes.Login, loginValidator, handleValidationErrors, login);
+app.get(Routes.USER, checkAuth, getUser);
+app.post(Routes.LOGIN, loginValidator, handleValidationErrors, login);
 app.post(
-  Routes.Registration,
+  Routes.REGISTRATION,
   registrationValidator,
   handleValidationErrors,
   registration,
 );
 app.patch(
-  Routes.User,
+  Routes.USER,
   checkAuth,
   updateUserValidator,
   handleValidationErrors,
   updateUser,
+);
+
+app.post(Routes.UPLOAD_AVATAR, checkAuth, upload.single('image'), loadImage);
+app.post(
+  Routes.UPLOAD_BACKGROUND,
+  checkAuth,
+  upload.single('image'),
+  loadBackgroundImage,
 );
 
 app.listen(PORT, (error) => {

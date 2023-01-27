@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { Statuses, Routes } from '../../consts/consts';
 import { debounceAsyncFunction } from '../../utils/utils';
+import { Statuses, Routes } from '../../consts/consts';
 
 export const getUser = createAsyncThunk(
   'user/getUser',

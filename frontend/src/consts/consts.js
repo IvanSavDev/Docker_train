@@ -1,4 +1,4 @@
-export const REG_EMAIL = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]{2,})/;
+export const REG_EMAIL = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,})/;
 export const REG_PASSWORD =
   /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -6,24 +6,23 @@ export const SERVER_ROUTE = 'http://localhost:4000';
 
 export const Errors = {
   FULL_NAME: 'Minimum 3 characters required',
-  COMPANY_NAME: 'Please enter more than 1 character',
+  COMPANY_NAME: 'Minimum 1 character required',
   EMAIL: 'Invalid email',
-  ACCOUNT_EXIST: 'Account already exist',
   REQUIRED_FIELD: 'Required field',
-  MORE_ZERO: 'Value must be a positive number',
+  MORE_ZERO: 'Value must be greater than 0',
+  INTEGER: 'The number must be a positive integer',
   INVALID_DATE: 'Invalid date',
-  PRICE_INTEGER: 'Price must be integer',
   NOT_ENOUGH_GOODS: 'Not enough goods',
+  MODAL: 'An error has occurred. Reload modal window',
 };
 
 export const PasswordErrors = {
+  SAME_PASSWORD: 'Same password',
   NEW_PASSWORD: 'Enter new password',
   OLD_PASSWORD: 'Enter old password',
-  SAME_PASSWORD: 'Same password',
   INVALID_PASSWORD:
     'Minimum 8 characters required, 1 special character and 1 number',
   CONFIRMED_PASSWORD: 'Does not match the entered password',
-  MATCH_OLD_PASSWORD: 'Not equal to old password',
   MATCH_PASSWORD: 'Not equal to password above',
 };
 

@@ -3,6 +3,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
 import ContainerDiagrams from '../ContainerDiagrams';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
+
 import { formatNumberWithSymbol, parseDate } from '../../../utils/utils';
 
 import styles from './LineChart.module.css';

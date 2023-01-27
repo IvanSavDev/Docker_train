@@ -1,5 +1,5 @@
 .link {
-    color: #5382E7;
+    color: var(--main-blue);
     text-decoration: none;
 }
 

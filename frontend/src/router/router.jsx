@@ -1,16 +1,17 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Paths } from '../consts/consts';
 import SignIn from '../pages/SignIn/SignIn';
 import SignUp from '../pages/SignUp/SignUp';
 import Main from '../pages/Main/Main';
 import MyProduct from '../pages/MyProduct/MyProduct';
 import MySales from '../pages/MySales/MySales';
 import PersonalCabinet from '../pages/PersonalCabinet/PersonalCabinet';
-import useAuth from '../hooks/useAuth';
 import PersonalPage from '../pages/PersonalPage';
+
 import { generateId } from '../utils/utils';
+import useAuth from '../hooks/useAuth';
+import { Paths } from '../consts/consts';
 
 const routers = [
   {

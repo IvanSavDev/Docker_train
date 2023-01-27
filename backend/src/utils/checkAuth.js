@@ -19,7 +19,7 @@ export default async (req, res, next) => {
 
     if (!user) {
       return res.status(401).json({
-        message: Errors.FAILED_AUTHENTICATION,
+        message: Errors.FAILED_AUTHORIZATION,
       });
     }
     req.userId = decoded._id;

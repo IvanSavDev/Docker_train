@@ -1,13 +1,13 @@
 .lineChart {
     grid-area: LineChart;
     padding: 32px 32px 40px 32px;
-    background-color: #ffffff;
+    background-color: var(--background-diagrams);
 }
 
 .header {
+    margin-bottom: 24px;
     font-size: 18px;
     line-height: 1em;
-    margin-bottom: 24px;
 }
 
 .total {

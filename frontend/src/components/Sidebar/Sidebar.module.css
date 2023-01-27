@@ -17,10 +17,10 @@
     align-items: center;
     gap: 11px;
     padding: 17px 0 17px 40px;
-    color: #5382E7;
+    color: var(--main-blue);
     text-decoration: none;
     background-color: rgba(83, 130, 231, 0.04);
-    border-right: 2px solid #5382E7;
+    border-right: 2px solid var(--main-blue);
     font-size: 14px;
     line-height: 14px;
 }
@@ -30,7 +30,7 @@
     align-items: center;
     gap: 11px;
     padding: 17px 0 17px 40px;
-    color: #2B3844;
+    color: var(--main-dark-blue);
     text-decoration: none;
     opacity: 0.4;
     font-size: 14px;
@@ -58,7 +58,7 @@
 }
 
 a[aria-current="page"] .activeLogo path {
-    stroke: #5382E7;
+    stroke: var(--main-blue);
 }
 
 .burgerMenu {
@@ -84,7 +84,7 @@ a[aria-current="page"] .activeLogo path {
         grid-area: nav;
         flex-direction: row;
         gap: 25px;
-        border-bottom: 1px solid #E8EBEF;
+        border-bottom: 1px solid var(--main-border);
     }
 
     .wrapperPadding {
@@ -103,7 +103,7 @@ a[aria-current="page"] .activeLogo path {
     .active {
         padding-inline: 10px;
         border-right: 0;
-        border-bottom: 2px solid #5382E7;
+        border-bottom: 2px solid var(--main-blue);
     }
 
     .noActive {

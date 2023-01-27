@@ -7,9 +7,8 @@
                         'oldPassword newPassword';
     column-gap: 32px;
     padding-top: 53px;
-    margin-top: 32px;
     margin-bottom: 20px;
-    border-top: 1px solid rgba(43, 56, 68, 0.08);
+    border-top: 1px solid var(--main-border);
     max-width: 792px;
 }
 

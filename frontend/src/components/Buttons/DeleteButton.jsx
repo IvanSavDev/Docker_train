@@ -4,12 +4,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Snackbar } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import { ReactComponent as Delete } from '../../assets/img/delete.svg';
+import { FetchErrors, Statuses } from '../../consts/consts';
+import { deleteProduct } from '../../store/slices/productsSlice';
 
 import styles from './DeleteButton.module.css';
 
-const StyledSnackbar = styled(Snackbar)(() => ({
+import { ReactComponent as Delete } from '../../assets/img/delete.svg';
+
+const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
   position: 'absolute',
   left: -410,
   top: 10,
@@ -17,25 +22,43 @@ const StyledSnackbar = styled(Snackbar)(() => ({
 
   '& .MuiPaper-root': {
     flexWrap: 'nowrap',
-    backgroundColor: '#2B3844',
+    backgroundColor: theme.palette.custom.main.grey,
   },
 }));
 
-const DeleteButton = ({ handleClick, ...props }) => {
+const DeleteButton = ({ id }) => {
   const [open, setOpen] = useState(false);
+  const { status } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+
   const handleOpen = () => setOpen(true);
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    if (status !== Statuses.PENDING) {
+      setOpen(false);
+    }
+  };
+
+  const handleClick = async () => {
+    try {
+      await dispatch(deleteProduct(id)).unwrap();
+      handleClose();
+    } catch (error) {
+      if (error.status === 401) {
+        toast.error(FetchErrors.AUTHORIZATION);
+      } else {
+        toast.error(FetchErrors.UNEXPECTED);
+      }
+    }
+  };
 
   const action = (
     <>
       <Button
         size="small"
         color="error"
-        onClick={() => {
-          handleClick();
-          handleClose();
-        }}
+        onClick={handleClick}
+        disabled={Boolean(status === Statuses.PENDING)}
       >
         Delete
       </Button>
@@ -44,6 +67,7 @@ const DeleteButton = ({ handleClick, ...props }) => {
         aria-label="close"
         color="inherit"
         onClick={handleClose}
+        disabled={Boolean(status === Statuses.PENDING)}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
@@ -53,10 +77,11 @@ const DeleteButton = ({ handleClick, ...props }) => {
   return (
     <div className={styles.container}>
       <Button
-        {...props}
-        size="small"
         sx={{
           minWidth: '28px',
+          minHeight: '28xp',
+          width: '100%',
+          height: '100%',
         }}
         onClick={handleOpen}
       >

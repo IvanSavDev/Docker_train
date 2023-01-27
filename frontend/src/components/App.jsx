@@ -16,6 +16,8 @@ const theme = createTheme({
     custom: {
       main: {
         grey: '#2B3844',
+        blue: '#5382E7',
+        scrollColor: 'rgba(169, 169, 169, 0.4)',
       },
     },
   },

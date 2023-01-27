@@ -22,12 +22,12 @@ const StyledBurgerMenu = styled(BurgerMenu)(({ theme }) => ({
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  textTransform: 'none',
-  color: '#2B3844',
+  minWidth: 'auto',
   fontSize: '14px',
+  textTransform: 'none',
+  color: theme.palette.custom.main.grey,
   opacity: 0.4,
   whiteSpace: 'nowrap',
-  minWidth: 'auto',
 
   [theme.breakpoints.down('lessSmall')]: {
     fontSize: 0,

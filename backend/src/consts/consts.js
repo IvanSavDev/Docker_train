@@ -12,17 +12,17 @@ export const Errors = {
   PERMISSION_DENIED: 'Permission denied',
   INVALID_DATA: 'Invalid data',
   FAILED_REGISTRATION: 'Failed to registration',
-  FAILED_AUTHORIZATION: 'Failed to authorization',
   FAILED_AUTHENTICATION: 'Failed to authentication',
-  FAILED_IDENTIFICATION: 'Wrong email or password',
+  FAILED_AUTHORIZATION: 'Failed to authorization',
   MORE_ZERO: 'Value must be greater than 0',
-  MORE_ONE_SYMBOL: 'Minimum 1 string character required',
-  MORE_THREE_SYMBOLS: 'Minimum 3 string characters required',
-  INTEGER: 'Value must be integer and greater than 0',
+  MORE_ONE_SYMBOL: 'Minimum 1 character required',
+  MORE_THREE_SYMBOLS: 'Minimum 3 characters required',
+  INTEGER: 'The number must be a positive integer',
   INVALID_DATE: 'Invalid Date',
   NOT_VALID_ADDRESS: 'Not valid address',
   FILE: 'File upload error',
   UNKNOWN: 'Unknown error',
+  NOT_ENOUGH_GOODS: 'Not enough goods',
 };
 
 export const EmailErrors = {

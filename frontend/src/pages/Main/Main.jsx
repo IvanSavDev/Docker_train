@@ -1,36 +1,47 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 
-import { getSales } from '../../slices/salesSlice';
+import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Header from '../../components/Header/Header';
 import PieChart from '../../components/Diagrams/PieChart/PieChart';
 import LineChart from '../../components/Diagrams/LineChart/LineChart';
 import BarChart from '../../components/Diagrams/BarChart/BarChart';
-import { FetchErrors, Statuses } from '../../consts/consts';
+
+import { notifyPageErrors } from '../../utils/notifyErrors';
+import { isEmptyObject } from '../../utils/utils';
+import { Statuses } from '../../consts/consts';
+import { getSales } from '../../store/slices/salesSlice';
+import { getUser } from '../../store/slices/userSlice';
 
 import styles from './Main.module.css';
-import CenteringContainer from '../../components/Containers/CenteringContainer';
 
 const Main = () => {
   const { sales, status } = useSelector((state) => state.sales);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (sales.length === 0) {
+      if (!sales) {
         try {
           await dispatch(getSales()).unwrap();
         } catch (error) {
-          if (error.status === 401) {
-            toast.error(FetchErrors.AUTHORIZATION);
-          } else if (error.status === 404) {
-            toast.error(FetchErrors.LOAD_DATA);
-          } else {
-            toast.error(FetchErrors.UNEXPECTED);
-          }
+          notifyPageErrors(error);
         }
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isEmptyObject(user)) {
+          await dispatch(getUser()).unwrap();
+        }
+      } catch (error) {
+        notifyPageErrors(error);
       }
     };
     fetchData();
@@ -39,20 +50,18 @@ const Main = () => {
   return (
     <>
       <Header title="Sales statistics" description="Welcome to CRM dashboard" />
-      <div className={styles.container}>
-        {status !== Statuses.PENDING && (
-          <>
-            <PieChart data={sales} />
-            <LineChart data={sales} />
-            <BarChart data={sales} />
-          </>
-        )}
-        {status === Statuses.PENDING && (
-          <CenteringContainer>
-            <CircularProgress />
-          </CenteringContainer>
-        )}
-      </div>
+      {status !== Statuses.PENDING && sales && (
+        <div className={styles.container}>
+          <PieChart data={sales} />
+          <LineChart data={sales} />
+          <BarChart data={sales} />
+        </div>
+      )}
+      {status === Statuses.PENDING && (
+        <CenteringContainer>
+          <CircularProgress />
+        </CenteringContainer>
+      )}
     </>
   );
 };

@@ -6,10 +6,10 @@
 }
 
 .haveAccountText {
-    color: #2B3844;
+    color: var(--main-dark-blue);
 }
 
 .invalidValue {
     position: absolute;
-    color: red;
+    color: var(--main-error);
 }
