@@ -22,6 +22,12 @@ const UserSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    urlImg: {
+      type: String,
+    },
+    urlBackgroundImg: {
+      type: String,
+    },
     passwordHash: {
       type: String,
       required: true,
