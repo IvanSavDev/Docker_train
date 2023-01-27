@@ -8,7 +8,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { styled } from '@mui/material/styles';
 
+import ContainerDiagrams from '../ContainerDiagrams';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import { getMultipleOFFive, parseDate } from '../../../utils/utils';
 
@@ -37,6 +39,12 @@ const getWidthYAxis = (maxValue) => {
 
   return 105;
 };
+
+const StyledBarChar = styled(BarChart)(() => ({
+  '& .recharts-cartesian-grid line': {
+    stroke: 'rgba(232,235,239,0.4)',
+  },
+}));
 
 const Chart = ({ data }) => {
   const chartData = [
@@ -92,39 +100,43 @@ const Chart = ({ data }) => {
 
   return (
     <div className={styles.barChart}>
-      <h2 className={styles.header}>Sales Overview</h2>
-      <p className={styles.description}>Sales chart for all months this year</p>
-      <ResponsiveContainer width="100%" height="80%">
-        <BarChart
-          width={500}
-          height={300}
-          data={chartDataWithSizeShadow}
-          stackOffset="sign"
-          margin={{ bottom: 20 }}
-          barSize={48}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tickMargin={17}
-            tickCount={7}
-            width={getWidthYAxis(maxTotalCost)}
-            ticks={dataForYAxis}
-            domain={[interval, maxTotalCost]}
-          />
-          <XAxis
-            axisLine={false}
-            tickLine={false}
-            dataKey="name"
-            tickMargin={27}
-            minTickGap="10"
-          />
-          <Tooltip content={CustomTooltip} />
-          <Bar dataKey="totalCost" fill="#5B6ACD" stackId="stack" />
-          <Bar dataKey="sizeShadow" fill="#EFF1FF" stackId="stack" />
-        </BarChart>
-      </ResponsiveContainer>
+      <ContainerDiagrams>
+        <h2 className={styles.header}>Sales Overview</h2>
+        <p className={styles.description}>
+          Sales chart for all months this year
+        </p>
+        <ResponsiveContainer width="100%" height="80%">
+          <StyledBarChar
+            width={500}
+            height={300}
+            data={chartDataWithSizeShadow}
+            stackOffset="sign"
+            margin={{ bottom: 20 }}
+            barSize={48}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tickMargin={17}
+              tickCount={7}
+              width={getWidthYAxis(maxTotalCost)}
+              ticks={dataForYAxis}
+              domain={[interval, maxTotalCost]}
+            />
+            <XAxis
+              axisLine={false}
+              tickLine={false}
+              dataKey="name"
+              tickMargin={27}
+              minTickGap="10"
+            />
+            <Tooltip content={CustomTooltip} />
+            <Bar dataKey="totalCost" fill="#5B6ACD" stackId="stack" />
+            <Bar dataKey="sizeShadow" fill="#EFF1FF" stackId="stack" />
+          </StyledBarChar>
+        </ResponsiveContainer>
+      </ContainerDiagrams>
     </div>
   );
 };

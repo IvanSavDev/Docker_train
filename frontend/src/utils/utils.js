@@ -84,7 +84,7 @@ export const debounceAsyncFunction = (fun, timeout = 1000) =>
     }, timeout);
   });
 
-export const formatErrors = (errors) =>
+export const formattingErrorsFromBackend = (errors) =>
   Array.isArray(errors)
     ? errors.reduce(
         (acc, errorInfo) => ({

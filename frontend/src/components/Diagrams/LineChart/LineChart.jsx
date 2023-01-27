@@ -1,6 +1,7 @@
 import React from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
+import ContainerDiagrams from '../ContainerDiagrams';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import { formatNumberWithSymbol, parseDate } from '../../../utils/utils';
 
@@ -39,28 +40,30 @@ const Chart = ({ data }) => {
 
   return (
     <div className={styles.lineChart}>
-      <h2 className={styles.header}>Total earned this year</h2>
-      <ResponsiveContainer height={50}>
-        <LineChart width={377} height={50} data={chartData}>
-          <Line
-            dataKey="totalCost"
-            name="Total cost"
-            stroke="#1CAF7F"
-            strokeWidth={4}
-            dot={false}
-          />
-          <Tooltip
-            content={CustomTooltip}
-            cursor={{ strokeWidth: 0 }}
-            showLabel
-          />
-          <XAxis dataKey="name" hide />
-        </LineChart>
-      </ResponsiveContainer>
-      <p className={styles.total}>{`$${formatNumberWithSymbol(
-        chartData.reduce((acc, value) => acc + value.totalCost, 0),
-        ',',
-      )}`}</p>
+      <ContainerDiagrams>
+        <h2 className={styles.header}>Total earned this year</h2>
+        <ResponsiveContainer height={50}>
+          <LineChart width={377} height={50} data={chartData}>
+            <Line
+              dataKey="totalCost"
+              name="Total cost"
+              stroke="#1CAF7F"
+              strokeWidth={4}
+              dot={false}
+            />
+            <Tooltip
+              content={CustomTooltip}
+              cursor={{ strokeWidth: 0 }}
+              showLabel
+            />
+            <XAxis dataKey="name" hide />
+          </LineChart>
+        </ResponsiveContainer>
+        <p className={styles.total}>{`$${formatNumberWithSymbol(
+          chartData.reduce((acc, value) => acc + value.totalCost, 0),
+          ',',
+        )}`}</p>
+      </ContainerDiagrams>
     </div>
   );
 };

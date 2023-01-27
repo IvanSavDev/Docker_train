@@ -10,7 +10,7 @@ const StyledButton = styled(Button)(() => ({
 }));
 
 const StandardButton = ({ children, ...rest }) => (
-  <StyledButton {...rest} variant="contained" autoFocus>
+  <StyledButton {...rest} variant="contained" disableFocusRipple autoFocus>
     {children}
   </StyledButton>
 );

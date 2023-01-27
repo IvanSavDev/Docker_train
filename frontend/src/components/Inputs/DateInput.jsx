@@ -5,6 +5,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { styled } from '@mui/material/styles';
 
 import Input from './Input';
+
 import { Errors } from '../../consts/consts';
 
 const StyledModalInput = styled(Input)(({ error }) => ({
@@ -22,7 +23,7 @@ const DateInput = ({ error, ...rest }) => (
           {...params}
           variant="outlined"
           error={error}
-          helperText={Errors.date}
+          helperText={Errors.INVALID_DATE}
         />
       )}
     />

@@ -3,9 +3,9 @@ import { useDispatch } from 'react-redux';
 
 import AuthContext from '../context/AuthContext';
 import { KeysLocalStorage } from '../consts/consts';
-import { clearSales } from '../slices/salesSlice';
-import { clearProducts } from '../slices/productsSlice';
-import { clearUser } from '../slices/userSlice';
+import { clearSales } from '../store/slices/salesSlice';
+import { clearProducts } from '../store/slices/productsSlice';
+import { clearUser } from '../store/slices/userSlice';
 
 const AuthProvider = ({ children }) => {
   const isLogged = !!localStorage.getItem(KeysLocalStorage.TOKEN);
