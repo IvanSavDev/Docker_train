@@ -1,15 +1,12 @@
 export const isEmptyObject = (object) => Object.keys(object).length === 0;
 
-export const isDifferentFields = (oldAccount, newAccount) => {
-  return !Object.keys(oldAccount).every(
-    (key) => oldAccount[key] === newAccount[key],
-  );
-};
+export const isDifferentFields = (oldAccount, newAccount) =>
+  !Object.keys(oldAccount).every((key) => oldAccount[key] === newAccount[key]);
 
 export const haveErrors = (errors) =>
   Object.values(errors).every((error) => !error);
 
-export const generateId = () => Date.now() + Math.floor(Math.random() * 100);
+export const generateId = () => Date.now() + Math.floor(Math.random() * 1000);
 
 export const formatNumberWithSymbol = (number, symbol = ' ') => {
   let result = '';
@@ -49,8 +46,8 @@ export const getMultipleOFFive = (number) => {
   if (countSymbolsInNumber === 1) {
     return 10;
   }
-  const lastSymbols = Number(String(number).slice(0, 2));
-  const nextSymbols = lastSymbols + 1;
+  const firstTwoSymbols = Number(numberAsString.slice(0, 2));
+  const nextSymbols = firstTwoSymbols + 1;
   const secondSymbol = Number(String(nextSymbols)[1]);
 
   if (secondSymbol === 0 || secondSymbol === 5) {
@@ -64,13 +61,24 @@ export const parseDate = (date) => {
   return new Date(year, month - 1, day);
 };
 
-export const getChangedFields = (firstObject, secondObject) => {
-  return Object.keys(firstObject).reduce((acc, key) => {
-    return firstObject[key] === secondObject[key]
-      ? acc
-      : { ...acc, [key]: secondObject[key] };
-  }, {});
+export const sortByDate = (data, key) => {
+  if (Array.isArray(data)) {
+    return [...data].sort(
+      (firstData, secondData) =>
+        parseDate(secondData[key]).getTime() -
+        parseDate(firstData[key]).getTime(),
+    );
+  }
+  return data;
 };
+export const getChangedFields = (firstObject, secondObject) =>
+  Object.keys(firstObject).reduce(
+    (acc, key) =>
+      firstObject[key] === secondObject[key]
+        ? acc
+        : { ...acc, [key]: secondObject[key] },
+    {},
+  );
 
 export const debounceAsyncFunction = (fun, timeout = 1000) =>
   new Promise((resolve, reject) => {
@@ -95,16 +103,20 @@ export const formattingErrorsFromBackend = (errors) =>
       )
     : {};
 
-export const trimObjectValues = (object) => {
-  const keys = Object.keys(object);
-  return keys.reduce((acc, key) => {
+export const trimObjectValues = (object) =>
+  Object.keys(object).reduce((acc, key) => {
     const value = object[key];
     return {
       ...acc,
       [key]: typeof value === 'string' ? value.trim() : value,
     };
   }, {});
-};
+
+export const getUniqueValuesByKey = (data) =>
+  Array.from(new Set(data.map((sale) => sale.category)));
+
+export const formattingNumericValueFromForm = (formValue) =>
+  formValue === '' ? null : Number(formValue);
 
 export const throttle = (fun, delay = 500) => {
   let timer = null;
