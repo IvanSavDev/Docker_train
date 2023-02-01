@@ -7,14 +7,20 @@ import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Header from '../../components/Header/Header';
 import TableTemplate from '../../components/Table/TableTemplate';
 import TableHeader from '../../components/Table/TableHeader';
-import { StyledTableRow } from '../../components/Table/StyledTableRow';
-import { StyledTableCell } from '../../components/Table/StyledTableCell';
 
-import { formatNumberWithSymbol, isEmptyObject } from '../../utils/utils';
+import {
+  formatNumberWithSymbol,
+  generateId,
+  isEmptyObject,
+  sortByDate,
+} from '../../utils/utils';
 import { notifyPageErrors } from '../../utils/notifyErrors';
 import { Statuses } from '../../consts/consts';
 import { getSales } from '../../store/slices/salesSlice';
 import { getUser } from '../../store/slices/userSlice';
+
+import { TableRowStyled } from '../../components/Table/TableRow.styled';
+import { TableCellStyled } from '../../components/Table/TableCell.styled';
 
 const tableHeaders = [
   'Product name',
@@ -76,37 +82,37 @@ const MySales = () => {
         <TableTemplate>
           <TableHeader headers={tableHeaders} />
           <TableBody>
-            {sales.map((sale) => (
-              <StyledTableRow key={sale.store + Math.random()}>
-                <StyledTableCell align="center">{sale.name}</StyledTableCell>
-                <StyledTableCell align="center">{sale.store}</StyledTableCell>
-                <StyledTableCell align="center">
+            {sortByDate(sales, 'lastSale').map((sale) => (
+              <TableRowStyled key={generateId()}>
+                <TableCellStyled align="center">{sale.name}</TableCellStyled>
+                <TableCellStyled align="center">{sale.store}</TableCellStyled>
+                <TableCellStyled align="center">
                   {sale.address || '-'}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {sale.category}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {sale.creationDate}
-                </StyledTableCell>
-                <StyledTableCell
+                </TableCellStyled>
+                <TableCellStyled
                   align="center"
                   sx={{
                     whiteSpace: 'nowrap',
                   }}
                 >
                   {`$${formatNumberWithSymbol(sale.price)}`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {sale.soldItems}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {`${sale.weight}kg`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {sale.lastSale}
-                </StyledTableCell>
-              </StyledTableRow>
+                </TableCellStyled>
+              </TableRowStyled>
             ))}
           </TableBody>
         </TableTemplate>

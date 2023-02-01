@@ -2,15 +2,15 @@ import React from 'react';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import { StyledTableCell } from './StyledTableCell';
+import { TableCellStyled } from './TableCell.styled';
 
 const TableHeader = ({ headers }) => (
   <TableHead>
     <TableRow>
       {headers.map((headerName) => (
-        <StyledTableCell key={headerName} align="center">
+        <TableCellStyled key={headerName} align="center">
           {headerName}
-        </StyledTableCell>
+        </TableCellStyled>
       ))}
     </TableRow>
   </TableHead>

@@ -1,42 +1,14 @@
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 
 import { NavList } from './NavList';
 import { LeftSidebar } from './LeftSidebar';
-import BurgerMenu from '../BurgerMenu/BurgerMenu';
+import { StyledBurgerMenu, StyledButton } from './Sidebar.styled';
 
 import useAuth from '../../hooks/useAuth';
 
 import styles from './Sidebar.module.css';
 
 import { ReactComponent as LogOut } from '../../assets/img/logOut.svg';
-
-const StyledBurgerMenu = styled(BurgerMenu)(({ theme }) => ({
-  display: 'none',
-  paddingInline: 0,
-
-  [theme.breakpoints.down('middle')]: {
-    display: 'inline-flex',
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  minWidth: 'auto',
-  fontSize: '14px',
-  textTransform: 'none',
-  color: theme.palette.custom.main.grey,
-  opacity: 0.4,
-  whiteSpace: 'nowrap',
-
-  [theme.breakpoints.down('lessSmall')]: {
-    fontSize: 0,
-
-    '& .MuiButton-startIcon': {
-      margin: 0,
-    },
-  },
-}));
 
 const Sidebar = () => {
   const { logOut } = useAuth();

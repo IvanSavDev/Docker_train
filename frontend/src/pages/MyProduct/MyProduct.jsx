@@ -9,9 +9,6 @@ import TableTemplate from '../../components/Table/TableTemplate';
 import TableHeader from '../../components/Table/TableHeader';
 import TableButton from '../../components/Buttons/TableButton';
 import DeleteButton from '../../components/Buttons/DeleteButton';
-import { StyledTableCell } from '../../components/Table/StyledTableCell';
-import { ReactComponent as Edit } from '../../assets/img/edit.svg';
-import { StyledTableRow } from '../../components/Table/StyledTableRow';
 
 import { formatNumberWithSymbol, isEmptyObject } from '../../utils/utils';
 import { notifyPageErrors } from '../../utils/notifyErrors';
@@ -19,6 +16,11 @@ import { ModalsTypes, Statuses } from '../../consts/consts';
 import { getProducts } from '../../store/slices/productsSlice';
 import { getUser } from '../../store/slices/userSlice';
 import { getSales } from '../../store/slices/salesSlice';
+
+import { TableCellStyled } from '../../components/Table/TableCell.styled';
+import { TableRowStyled } from '../../components/Table/TableRow.styled';
+
+import { ReactComponent as Edit } from '../../assets/img/edit.svg';
 
 const tableHeaders = [
   'Product name',
@@ -95,35 +97,35 @@ const MyProduct = () => {
           <TableHeader headers={tableHeaders} />
           <TableBody>
             {products.map((product) => (
-              <StyledTableRow key={product.id}>
-                <StyledTableCell align="center">{product.name}</StyledTableCell>
-                <StyledTableCell align="center">
+              <TableRowStyled key={product.id}>
+                <TableCellStyled align="center">{product.name}</TableCellStyled>
+                <TableCellStyled align="center">
                   {product.store}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {product.address || '-'}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {product.category}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {product.creationDate}
-                </StyledTableCell>
-                <StyledTableCell
+                </TableCellStyled>
+                <TableCellStyled
                   align="center"
                   sx={{
                     whiteSpace: 'nowrap',
                   }}
                 >
                   {`$${formatNumberWithSymbol(product.price)}`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {formatNumberWithSymbol(product.remains)}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                </TableCellStyled>
+                <TableCellStyled align="center">
                   {`${formatNumberWithSymbol(product.weight)}kg`}
-                </StyledTableCell>
-                <StyledTableCell
+                </TableCellStyled>
+                <TableCellStyled
                   align="center"
                   sx={{
                     display: 'flex',
@@ -147,8 +149,8 @@ const MyProduct = () => {
                     <Edit />
                   </TableButton>
                   <DeleteButton id={product.id} />
-                </StyledTableCell>
-              </StyledTableRow>
+                </TableCellStyled>
+              </TableRowStyled>
             ))}
           </TableBody>
         </TableTemplate>

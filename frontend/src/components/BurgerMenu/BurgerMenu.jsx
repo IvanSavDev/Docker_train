@@ -1,16 +1,7 @@
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { styled } from '@mui/material/styles';
 
-const StyledIconButton = styled(IconButton)(() => ({
-  borderRadius: '4px',
-  padding: '9px',
-  margin: 0,
-  '& .MuiTouchRipple-root *': {
-    borderRadius: '4px',
-  },
-}));
+import { StyledIconButton } from './BurgerMenu.styled';
 
 const BurgerMenu = ({ ...rest }) => (
   <StyledIconButton

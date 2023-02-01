@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
 
-export const StyledTableRow = styled(TableRow)(() => ({
+export const TableRowStyled = styled(TableRow)(() => ({
   '&:nth-of-type(odd)': {
     minHeight: '54px',
     backgroundColor: '#F8F8F8',

@@ -1,26 +1,16 @@
 import React from 'react';
-import { Fab, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { styled } from '@mui/material/styles';
 
 import { FetchErrors, Statuses } from '../../consts/consts';
 import { loadAvatar } from '../../store/slices/userSlice';
 
 import styles from './Avatar.module.css';
+import { StyledFab } from './Avatar.styled';
 
 import { ReactComponent as UserImg } from '../../assets/img/user.svg';
-
-const StyledFab = styled(Fab)(({ theme }) => ({
-  position: 'absolute',
-  right: 0,
-  top: 0,
-  width: 30,
-  height: 30,
-  minHeight: 'auto',
-  backgroundColor: theme.palette.custom.main.blue,
-}));
 
 const Avatar = () => {
   const dispatch = useDispatch();

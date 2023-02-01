@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { Snackbar } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -11,20 +9,9 @@ import { FetchErrors, Statuses } from '../../consts/consts';
 import { deleteProduct } from '../../store/slices/productsSlice';
 
 import styles from './DeleteButton.module.css';
+import { StyledSnackbar } from './DeleteButton.styled';
 
 import { ReactComponent as Delete } from '../../assets/img/delete.svg';
-
-const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
-  position: 'absolute',
-  left: -410,
-  top: 10,
-  maxWidth: 300,
-
-  '& .MuiPaper-root': {
-    flexWrap: 'nowrap',
-    backgroundColor: theme.palette.custom.main.grey,
-  },
-}));
 
 const DeleteButton = ({ id }) => {
   const [open, setOpen] = useState(false);

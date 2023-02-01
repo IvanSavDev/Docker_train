@@ -1,20 +1,13 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-
-import StandardButton from '../Buttons/StandardButton';
 
 import { FetchErrors } from '../../consts/consts';
 import { loadBackgroundImg } from '../../store/slices/userSlice';
 
-const BackgroundButton = styled(StandardButton)(() => ({
-  gridArea: 'background',
-  justifySelf: 'start',
-  padding: '10px 10px',
-}));
+import { StyledBackgroundButton } from './BackgroundButton.styled';
 
-const AddBackgroundButton = () => {
+const BackgroundButton = () => {
   const dispatch = useDispatch();
   const handleLoadImg = async (event) => {
     try {
@@ -33,11 +26,11 @@ const AddBackgroundButton = () => {
   };
 
   return (
-    <BackgroundButton component="label">
+    <StyledBackgroundButton component="label">
       add background
       <input type="file" accept="image/*" hidden onChange={handleLoadImg} />
-    </BackgroundButton>
+    </StyledBackgroundButton>
   );
 };
 
-export default AddBackgroundButton;
+export default BackgroundButton;

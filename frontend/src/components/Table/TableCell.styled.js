@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
-export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const TableCellStyled = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     padding: '20px',
     backgroundColor: '#2B3844',
