@@ -104,6 +104,7 @@ export const updateProduct = async (req, res) => {
     const {
       _id: id,
       store,
+      address,
       price,
       name,
       category,
@@ -115,6 +116,7 @@ export const updateProduct = async (req, res) => {
     res.json({
       id,
       store,
+      address,
       price,
       name,
       category,

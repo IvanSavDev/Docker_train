@@ -20,7 +20,7 @@ export const createSaleValidator = [
     .bail()
     .isLength({ min: 1 }),
   body('store', Errors.MORE_ONE_SYMBOL).isString().bail().isLength({ min: 1 }),
-  body('price', Errors.MORE_ZERO).isFloat({ gt: 0 }),
+  body('price', Errors.MORE_ZERO).isFloat({ min: 0 }),
   body('name', Errors.MORE_ONE_SYMBOL).isString().bail().isLength({ min: 1 }),
   body('address', Errors.NOT_VALID_ADDRESS).isString(),
   body('category', Errors.MORE_ONE_SYMBOL)
@@ -28,7 +28,7 @@ export const createSaleValidator = [
     .bail()
     .isLength({ min: 1 }),
   body('soldItems', Errors.INTEGER).isInt({ min: 0 }),
-  body('weight', Errors.MORE_ZERO).isFloat({ gt: 0 }),
+  body('weight', Errors.MORE_ZERO).isFloat({ min: 0 }),
   body('lastSale', Errors.INVALID_DATE).isString().bail().custom(isValidDate),
 ];
 
@@ -37,7 +37,7 @@ export const updateSaleValidator = [
     .optional()
     .isString()
     .isLength({ min: 1 }),
-  body('price', Errors.MORE_ZERO).optional().isFloat({ gt: 0 }),
+  body('price', Errors.MORE_ZERO).optional().isFloat({ min: 0 }),
   body('name', Errors.MORE_ONE_SYMBOL)
     .optional()
     .isString()
@@ -47,7 +47,7 @@ export const updateSaleValidator = [
     .isString()
     .isLength({ min: 1 }),
   body('soldItems', Errors.INTEGER).optional().isInt({ min: 0 }),
-  body('weight', Errors.MORE_ZERO).optional().isFloat({ gt: 0 }),
+  body('weight', Errors.MORE_ZERO).optional().isFloat({ min: 0 }),
   body('address', Errors.NOT_VALID_ADDRESS).optional().isString(),
   body('lastSale', Errors.INVALID_DATE)
     .optional()
