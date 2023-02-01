@@ -1,15 +1,16 @@
 import React from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
-import ContainerDiagrams from '../ContainerDiagrams';
+import ContainerDiagrams from '../../Containers/ContainerDiagrams';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 
-import { formatNumberWithSymbol, parseDate } from '../../../utils/utils';
+import { formatNumberWithSymbol } from '../../../utils/utils';
+import { updateChartData } from '../../../utils/diagramsUtils';
 
 import styles from './LineChart.module.css';
 
 const Chart = ({ data }) => {
-  const chartData = [
+  const lineChartData = [
     { name: 'January', totalCost: 0 },
     { name: 'February', totalCost: 0 },
     { name: 'March', totalCost: 0 },
@@ -24,27 +25,18 @@ const Chart = ({ data }) => {
     { name: 'December', totalCost: 0 },
   ];
 
-  if (data) {
-    data.forEach((sale) => {
-      const date = parseDate(sale.lastSale);
-      const monthNumber = date.getMonth();
-      const year = date.getFullYear();
-      const currentYear = new Date().getFullYear();
-
-      if (year === currentYear) {
-        chartData[monthNumber].totalCost += Math.floor(
-          sale.soldItems * sale.price,
-        );
-      }
-    });
-  }
+  const updatedChartData = updateChartData(data, lineChartData);
+  const totalCostPerYear = updatedChartData.reduce(
+    (acc, value) => acc + value.totalCost,
+    0,
+  );
 
   return (
     <div className={styles.lineChart}>
       <ContainerDiagrams>
         <h2 className={styles.header}>Total earned this year</h2>
         <ResponsiveContainer height={50}>
-          <LineChart width={377} height={50} data={chartData}>
+          <LineChart width={377} height={50} data={updatedChartData}>
             <Line
               dataKey="totalCost"
               name="Total cost"
@@ -61,7 +53,7 @@ const Chart = ({ data }) => {
           </LineChart>
         </ResponsiveContainer>
         <p className={styles.total}>{`$${formatNumberWithSymbol(
-          chartData.reduce((acc, value) => acc + value.totalCost, 0),
+          totalCostPerYear,
           ',',
         )}`}</p>
       </ContainerDiagrams>

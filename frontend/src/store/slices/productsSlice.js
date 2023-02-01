@@ -77,7 +77,7 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     clearProducts: (state) => {
-      state.products = [];
+      state.products = null;
       state.status = Statuses.FULFILLED;
     },
   },

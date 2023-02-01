@@ -9,6 +9,7 @@ import ModalInputContainer from './ModalInputContainer';
 
 import { notifyFormsErrors } from '../../utils/notifyErrors';
 import {
+  formattingNumericValueFromForm,
   getKeysDifferentFields,
   haveErrors,
   isDifferentFields,
@@ -21,7 +22,7 @@ import {
   deleteProduct,
   updateProduct,
 } from '../../store/slices/productsSlice';
-import { checkProductForValidation } from '../../validations/productValidation';
+import { productValidation } from '../../validations/productValidation';
 
 const initialStateErrors = {
   store: null,
@@ -32,23 +33,21 @@ const initialStateErrors = {
   weight: null,
 };
 
-const initialStateForm = {
-  store: '',
-  price: '',
-  name: '',
-  category: '',
-  address: '',
-  remains: '',
-  weight: '',
-};
-
 const EditProduct = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { products, status } = useSelector((state) => state.products);
   const { extra: productId } = useSelector((state) => state.modal);
   const [errors, setErrors] = useState({ ...initialStateErrors });
-  const [form, setForm] = useForm({ ...initialStateForm });
+  const [form, setForm] = useForm({
+    store: '',
+    price: '',
+    name: '',
+    category: '',
+    address: '',
+    remains: '',
+    weight: '',
+  });
   const [oldProduct, setOldProduct] = useState({});
 
   useLayoutEffect(() => {
@@ -66,19 +65,19 @@ const EditProduct = ({ closeModal }) => {
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
 
-    const priceAsNumber = price === '' ? null : Number(price);
-    const remainsAsNumber = remains === '' ? null : Number(remains);
-    const weightAsNumber = weight === '' ? null : Number(weight);
+    const formattedPrice = formattingNumericValueFromForm(price);
+    const formattedRemains = formattingNumericValueFromForm(remains);
+    const formattedWeight = formattingNumericValueFromForm(weight);
 
     const updatedForm = {
       ...trimObjectValues(form),
-      price: priceAsNumber,
-      remains: remainsAsNumber,
-      weight: weightAsNumber,
+      price: formattedPrice,
+      remains: formattedRemains,
+      weight: formattedWeight,
     };
 
-    const checkedErrors = checkProductForValidation(updatedForm);
-    const isNotErrors = haveErrors(checkedErrors);
+    const resultValidation = productValidation(updatedForm);
+    const isNotErrors = haveErrors(resultValidation);
 
     if (isNotErrors) {
       try {
@@ -108,7 +107,7 @@ const EditProduct = ({ closeModal }) => {
         notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(resultValidation);
     }
   };
 

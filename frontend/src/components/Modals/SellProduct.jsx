@@ -8,40 +8,15 @@ import Input from '../Inputs/Input';
 import DateInput from '../Inputs/DateInput';
 import StandardButton from '../Buttons/StandardButton';
 
-import { haveErrors } from '../../utils/utils';
+import { formattingNumericValueFromForm, haveErrors } from '../../utils/utils';
 import { notifyFormsErrors } from '../../utils/notifyErrors';
+import { sellProductValidator } from '../../validations/saleValidator';
 import useForm from '../../hooks/useForm';
-import { Errors, Statuses } from '../../consts/consts';
+import { Statuses } from '../../consts/consts';
 import { createSale, updateSale } from '../../store/slices/salesSlice';
 import { updateProduct } from '../../store/slices/productsSlice';
 
 const initialStateErrors = { soldItems: null, lastSale: null };
-
-const initialStateForm = {
-  soldItems: '',
-  lastSale: '',
-};
-
-const checkErrors = (numberProducts, restProducts, lastSale) => {
-  const resultInsertedDate = String(lastSale.$d);
-  return {
-    soldItems: Number.isInteger(numberProducts)
-      ? numberProducts > 0
-        ? restProducts >= 0
-          ? null
-          : Errors.NOT_ENOUGH_GOODS
-        : Errors.MORE_ZERO
-      : Errors.INTEGER,
-    lastSale:
-      lastSale !== ''
-        ? resultInsertedDate !== 'Invalid Date'
-          ? new Date(resultInsertedDate).getTime() <= Date.now()
-            ? null
-            : Errors.INVALID_DATE
-          : Errors.INVALID_DATE
-        : Errors.INVALID_DATE,
-  };
-};
 
 const SellProduct = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -51,7 +26,7 @@ const SellProduct = ({ closeModal }) => {
   const { sales, status: statusSale } = useSelector((state) => state.sales);
   const { extra: productId } = useSelector((state) => state.modal);
   const [errors, setErrors] = useState({ ...initialStateErrors });
-  const [form, setForm] = useForm({ ...initialStateForm });
+  const [form, setForm] = useForm({ soldItems: '', lastSale: '' });
 
   const isDisabled =
     statusSale === Statuses.PENDING || statusProduct === Statuses.PENDING;
@@ -64,16 +39,16 @@ const SellProduct = ({ closeModal }) => {
 
   const handleSubmit = async () => {
     const { soldItems, lastSale } = form;
-
+    console.log(lastSale);
     const soldProduct = products.find((product) => product.id === productId);
-    const soldItemsAsNumber = soldItems === '' ? null : Number(soldItems);
-    const productRemains = soldProduct.remains - soldItemsAsNumber;
-    const checkedErrors = checkErrors(
-      soldItemsAsNumber,
+    const formattedSoldItems = formattingNumericValueFromForm(soldItems);
+    const productRemains = soldProduct.remains - formattedSoldItems;
+    const resultValidation = sellProductValidator(
+      formattedSoldItems,
       productRemains,
       lastSale,
     );
-    const isNotErrors = haveErrors(checkedErrors);
+    const isNotErrors = haveErrors(resultValidation);
 
     if (isNotErrors) {
       try {
@@ -85,7 +60,7 @@ const SellProduct = ({ closeModal }) => {
           await dispatch(
             updateSale({
               id: existedSale.id,
-              soldItems: existedSale.soldItems + soldItemsAsNumber,
+              soldItems: existedSale.soldItems + formattedSoldItems,
               lastSale: date,
             }),
           ).unwrap();
@@ -99,7 +74,7 @@ const SellProduct = ({ closeModal }) => {
               category: soldProduct.category,
               creationDate: soldProduct.creationDate,
               price: soldProduct.price,
-              soldItems: soldItemsAsNumber,
+              soldItems: formattedSoldItems,
               weight: soldProduct.weight,
               lastSale: date,
             }),
@@ -117,7 +92,7 @@ const SellProduct = ({ closeModal }) => {
         notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(resultValidation);
     }
   };
 

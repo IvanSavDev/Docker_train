@@ -61,7 +61,7 @@ const salesSlice = createSlice({
   initialState,
   reducers: {
     clearSales: (state) => {
-      state.sales = [];
+      state.sales = null;
       state.status = Statuses.FULFILLED;
     },
   },
@@ -74,8 +74,7 @@ const salesSlice = createSlice({
         }));
       })
       .addCase(createSale.fulfilled, (state, { payload }) => {
-        const color = generateColor();
-        state.sales = [{ ...payload, color }, ...state.sales];
+        state.sales = [{ ...payload, color: generateColor() }, ...state.sales];
       })
       .addCase(updateSale.fulfilled, (state, { payload }) => {
         state.sales = state.sales.map((sale) =>
@@ -109,6 +108,6 @@ const salesSlice = createSlice({
   },
 });
 
-export const { clearSales, clearStatus } = salesSlice.actions;
+export const { clearSales } = salesSlice.actions;
 
 export default salesSlice.reducer;

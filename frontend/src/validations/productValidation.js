@@ -1,7 +1,7 @@
+import { isPositiveInteger } from './validation';
 import { Errors } from '../consts/consts';
-import { isPositiveInteger } from '../utils/validation';
 
-export const checkProductForValidation = (form) => {
+export const productValidation = (form) => {
   const { store, price, name, category, remains, weight } = form;
   return {
     store: store.length > 0 ? null : Errors.REQUIRED_FIELD,

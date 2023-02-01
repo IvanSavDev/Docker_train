@@ -137,13 +137,6 @@ a[aria-current="page"] .activeLogo path {
     }
 }
 
-@media (max-width: 420px) {
-    .sidebar {
-        grid-template-areas: 'burger logo logOut';
-        min-width: auto;
-    }
-}
-
 @media (max-height: 550px) and (min-width: 920px){
     .wrapperButton {
         padding-top: 10px;
@@ -152,5 +145,12 @@ a[aria-current="page"] .activeLogo path {
 
     .logo {
         margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .sidebar {
+        grid-template-areas: 'burger logo logOut';
+        min-width: auto;
     }
 }

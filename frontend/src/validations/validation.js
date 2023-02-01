@@ -13,12 +13,5 @@ export const isValidPassword = (password) => REG_PASSWORD.test(password);
 export const isMatchPassword = (password, repeatedPassword) =>
   password === repeatedPassword;
 
-export const isInvalidAccount = (errors) => {
-  if (errors.invalidAccount) {
-    return Boolean(errors.email || errors.password);
-  }
-  return true;
-};
-
 export const isPositiveInteger = (number) =>
   Number.isInteger(number) && number >= 0;

@@ -2,14 +2,14 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 
-import { CreateProductButton } from './CreateProductButton';
-import AddBackgroundButton from './AddBackgroundButton';
+import BackgroundButton from './BackgroundButton';
 import Avatar from './Avatar';
 
 import { ModalsTypes } from '../../consts/consts';
 import { openModal } from '../../store/slices/modalSlice';
 
 import styles from './Header.module.css';
+import { CreateProductButton } from './Header.styled';
 
 import { ReactComponent as CreateProductImg } from '../../assets/img/createProduct.svg';
 
@@ -51,7 +51,7 @@ const Header = ({
         </CreateProductButton>
       )}
       {addImg && <Avatar />}
-      {addImg && <AddBackgroundButton />}
+      {addImg && <BackgroundButton />}
       <p className={styles.text}>{description}</p>
     </header>
   );

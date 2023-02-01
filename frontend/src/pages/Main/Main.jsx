@@ -23,12 +23,12 @@ const Main = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!sales) {
-        try {
+      try {
+        if (!sales) {
           await dispatch(getSales()).unwrap();
-        } catch (error) {
-          notifyPageErrors(error);
         }
+      } catch (error) {
+        notifyPageErrors(error);
       }
     };
     fetchData();

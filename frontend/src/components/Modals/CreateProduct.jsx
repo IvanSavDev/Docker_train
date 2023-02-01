@@ -8,13 +8,18 @@ import Input from '../Inputs/Input';
 import ModalTitle from './ModalTitle';
 import ModalInputContainer from './ModalInputContainer';
 
-import { haveErrors, isEmptyObject, trimObjectValues } from '../../utils/utils';
+import {
+  formattingNumericValueFromForm,
+  haveErrors,
+  isEmptyObject,
+  trimObjectValues,
+} from '../../utils/utils';
+import { productValidation } from '../../validations/productValidation';
 import { notifyFormsErrors } from '../../utils/notifyErrors';
 import useForm from '../../hooks/useForm';
 import { Errors, Statuses } from '../../consts/consts';
 import { createProduct } from '../../store/slices/productsSlice';
 import { getUser } from '../../store/slices/userSlice';
-import { checkProductForValidation } from '../../validations/productValidation';
 
 const initialStateErrors = {
   store: null,
@@ -25,21 +30,19 @@ const initialStateErrors = {
   weight: null,
 };
 
-const initialStateForm = {
-  store: '',
-  price: '',
-  name: '',
-  category: '',
-  remains: '',
-  weight: '',
-};
-
 const CreateProduct = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { status } = useSelector((state) => state.products);
   const [errors, setErrors] = useState({ ...initialStateErrors });
-  const [form, setForm] = useForm({ ...initialStateForm });
+  const [form, setForm] = useForm({
+    store: '',
+    price: '',
+    name: '',
+    category: '',
+    remains: '',
+    weight: '',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,19 +65,18 @@ const CreateProduct = ({ closeModal }) => {
 
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
-    console.log(form);
-    const priceAsNumber = price === '' ? null : Number(price);
-    const remainsAsNumber = remains === '' ? null : Number(remains);
-    const weightAsNumber = weight === '' ? null : Number(weight);
+    const formattedPrice = formattingNumericValueFromForm(price);
+    const formattedRemains = formattingNumericValueFromForm(remains);
+    const formattedWeight = formattingNumericValueFromForm(weight);
 
     const updatedForm = {
       ...trimObjectValues(form),
-      price: priceAsNumber,
-      remains: remainsAsNumber,
-      weight: weightAsNumber,
+      price: formattedPrice,
+      remains: formattedRemains,
+      weight: formattedWeight,
     };
 
-    const checkedErrors = checkProductForValidation(updatedForm);
+    const checkedErrors = productValidation(updatedForm);
     const isNotErrors = haveErrors(checkedErrors);
 
     if (isNotErrors) {

@@ -1,10 +1,7 @@
 export const PORT = 4000;
 export const KEY_JWT = 'SuperSecret';
-
 export const SALT_ROUNDS = 10;
-
 export const TOKEN_LIFESPAN = '30d';
-
 export const REG_PASSWORD =
   /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 

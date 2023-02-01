@@ -9,22 +9,16 @@ import Form from '../../components/Form/Form';
 import StandardButton from '../../components/Buttons/StandardButton';
 
 import {
-  isInvalidAccount,
-  isValidEmail,
-  isValidPassword,
-} from '../../utils/validation';
-import {
   formattingErrorsFromBackend,
   haveErrors,
   trimObjectValues,
 } from '../../utils/utils';
+import { loginValidator } from '../../validations/loginValidator';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
 import {
-  Errors,
   FetchErrors,
   KeysLocalStorage,
-  PasswordErrors,
   Paths,
   Routes,
   SERVER_ROUTE,
@@ -32,31 +26,15 @@ import {
 
 import styles from './SignIn.module.css';
 
-const checkErrors = (form) => {
-  const { email, password } = form;
-
-  return {
-    email: isValidEmail(email) ? null : Errors.EMAIL,
-    password: isValidPassword(password)
-      ? null
-      : PasswordErrors.INVALID_PASSWORD,
-  };
-};
-
 const initialStateErrors = {
   email: null,
   password: null,
   invalidAccount: null,
 };
 
-const initialStateForm = {
-  email: '',
-  password: '',
-};
-
 const SignIn = () => {
   const [errors, setErrors] = useState(initialStateErrors);
-  const [form, setForm] = useForm(initialStateForm);
+  const [form, setForm] = useForm({ email: '', password: '' });
   const { logIn } = useAuth();
 
   const handleChange = ({ target }) => {
@@ -67,8 +45,8 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedForm = trimObjectValues(form);
-    const checkedErrors = checkErrors(updatedForm);
-    const isNotErrors = haveErrors(checkedErrors);
+    const validationResult = loginValidator(updatedForm);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       try {
@@ -92,7 +70,7 @@ const SignIn = () => {
         }
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(validationResult);
     }
   };
 
@@ -118,7 +96,7 @@ const SignIn = () => {
           value={form.password}
         />
         <div className={styles.containerError}>
-          {isInvalidAccount(errors) || (
+          {errors.invalidAccount && (
             <p className={styles.invalidValue}>Invalid email or password</p>
           )}
         </div>

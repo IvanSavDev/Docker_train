@@ -9,47 +9,22 @@ import Input from '../../components/Inputs/Input';
 import StandardButton from '../../components/Buttons/StandardButton';
 
 import {
-  isMatchPassword,
-  isValidCompanyName,
-  isValidEmail,
-  isValidFullName,
-  isValidPassword,
-} from '../../utils/validation';
-import {
   formattingErrorsFromBackend,
   haveErrors,
   trimObjectValues,
 } from '../../utils/utils';
+import { registrationValidator } from '../../validations/registrationValidator';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
 import {
-  Errors,
   FetchErrors,
   KeysLocalStorage,
-  PasswordErrors,
   Paths,
   Routes,
   SERVER_ROUTE,
 } from '../../consts/consts';
 
 import styles from './SignUp.module.css';
-
-const checkErrors = (form) => {
-  const { name, surname, companyName, email, password, confirmPassword } = form;
-
-  return {
-    name: isValidFullName(name) ? null : Errors.FULL_NAME,
-    surname: isValidFullName(surname) ? null : Errors.FULL_NAME,
-    companyName: isValidCompanyName(companyName) ? null : Errors.COMPANY_NAME,
-    email: isValidEmail(email) ? null : Errors.EMAIL,
-    password: isValidPassword(password)
-      ? null
-      : PasswordErrors.INVALID_PASSWORD,
-    confirmPassword: isMatchPassword(password, confirmPassword)
-      ? null
-      : PasswordErrors.MATCH_PASSWORD,
-  };
-};
 
 const initialStateErrors = {
   name: null,
@@ -60,18 +35,16 @@ const initialStateErrors = {
   confirmPassword: null,
 };
 
-const initialStateForm = {
-  name: '',
-  surname: '',
-  companyName: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-};
-
 const SignUp = () => {
-  const [errors, setErrors] = useState(initialStateErrors);
-  const [form, setForm] = useForm(initialStateForm);
+  const [errors, setErrors] = useState({ ...initialStateErrors });
+  const [form, setForm] = useForm({
+    name: '',
+    surname: '',
+    companyName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const { logIn } = useAuth();
 
   const handleChange = ({ target }) => {
@@ -82,8 +55,8 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedForm = trimObjectValues(form);
-    const checkedErrors = checkErrors(updatedForm);
-    const isNotErrors = haveErrors(checkedErrors);
+    const validationResult = registrationValidator(updatedForm);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       try {
@@ -107,7 +80,7 @@ const SignUp = () => {
         }
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(validationResult);
     }
   };
 

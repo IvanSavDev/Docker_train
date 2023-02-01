@@ -3,18 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 
-import useForm from '../../hooks/useForm';
 import Header from '../../components/Header/Header';
 import StandardButton from '../../components/Buttons/StandardButton';
 import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Input from '../../components/Inputs/Input';
 
-import {
-  isValidCompanyName,
-  isValidEmail,
-  isValidFullName,
-  isValidPassword,
-} from '../../utils/validation';
 import {
   formattingErrorsFromBackend,
   getChangedFields,
@@ -24,25 +17,12 @@ import {
   trimObjectValues,
 } from '../../utils/utils';
 import { notifyPageErrors } from '../../utils/notifyErrors';
-import {
-  Errors,
-  FetchErrors,
-  PasswordErrors,
-  Statuses,
-} from '../../consts/consts';
+import { userValidator } from '../../validations/userValidator';
+import useForm from '../../hooks/useForm';
+import { FetchErrors, Statuses } from '../../consts/consts';
 import { getUser, updateUser } from '../../store/slices/userSlice';
 
 import styles from './PersonalCabinet.module.css';
-
-const initialStateForm = {
-  name: '',
-  surname: '',
-  companyName: '',
-  email: '',
-  oldPassword: '',
-  newPassword: '',
-  address: '',
-};
 
 const initialStateErrors = {
   name: null,
@@ -53,45 +33,17 @@ const initialStateErrors = {
   newPassword: null,
 };
 
-const checkErrors = (form) => {
-  const { name, surname, companyName, email, oldPassword, newPassword } = form;
-  const checkOldPasswordErrors = () => {
-    if (oldPassword.length === 0) {
-      return newPassword.length === 0 ? null : PasswordErrors.OLD_PASSWORD;
-    }
-    if (isValidPassword(oldPassword)) {
-      return newPassword !== oldPassword ? null : PasswordErrors.SAME_PASSWORD;
-    }
-    return isValidPassword(oldPassword)
-      ? null
-      : PasswordErrors.INVALID_PASSWORD;
-  };
-
-  const checkNewPasswordErrors = () => {
-    if (newPassword.length === 0) {
-      return oldPassword.length === 0 ? null : PasswordErrors.NEW_PASSWORD;
-    }
-    if (isValidPassword(oldPassword)) {
-      return newPassword !== oldPassword ? null : PasswordErrors.SAME_PASSWORD;
-    }
-    return isValidPassword(newPassword)
-      ? null
-      : PasswordErrors.INVALID_PASSWORD;
-  };
-
-  return {
-    name: isValidFullName(name) ? null : Errors.FULL_NAME,
-    surname: isValidFullName(surname) ? null : Errors.FULL_NAME,
-    companyName: isValidCompanyName(companyName) ? null : Errors.COMPANY_NAME,
-    email: isValidEmail(email) ? null : Errors.EMAIL,
-    oldPassword: checkOldPasswordErrors(),
-    newPassword: checkNewPasswordErrors(),
-  };
-};
-
 const PersonalCabinet = () => {
   const { user, status } = useSelector((state) => state.user);
-  const [form, setForm] = useForm({ ...initialStateForm });
+  const [form, setForm] = useForm({
+    name: '',
+    surname: '',
+    companyName: '',
+    email: '',
+    oldPassword: '',
+    newPassword: '',
+    address: '',
+  });
   const [errors, setErrors] = useState({ ...initialStateErrors });
   const [oldUser, setOldUser] = useState({});
   const dispatch = useDispatch();
@@ -126,8 +78,8 @@ const PersonalCabinet = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const checkedErrors = checkErrors(form);
-    const isNotErrors = haveErrors(checkedErrors);
+    const resultValidator = userValidator(form);
+    const isNotErrors = haveErrors(resultValidator);
 
     if (isNotErrors) {
       try {
@@ -155,7 +107,7 @@ const PersonalCabinet = () => {
         }
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(resultValidator);
     }
   };
 
