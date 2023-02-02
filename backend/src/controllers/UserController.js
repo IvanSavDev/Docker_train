@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import UserModal from '../models/User.js';
+
 import {
   Errors,
   KEY_JWT,

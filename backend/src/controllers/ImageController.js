@@ -1,5 +1,6 @@
-import { Errors } from '../consts/consts.js';
 import UserModal from '../models/User.js';
+
+import { Errors } from '../consts/consts.js';
 
 export const loadImage = async (req, res) => {
   try {
@@ -18,6 +19,7 @@ export const loadImage = async (req, res) => {
       },
       { new: true },
     );
+
     res.json({
       urlImg: updatedUser.urlImg,
     });

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import UserModal from '../models/User.js';
+
 import { Errors, KEY_JWT } from '../consts/consts.js';
 
 export default async (req, res, next) => {

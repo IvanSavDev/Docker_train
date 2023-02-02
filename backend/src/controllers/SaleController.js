@@ -1,8 +1,8 @@
 import SaleModel from '../models/Sale.js';
-
 import ProductModal from '../models/Product.js';
-import { Errors, ProductErrors, SaleErrors } from '../consts/consts.js';
+
 import { getFormatDate } from '../utils/utils.js';
+import { Errors, ProductErrors, SaleErrors } from '../consts/consts.js';
 
 export const getSales = async (req, res) => {
   try {
@@ -136,6 +136,7 @@ export const updateSale = async (req, res) => {
 
     const {
       _id: id,
+      productId,
       store,
       price,
       address,
@@ -149,6 +150,7 @@ export const updateSale = async (req, res) => {
 
     res.json({
       id,
+      productId,
       store,
       price,
       address,
