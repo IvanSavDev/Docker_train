@@ -29,7 +29,9 @@ export const getKeysDifferentFields = (firstObject, secondObject) =>
   );
 
 export const generateColor = () =>
-  `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  `#${Math.floor(Math.random() * (0xffffff + 1))
+    .toString(16)
+    .padStart(6, '0')}`;
 
 export const addZeros = (number, count) => {
   let result = String(number);
@@ -42,18 +44,18 @@ export const addZeros = (number, count) => {
 export const getMultipleOFFive = (number) => {
   const numberAsString = String(number);
   const countSymbolsInNumber = numberAsString.length;
-  const lengthWithoutTwoSymbols = numberAsString.length - 2;
   if (countSymbolsInNumber === 1) {
     return 10;
   }
-  const firstTwoSymbols = Number(numberAsString.slice(0, 2));
-  const nextSymbols = firstTwoSymbols + 1;
-  const secondSymbol = Number(String(nextSymbols)[1]);
+  const firstTwoNumbers = Number(numberAsString.slice(0, 2));
+  const nextNumber = firstTwoNumbers + 1;
+  const secondSymbol = Number(String(nextNumber)[1]);
+  const lengthWithoutTwoSymbols = numberAsString.length - 2;
 
   if (secondSymbol === 0 || secondSymbol === 5) {
-    return addZeros(nextSymbols, lengthWithoutTwoSymbols);
+    return addZeros(nextNumber, lengthWithoutTwoSymbols);
   }
-  return getMultipleOFFive(addZeros(nextSymbols, lengthWithoutTwoSymbols));
+  return getMultipleOFFive(addZeros(nextNumber, lengthWithoutTwoSymbols));
 };
 
 export const parseDate = (date) => {
@@ -80,7 +82,7 @@ export const getChangedFields = (firstObject, secondObject) =>
     {},
   );
 
-export const debounceAsyncFunction = (fun, timeout = 1000) =>
+export const debounceAsyncFunction = (fun, timeout = 0) =>
   new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
