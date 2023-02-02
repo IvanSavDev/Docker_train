@@ -10,7 +10,7 @@ import StandardButton from '../Buttons/StandardButton';
 
 import { formattingNumericValueFromForm, haveErrors } from '../../utils/utils';
 import { notifyFormsErrors } from '../../utils/notifyErrors';
-import { sellProductValidator } from '../../validations/saleValidator';
+import { sellProductValidation } from '../../validations/sellProductValidation';
 import useForm from '../../hooks/useForm';
 import { Statuses } from '../../consts/consts';
 import { createSale, updateSale } from '../../store/slices/salesSlice';
@@ -31,24 +31,20 @@ const SellProduct = ({ closeModal }) => {
   const isDisabled =
     statusSale === Statuses.PENDING || statusProduct === Statuses.PENDING;
 
-  const handleClose = () => {
-    if (!isDisabled) {
-      closeModal();
-    }
-  };
+  const handleClose = () => closeModal();
 
   const handleSubmit = async () => {
     const { soldItems, lastSale } = form;
-    console.log(lastSale);
+
     const soldProduct = products.find((product) => product.id === productId);
     const formattedSoldItems = formattingNumericValueFromForm(soldItems);
     const productRemains = soldProduct.remains - formattedSoldItems;
-    const resultValidation = sellProductValidator(
+    const validationResult = sellProductValidation(
       formattedSoldItems,
       productRemains,
       lastSale,
     );
-    const isNotErrors = haveErrors(resultValidation);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       try {
@@ -56,6 +52,7 @@ const SellProduct = ({ closeModal }) => {
         const resultInsertedDate = String(lastSale.$d);
         const date = new Date(resultInsertedDate).toISOString();
         const existedSale = sales?.find((sale) => sale.productId === productId);
+
         if (existedSale) {
           await dispatch(
             updateSale({
@@ -92,7 +89,7 @@ const SellProduct = ({ closeModal }) => {
         notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(resultValidation);
+      setErrors(validationResult);
     }
   };
 

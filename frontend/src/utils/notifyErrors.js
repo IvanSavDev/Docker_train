@@ -18,7 +18,32 @@ export const notifyFormsErrors = (error, setErrors) => {
     toast.error(FetchErrors.AUTHORIZATION);
   } else if (error.status === 400) {
     const formattedErrors = formattingErrorsFromBackend(error.errors);
-    console.log(formattedErrors);
+    setErrors((prevState) => ({
+      ...prevState,
+      ...formattedErrors,
+    }));
+  } else {
+    toast.error(FetchErrors.UNEXPECTED);
+  }
+};
+
+export const notifyLoginErrors = (error, setErrors) => {
+  if (error.response.status === 404 || error.response.status === 400) {
+    const errorsInfo = error.response?.data?.errors;
+    const formattedErrors = formattingErrorsFromBackend(errorsInfo);
+    setErrors((prevState) => ({
+      ...prevState,
+      ...formattedErrors,
+    }));
+  } else {
+    toast.error(FetchErrors.UNEXPECTED);
+  }
+};
+
+export const notifyRegistrationErrors = (error, setErrors) => {
+  if (error.response.status === 400) {
+    const errorsInfo = error.response?.data?.errors;
+    const formattedErrors = formattingErrorsFromBackend(errorsInfo);
     setErrors((prevState) => ({
       ...prevState,
       ...formattedErrors,

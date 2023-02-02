@@ -9,7 +9,7 @@ import { FetchErrors, Statuses } from '../../consts/consts';
 import { deleteProduct } from '../../store/slices/productsSlice';
 
 import styles from './DeleteButton.module.css';
-import { StyledSnackbar } from './DeleteButton.styled';
+import { StyledSnackbar, StyledButton } from './DeleteButton.styled';
 
 import { ReactComponent as Delete } from '../../assets/img/delete.svg';
 
@@ -63,17 +63,9 @@ const DeleteButton = ({ id }) => {
 
   return (
     <div className={styles.container}>
-      <Button
-        sx={{
-          minWidth: '28px',
-          minHeight: '28xp',
-          width: '100%',
-          height: '100%',
-        }}
-        onClick={handleOpen}
-      >
+      <StyledButton onClick={handleOpen}>
         <Delete />
-      </Button>
+      </StyledButton>
       <StyledSnackbar
         open={open}
         onClose={handleClose}

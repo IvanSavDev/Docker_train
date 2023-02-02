@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'InterRegular, InterMedium, InterBold',
+    fontFamily: 'Inter',
   },
   palette: {
     custom: {

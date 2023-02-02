@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Input from '../../components/Inputs/Input';
@@ -8,16 +7,12 @@ import RouteLink from '../../components/RouteLink/RouteLink';
 import Form from '../../components/Form/Form';
 import StandardButton from '../../components/Buttons/StandardButton';
 
-import {
-  formattingErrorsFromBackend,
-  haveErrors,
-  trimObjectValues,
-} from '../../utils/utils';
-import { loginValidator } from '../../validations/loginValidator';
+import { haveErrors, trimObjectValues } from '../../utils/utils';
+import { notifyLoginErrors } from '../../utils/notifyErrors';
+import { loginValidation } from '../../validations/loginValidation';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
 import {
-  FetchErrors,
   KeysLocalStorage,
   Paths,
   Routes,
@@ -45,7 +40,7 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedForm = trimObjectValues(form);
-    const validationResult = loginValidator(updatedForm);
+    const validationResult = loginValidation(updatedForm);
     const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
@@ -58,16 +53,7 @@ const SignIn = () => {
         localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
-        if (error.response.status === 404 || error.response.status === 400) {
-          const errorsInfo = error.response?.data?.errors;
-          const formattedErrors = formattingErrorsFromBackend(errorsInfo);
-          setErrors((prevState) => ({
-            ...prevState,
-            ...formattedErrors,
-          }));
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyLoginErrors(error, setErrors);
       }
     } else {
       setErrors(validationResult);

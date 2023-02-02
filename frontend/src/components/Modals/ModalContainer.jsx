@@ -26,13 +26,7 @@ const ModalContainer = () => {
   const handleClose = () => {
     if (
       statusProducts !== Statuses.PENDING &&
-      modalType === ModalsTypes.EDIT_PRODUCT
-    ) {
-      dispatch(closeModal());
-    }
-    if (
-      statusProducts !== Statuses.PENDING &&
-      modalType === ModalsTypes.CREATE_PRODUCT
+      modalType !== ModalsTypes.SELL_PRODUCT
     ) {
       dispatch(closeModal());
     }

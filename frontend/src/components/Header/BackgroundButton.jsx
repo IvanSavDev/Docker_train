@@ -27,7 +27,7 @@ const BackgroundButton = () => {
 
   return (
     <StyledBackgroundButton component="label">
-      add background
+      Add background
       <input type="file" accept="image/*" hidden onChange={handleLoadImg} />
     </StyledBackgroundButton>
   );

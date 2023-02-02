@@ -78,7 +78,7 @@ const salesSlice = createSlice({
       })
       .addCase(updateSale.fulfilled, (state, { payload }) => {
         state.sales = state.sales.map((sale) =>
-          sale.id === payload.id ? payload : sale,
+          sale.id === payload.id ? { ...payload, color: sale.color } : sale,
         );
       })
       .addMatcher(

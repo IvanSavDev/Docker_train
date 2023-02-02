@@ -6,4 +6,5 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   lineHeight: '1em',
   textTransform: 'none',
   backgroundColor: theme.palette.custom.main.blue,
+  fontWeight: 500,
 }));

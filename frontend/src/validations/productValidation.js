@@ -3,6 +3,7 @@ import { Errors } from '../consts/consts';
 
 export const productValidation = (form) => {
   const { store, price, name, category, remains, weight } = form;
+
   return {
     store: store.length > 0 ? null : Errors.REQUIRED_FIELD,
     price: isPositiveInteger(price) ? null : Errors.INTEGER,

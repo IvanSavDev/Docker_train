@@ -1,11 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Statuses } from '../../consts/consts';
 
 const initialState = {
   isOpened: false,
   type: null,
   extra: null,
-  status: Statuses.FULFILLED,
 };
 
 const modalsSlice = createSlice({

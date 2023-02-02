@@ -7,11 +7,15 @@
 .header {
     margin-bottom: 8px;
     font-size: 18px;
+    font-weight: 600;
     line-height: 1em;
 }
 
 .description {
     margin-bottom: 70px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 12px;
 }
 
 .barChart::-webkit-scrollbar {

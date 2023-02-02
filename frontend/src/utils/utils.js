@@ -82,7 +82,7 @@ export const getChangedFields = (firstObject, secondObject) =>
     {},
   );
 
-export const debounceAsyncFunction = (fun, timeout = 0) =>
+export const debounceAsyncFunction = (fun, timeout = 1000) =>
   new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {

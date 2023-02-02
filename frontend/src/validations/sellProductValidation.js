@@ -1,11 +1,12 @@
 import { Errors } from '../consts/consts';
 
-export const sellProductValidator = (
+export const sellProductValidation = (
   numberProducts,
   restProducts,
   lastSale,
 ) => {
-  const resultInsertedDate = String(lastSale.$d);
+  const resultInsertedDate = String(lastSale?.$d);
+
   return {
     soldItems: Number.isInteger(numberProducts)
       ? numberProducts > 0
@@ -14,13 +15,12 @@ export const sellProductValidator = (
           : Errors.NOT_ENOUGH_GOODS
         : Errors.MORE_ZERO
       : Errors.INTEGER,
-    lastSale:
-      lastSale !== ''
-        ? resultInsertedDate !== 'Invalid Date'
-          ? new Date(resultInsertedDate).getTime() <= Date.now()
-            ? null
-            : Errors.INVALID_DATE
+    lastSale: resultInsertedDate
+      ? resultInsertedDate !== 'Invalid Date'
+        ? new Date(resultInsertedDate).getTime() <= Date.now()
+          ? null
           : Errors.INVALID_DATE
-        : Errors.INVALID_DATE,
+        : Errors.INVALID_DATE
+      : Errors.INVALID_DATE,
   };
 };

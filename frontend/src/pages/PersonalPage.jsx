@@ -7,7 +7,7 @@ import ModalContainer from '../components/Modals/ModalContainer';
 import styles from './PersonalPage.module.css';
 
 const PersonalPage = () => (
-  <div className={styles.container} data-portal="modal">
+  <div className={styles.container}>
     <Sidebar />
     <div className={styles.contentWrapper}>
       <Outlet />

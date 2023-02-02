@@ -1,7 +1,7 @@
 import { isValidEmail, isValidPassword } from './validation';
 import { Errors, PasswordErrors } from '../consts/consts';
 
-export const loginValidator = (form) => {
+export const loginValidation = (form) => {
   const { email, password } = form;
 
   return {

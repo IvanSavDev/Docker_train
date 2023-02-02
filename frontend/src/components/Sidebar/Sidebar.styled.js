@@ -15,6 +15,7 @@ export const StyledBurgerMenu = styled(BurgerMenu)(({ theme }) => ({
 export const StyledButton = styled(Button)(({ theme }) => ({
   minWidth: 'auto',
   fontSize: '14px',
+  fontWeight: '1em',
   textTransform: 'none',
   color: theme.palette.custom.main.grey,
   opacity: 0.4,

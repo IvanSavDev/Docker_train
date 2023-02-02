@@ -14,6 +14,7 @@ const TableButton = ({ productId, children, type, ...rest }) => {
       onClick={() => {
         dispatch(openModal({ type, id: productId }));
       }}
+      disableFocusRipple
     >
       {children}
     </StyledButton>

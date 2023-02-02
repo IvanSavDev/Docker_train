@@ -23,8 +23,8 @@
     display: grid;
     grid-template-areas: 'title img'
                         'text img'
-                        'background background';
-    padding-top: 48px;
+                        'background img';
+    padding-top: 64px;
     padding-bottom: 24px;
     max-width: 792px;
 }
@@ -60,6 +60,14 @@
 
 @media (max-width: 920px) {
     .container {
+        padding-top: 45px;
+    }
+
+    .containerWithButton {
+        padding-top: 26px;
+    }
+
+    .containerWithImg {
         padding-top: 45px;
     }
 }

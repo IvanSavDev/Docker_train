@@ -6,9 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 export const StyledPaper = styled(Paper)(() => ({
   width: '100%',
   marginTop: '16px',
+  flexGrow: 1,
   overflow: 'hidden',
   boxShadow: 'none',
-  flexGrow: 1,
   backgroundColor: 'transparent',
 
   '& .MuiTableContainer-root::-webkit-scrollbar': {

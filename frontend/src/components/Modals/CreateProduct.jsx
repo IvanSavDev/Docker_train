@@ -14,8 +14,8 @@ import {
   isEmptyObject,
   trimObjectValues,
 } from '../../utils/utils';
-import { productValidation } from '../../validations/productValidation';
 import { notifyFormsErrors } from '../../utils/notifyErrors';
+import { productValidation } from '../../validations/productValidation';
 import useForm from '../../hooks/useForm';
 import { Errors, Statuses } from '../../consts/consts';
 import { createProduct } from '../../store/slices/productsSlice';
@@ -57,11 +57,7 @@ const CreateProduct = ({ closeModal }) => {
     fetchData();
   }, []);
 
-  const handleClose = () => {
-    if (status !== Statuses.PENDING) {
-      closeModal();
-    }
-  };
+  const handleClose = () => closeModal();
 
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
@@ -76,8 +72,8 @@ const CreateProduct = ({ closeModal }) => {
       weight: formattedWeight,
     };
 
-    const checkedErrors = productValidation(updatedForm);
-    const isNotErrors = haveErrors(checkedErrors);
+    const validationResult = productValidation(updatedForm);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       if (user.address === undefined) {
@@ -97,7 +93,7 @@ const CreateProduct = ({ closeModal }) => {
         notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(checkedErrors);
+      setErrors(validationResult);
     }
   };
 

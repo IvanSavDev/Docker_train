@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 
 import Header from '../../components/Header/Header';
@@ -9,17 +8,16 @@ import CenteringContainer from '../../components/Containers/CenteringContainer';
 import Input from '../../components/Inputs/Input';
 
 import {
-  formattingErrorsFromBackend,
   getChangedFields,
   haveErrors,
   isDifferentFields,
   isEmptyObject,
   trimObjectValues,
 } from '../../utils/utils';
-import { notifyPageErrors } from '../../utils/notifyErrors';
-import { userValidator } from '../../validations/userValidator';
+import { notifyFormsErrors, notifyPageErrors } from '../../utils/notifyErrors';
+import { userValidation } from '../../validations/userValidation';
 import useForm from '../../hooks/useForm';
-import { FetchErrors, Statuses } from '../../consts/consts';
+import { Statuses } from '../../consts/consts';
 import { getUser, updateUser } from '../../store/slices/userSlice';
 
 import styles from './PersonalCabinet.module.css';
@@ -78,8 +76,8 @@ const PersonalCabinet = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultValidator = userValidator(form);
-    const isNotErrors = haveErrors(resultValidator);
+    const validationResult = userValidation(form);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       try {
@@ -93,21 +91,10 @@ const PersonalCabinet = () => {
         });
         setErrors({ ...initialStateErrors });
       } catch (error) {
-        if (error.status === 401) {
-          toast.error(FetchErrors.AUTHORIZATION);
-        }
-        if (error.status === 400) {
-          const formattedErrors = formattingErrorsFromBackend(error.errors);
-          setErrors((prevState) => ({
-            ...prevState,
-            ...formattedErrors,
-          }));
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(resultValidator);
+      setErrors(validationResult);
     }
   };
 

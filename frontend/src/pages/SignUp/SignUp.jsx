@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import ContainerSignInAndSignUp from '../../components/Containers/ContainerSignInAndSignUp';
 import Form from '../../components/Form/Form';
@@ -8,16 +7,12 @@ import RouteLink from '../../components/RouteLink/RouteLink';
 import Input from '../../components/Inputs/Input';
 import StandardButton from '../../components/Buttons/StandardButton';
 
-import {
-  formattingErrorsFromBackend,
-  haveErrors,
-  trimObjectValues,
-} from '../../utils/utils';
-import { registrationValidator } from '../../validations/registrationValidator';
+import { haveErrors, trimObjectValues } from '../../utils/utils';
+import { notifyRegistrationErrors } from '../../utils/notifyErrors';
+import { registrationValidation } from '../../validations/registrationValidation';
 import useForm from '../../hooks/useForm';
 import useAuth from '../../hooks/useAuth';
 import {
-  FetchErrors,
   KeysLocalStorage,
   Paths,
   Routes,
@@ -55,7 +50,7 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedForm = trimObjectValues(form);
-    const validationResult = registrationValidator(updatedForm);
+    const validationResult = registrationValidation(updatedForm);
     const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
@@ -68,16 +63,7 @@ const SignUp = () => {
         localStorage.setItem(KeysLocalStorage.TOKEN, response.data.token);
         logIn();
       } catch (error) {
-        if (error.response.status === 400) {
-          const errorsInfo = error.response?.data?.errors;
-          const formattedErrors = formattingErrorsFromBackend(errorsInfo);
-          setErrors((prevState) => ({
-            ...prevState,
-            ...formattedErrors,
-          }));
-        } else {
-          toast.error(FetchErrors.UNEXPECTED);
-        }
+        notifyRegistrationErrors(error, setErrors);
       }
     } else {
       setErrors(validationResult);

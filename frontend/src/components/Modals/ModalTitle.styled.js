@@ -3,12 +3,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 
 export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  fontFamily: 'InterBold',
+  padding: 0,
+  textAlign: 'center',
   fontWeight: 700,
   fontSize: '28px',
   lineHeight: '1em',
-  textAlign: 'center',
-  padding: 0,
   color: theme.palette.custom.main.grey,
 }));
 

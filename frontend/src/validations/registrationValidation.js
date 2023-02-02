@@ -7,7 +7,7 @@ import {
 } from './validation';
 import { Errors, PasswordErrors } from '../consts/consts';
 
-export const registrationValidator = (form) => {
+export const registrationValidation = (form) => {
   const { name, surname, companyName, email, password, confirmPassword } = form;
 
   return {

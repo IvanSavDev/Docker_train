@@ -1,28 +1,34 @@
 :root {
-  --scroll-color: rgba(169, 169, 169, 0.4);
   --main-blue: #5382E7;
   --main-dark-blue: #2B3844;
-  --background-diagrams: #FFFFFF;
   --main-background: #F8F8F8;
   --main-error: #FF0000;
   --main-border: rgba(43, 56, 68, 0.08);
   --sidebar-border: #E8EBEF;
+  --background-diagrams: #FFFFFF;
+  --scroll-color: rgba(169, 169, 169, 0.4);
 }
 
 @font-face {
-  font-family: "InterRegular";
+  font-family: "Inter";
   src: url("./assets/fonts/Inter-Regular.ttf");
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "InterMedium";
+  font-family: "Inter";
   src: url("./assets/fonts/Inter-Medium.ttf");
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "InterBold";
+  font-family: "Inter";
+  src: url("./assets/fonts/Inter-SemiBold.ttf");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Inter";
   src: url("./assets/fonts/Inter-Bold.ttf");
   font-weight: 700;
 }
@@ -32,11 +38,12 @@
 }
 
 body {
-  font-family: "InterRegular", sans-serif;
   height: 100vh;
+  font-family: "Inter", sans-serif;
   color: var(--main-dark-blue);
   font-size: 14px;
   line-height: 14px;
+  font-weight: 400;
 }
 
 body,

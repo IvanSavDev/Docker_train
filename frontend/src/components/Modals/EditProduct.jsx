@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,6 +15,7 @@ import {
   isDifferentFields,
   trimObjectValues,
 } from '../../utils/utils';
+import { productValidation } from '../../validations/productValidation';
 import useForm from '../../hooks/useForm';
 import { Statuses } from '../../consts/consts';
 import {
@@ -22,7 +23,6 @@ import {
   deleteProduct,
   updateProduct,
 } from '../../store/slices/productsSlice';
-import { productValidation } from '../../validations/productValidation';
 
 const initialStateErrors = {
   store: null,
@@ -50,17 +50,13 @@ const EditProduct = ({ closeModal }) => {
   });
   const [oldProduct, setOldProduct] = useState({});
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const foundProduct = products.find((product) => product.id === productId);
     setOldProduct(foundProduct);
     setForm(foundProduct);
   }, [setForm, productId]);
 
-  const handleClose = () => {
-    if (status !== Statuses.PENDING) {
-      closeModal();
-    }
-  };
+  const handleClose = () => closeModal();
 
   const handleSubmit = async () => {
     const { price, remains, weight } = form;
@@ -76,8 +72,8 @@ const EditProduct = ({ closeModal }) => {
       weight: formattedWeight,
     };
 
-    const resultValidation = productValidation(updatedForm);
-    const isNotErrors = haveErrors(resultValidation);
+    const validationResult = productValidation(updatedForm);
+    const isNotErrors = haveErrors(validationResult);
 
     if (isNotErrors) {
       try {
@@ -86,6 +82,7 @@ const EditProduct = ({ closeModal }) => {
           { ...updatedForm, address: oldProduct.address },
           oldProduct,
         );
+
         if (changedFields.length === 1 && changedFields[0] === 'remains') {
           await dispatch(
             updateProduct({
@@ -107,7 +104,7 @@ const EditProduct = ({ closeModal }) => {
         notifyFormsErrors(error, setErrors);
       }
     } else {
-      setErrors(resultValidation);
+      setErrors(validationResult);
     }
   };
 

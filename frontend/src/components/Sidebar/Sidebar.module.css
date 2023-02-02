@@ -3,6 +3,9 @@
     flex-direction: column;
     min-width: 274px;
     padding: 40px 0 0 0;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
 }
 
 .navigation {
@@ -21,8 +24,6 @@
     text-decoration: none;
     background-color: rgba(83, 130, 231, 0.04);
     border-right: 2px solid var(--main-blue);
-    font-size: 14px;
-    line-height: 14px;
 }
 
 .noActive {
@@ -33,8 +34,6 @@
     color: var(--main-dark-blue);
     text-decoration: none;
     opacity: 0.4;
-    font-size: 14px;
-    line-height: 14px;
 }
 
 .wrapperButton {
@@ -94,10 +93,10 @@ a[aria-current="page"] .activeLogo path {
     }
 
     .logo {
+        grid-area: logo;
         margin-bottom: 0;
         padding: 0;
         background-position: left;
-        grid-area: logo;
     }
 
     .active {
