@@ -1,6 +1,6 @@
 import UserModal from '../models/User.js';
 
-import { Errors } from '../consts/consts.js';
+import { BASE_URL, Errors } from '../consts/consts.js';
 
 export const loadImage = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const loadImage = async (req, res) => {
     const updatedUser = await UserModal.findByIdAndUpdate(
       userId,
       {
-        urlImg: `http://localhost:4000/uploads/${file.originalname}`,
+        urlImg: `${BASE_URL}/uploads/${file.originalname}`,
       },
       { new: true },
     );

@@ -5,6 +5,13 @@ export const TOKEN_LIFESPAN = '30d';
 export const REG_PASSWORD =
   /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+export const BASE_URL = 'http://localhost:4000';
+
+export const Parameters = {
+  INVALID_ACCOUNT: 'invalidAccount',
+  SOLD_ITEMS: 'soldItems',
+};
+
 export const Errors = {
   PERMISSION_DENIED: 'Permission denied',
   INVALID_DATA: 'Invalid data',

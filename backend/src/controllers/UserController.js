@@ -6,6 +6,7 @@ import UserModal from '../models/User.js';
 import {
   Errors,
   KEY_JWT,
+  Parameters,
   SALT_ROUNDS,
   TOKEN_LIFESPAN,
   UserErrors,
@@ -19,7 +20,7 @@ export const login = async (req, res) => {
       return res.status(404).json({
         errors: [
           {
-            parameter: 'invalidAccount',
+            parameter: Parameters.INVALID_ACCOUNT,
             message: Errors.FAILED_AUTHENTICATION,
           },
         ],
@@ -37,7 +38,7 @@ export const login = async (req, res) => {
       return res.status(404).json({
         errors: [
           {
-            parameter: 'invalidAccount',
+            parameter: Parameters.INVALID_ACCOUNT,
             message: Errors.FAILED_AUTHENTICATION,
           },
         ],

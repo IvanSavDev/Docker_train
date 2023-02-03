@@ -2,7 +2,12 @@ import SaleModel from '../models/Sale.js';
 import ProductModal from '../models/Product.js';
 
 import { getFormatDate } from '../utils/utils.js';
-import { Errors, ProductErrors, SaleErrors } from '../consts/consts.js';
+import {
+  Errors,
+  Parameters,
+  ProductErrors,
+  SaleErrors,
+} from '../consts/consts.js';
 
 export const getSales = async (req, res) => {
   try {
@@ -61,7 +66,7 @@ export const createSale = async (req, res) => {
         errors: [
           {
             message: Errors.NOT_ENOUGH_GOODS,
-            parameter: 'soldItems',
+            parameter: Parameters.SOLD_ITEMS,
             value: restProduct,
           },
         ],
