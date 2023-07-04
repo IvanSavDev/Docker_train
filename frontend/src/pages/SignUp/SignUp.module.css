@@ -1,0 +1,9 @@
+.containerFullName {
+    display: flex;
+    gap: 16px;
+}
+
+.alreadyHaveAccount {
+    color: var(--main-dark-blue);
+}
+

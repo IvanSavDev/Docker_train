@@ -1,0 +1,86 @@
+.pieChart {
+    grid-area: PieChart;
+    padding: 32px 32px 40px 32px;
+    background-color: var(--background-diagrams);
+    overflow: auto;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: flex-start;
+    max-height: 200px;
+    height: 100%;
+    gap: 28px;
+}
+
+.wrapperPieChart {
+    min-width: 200px;
+    min-height: 200px;
+}
+
+.list {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 169px;
+    padding: 20px 0 20px 0;
+    overflow-y: auto;
+}
+
+.list::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+.pieChart::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.pieChart::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+.containerItems {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: min-content;
+    min-width: 169px;
+}
+
+.containerContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    margin-bottom: 37px;
+    font-size: 18px;
+    line-height: 1em;
+    font-weight: 600;
+}
+
+.noSales {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 1;
+}
+
+@media (max-width: 600px) {
+    .pieChart {
+        overflow: auto;
+    }
+}

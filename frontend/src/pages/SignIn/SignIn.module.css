@@ -1,0 +1,15 @@
+.containerError {
+    position: relative;
+    top: -20px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.haveAccountText {
+    color: var(--main-dark-blue);
+}
+
+.invalidValue {
+    position: absolute;
+    color: var(--main-error);
+}

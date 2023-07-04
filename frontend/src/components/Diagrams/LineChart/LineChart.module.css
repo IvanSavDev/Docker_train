@@ -1,0 +1,38 @@
+.lineChart {
+    grid-area: LineChart;
+    padding: 32px 32px 40px 32px;
+    background-color: var(--background-diagrams);
+}
+
+.header {
+    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1em;
+}
+
+.total {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1em;
+    font-weight: 600;
+}
+
+.lineChart::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+.lineChart::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+    border-radius: 100px;
+    background-clip: content-box;
+    border: 6px solid transparent;
+}
+
+@media (max-width: 600px) {
+    .lineChart {
+        overflow: auto;
+    }
+}

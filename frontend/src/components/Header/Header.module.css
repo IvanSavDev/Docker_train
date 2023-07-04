@@ -1,0 +1,92 @@
+.header {
+    position: relative;
+    gap: 8px;
+}
+
+.container {
+    display: grid;
+    grid-template-areas: 'title'
+                        'text';
+    padding-top: 64px;
+    padding-bottom: 32px;
+}
+
+.containerWithButton {
+    display: grid;
+    grid-template-areas: 'title addProduct'
+                        'text text';
+    padding-top: 46px;
+    padding-bottom: 32px;
+}
+
+.containerWithImg {
+    display: grid;
+    grid-template-areas: 'title img'
+                        'text img'
+                        'background img';
+    padding-top: 64px;
+    padding-bottom: 24px;
+    max-width: 792px;
+}
+
+.title {
+    grid-area: title;
+    align-self: end;
+    font-size: 36px;
+    line-height: 1em;
+}
+
+.addProduct {
+    grid-area: addProduct;
+    justify-self: end;
+}
+
+.text {
+    grid-area: text;
+    font-size: 14px;
+    line-height: 1em;
+    color: var(--main-dark-blue);
+    opacity: 0.7;
+}
+
+.backgroundImg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 920px) {
+    .container {
+        padding-top: 45px;
+    }
+
+    .containerWithButton {
+        padding-top: 26px;
+    }
+
+    .containerWithImg {
+        padding-top: 45px;
+    }
+}
+
+@media (max-width: 720px) {
+    .container {
+        gap: 10px;
+    }
+
+    .addProduct {
+        justify-self: start;
+    }
+}
+
+@media (max-width: 490px) {
+    .containerWithButton {
+        grid-template-areas: 'title'
+                            'text '
+                            'addProduct';
+        gap: 10px;
+    }
+}

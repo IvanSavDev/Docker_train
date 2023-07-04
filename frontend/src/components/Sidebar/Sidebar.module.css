@@ -1,0 +1,155 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 274px;
+    padding: 40px 0 0 0;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.active {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 17px 0 17px 40px;
+    color: var(--main-blue);
+    text-decoration: none;
+    background-color: rgba(83, 130, 231, 0.04);
+    border-right: 2px solid var(--main-blue);
+}
+
+.noActive {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 17px 0 17px 40px;
+    color: var(--main-dark-blue);
+    text-decoration: none;
+    opacity: 0.4;
+}
+
+.wrapperButton {
+    padding: 48px 0 48px 0;
+    border-top: 1px solid #E8EBEF;
+}
+
+.wrapperPadding {
+    padding: 0 40px;
+}
+
+.logo {
+    width: 100%;
+    height: 26px;
+    margin-bottom: 82px;
+    padding: 0 40px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-image: url("../../assets/img/logo.png");
+}
+
+a[aria-current="page"] .activeLogo path {
+    stroke: var(--main-blue);
+}
+
+.burgerMenu {
+    display: none;
+}
+
+@media (max-width: 920px) {
+    .sidebar {
+        padding-inline: 35px;
+        padding-bottom: 35px;
+        gap: 20px;
+        display: grid;
+        grid-template-areas: 'logo logOut'
+                            'nav nav';
+    }
+
+    .wrapperButton {
+        border: 0;
+        padding: 0;
+    }
+
+    .navigation {
+        grid-area: nav;
+        flex-direction: row;
+        gap: 25px;
+        border-bottom: 1px solid var(--main-border);
+    }
+
+    .wrapperPadding {
+        grid-area: logOut;
+        justify-self: end;
+        padding: 0;
+    }
+
+    .logo {
+        grid-area: logo;
+        margin-bottom: 0;
+        padding: 0;
+        background-position: left;
+    }
+
+    .active {
+        padding-inline: 10px;
+        border-right: 0;
+        border-bottom: 2px solid var(--main-blue);
+    }
+
+    .noActive {
+        padding-inline: 10px;
+    }
+}
+
+@media (max-width: 720px) {
+    .sidebar {
+        grid-template-areas: 'burger logo logOut';
+        grid-template-columns: 40px 1fr auto;
+        align-items: center;
+        padding: 15px 25px;
+    }
+
+    .navigation {
+        display: none;
+    }
+
+    .burgerMenu {
+        display: block;
+        grid-area: burger;
+    }
+
+    .noActive {
+        padding-inline: 30px;
+    }
+
+    .active {
+        padding-inline: 30px;
+    }
+}
+
+@media (max-height: 550px) and (min-width: 920px){
+    .wrapperButton {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .sidebar {
+        grid-template-areas: 'burger logo logOut';
+        min-width: auto;
+    }
+}
