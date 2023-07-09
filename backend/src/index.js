@@ -43,7 +43,7 @@ import {
 
 mongoose.set('strictQuery', false);
 mongoose
-  .connect('mongodb://127.0.0.1:27017/crm')
+  .connect('mongodb://mongo:27017/crm')
   .then(() => console.log('db ok'))
   .catch((err) => console.log('db error', err));
 
@@ -126,9 +126,4 @@ app.post(
   loadBackgroundImage,
 );
 
-app.listen(PORT, (error) => {
-  if (error) {
-    return console.log(error);
-  }
-  return console.log('Server ok');
-});
+app.listen(PORT, (error) => console.log(error || 'Server ok'));
